@@ -134,11 +134,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setServerBuild({ error: `HTTP ${r.status}`, status: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "build-info",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as BuildInfo;
+      const j = JSON.parse(text) as BuildInfo;
       setServerBuild({
         buildTime: j.buildTime,
         buildCommit: j.buildCommit,
@@ -147,10 +159,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "build-info",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setServerBuild({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setServerBuild({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "build-info", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchHealth = useCallback(async () => {
     const stop = measure();
@@ -158,11 +182,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "health",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as HealthResponse;
+      const j = JSON.parse(text) as HealthResponse;
       setHealth({
         status: j.status,
         service: j.service,
@@ -172,10 +208,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "health",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setHealth({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setHealth({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "health", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchDiag = useCallback(async () => {
     const stop = measure();
@@ -183,11 +231,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/diag", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setDiag({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "diag",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as DiagResponse;
+      const j = JSON.parse(text) as DiagResponse;
       setDiag({
         service: j.service,
         checkedAt: j.checkedAt,
@@ -197,10 +257,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "diag",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setDiag({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "diag", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const lastBuildStamp = serverBuild?.fetchedAt ?? null;
   const lastHealthStamp = health?.fetchedAt ?? null;
