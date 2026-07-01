@@ -159,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
 
         <div style="padding: 32px 24px; background: #faf8f4;">
-          <p style="font-size: 16px;">Hi ${data.name},</p>
+          <p style="font-size: 16px;">Hi ${esc(data.name)},</p>
 
           ${isConfirmed
             ? `<p>Great news — your spot is secured! We're looking forward to seeing you${data.guests > 1 ? ` and your ${data.guests - 1} guest${data.guests > 2 ? "s" : ""}` : ""}.</p>`
