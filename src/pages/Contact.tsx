@@ -134,6 +134,8 @@ export default function Contact() {
   const MAX_FILES = 5;
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB per file
   const ALLOWED = /\.(pdf|jpe?g|png|webp|heic|dwg|dxf|doc|docx|xls|xlsx)$/i;
+  // Flip to true (or wire to form state) to require attachments before submit.
+  const REQUIRE_ATTACHMENTS = false;
 
   const addFiles = (incoming: FileList | null) => {
     if (!incoming) return;
