@@ -60,6 +60,10 @@ export default function ThankYou() {
   const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
   const clientName = searchParams.get("name") || "";
   const clientEmail = searchParams.get("email") || "";
+  const referenceId = (searchParams.get("ref") || searchParams.get("id") || "").trim();
+  const rawFrom = searchParams.get("from") || "";
+  const originLabel = ALLOWED_ORIGIN_PATHS[rawFrom];
+  const originPath = originLabel ? rawFrom : null;
 
   const primaryService = services.find((s) => s.id === serviceIds[0]);
   const suggestedDuration = SERVICE_DURATIONS[serviceIds[0]] || 45;
@@ -75,9 +79,20 @@ export default function ThankYou() {
         : primaryService ? `Regarding: ${primaryService.title}` : "General consultation",
       clientName ? `Client: ${clientName}` : "",
       clientEmail ? `Email: ${clientEmail}` : "",
+      referenceId ? `Reference: ${referenceId}` : "",
     ].filter(Boolean).join("\n"),
     location: "Peninsula Equine — On-site or Phone",
   } : null;
+
+  const copyReference = async () => {
+    if (!referenceId) return;
+    try {
+      await navigator.clipboard.writeText(referenceId);
+      toast.success("Reference copied to clipboard");
+    } catch {
+      toast.error("Couldn't copy — please select the reference manually.");
+    }
+  };
 
   return (
     <Layout>
@@ -87,11 +102,39 @@ export default function ThankYou() {
             <CheckCircle className="h-10 w-10 text-accent" />
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl font-normal text-primary-foreground mb-4">
-            Thank You!
+            Thank You{clientName ? `, ${clientName.split(" ")[0]}` : ""}.
           </h1>
           <p className="text-primary-foreground/70 text-lg max-w-xl mx-auto">
             Your inquiry has been submitted successfully. Here's what happens next.
           </p>
+
+          {referenceId && (
+            <div className="mt-8 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 rounded-md border border-primary-foreground/15 bg-primary-foreground/5 px-4 py-3 text-left">
+              <div className="flex items-center gap-2 text-primary-foreground/60 text-[0.7rem] uppercase tracking-[0.25em]">
+                <Hash className="h-3 w-3" />
+                Reference
+              </div>
+              <div className="flex items-center gap-2">
+                <code className="font-mono text-sm text-primary-foreground/90 tracking-wider">
+                  {shortRef(referenceId)}
+                </code>
+                <button
+                  type="button"
+                  onClick={copyReference}
+                  className="inline-flex items-center gap-1 text-xs text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                  aria-label="Copy full reference ID"
+                >
+                  <Copy className="h-3 w-3" />
+                  Copy
+                </button>
+              </div>
+            </div>
+          )}
+          {referenceId && (
+            <p className="mt-3 text-xs text-primary-foreground/50">
+              Quote this reference in any follow-up correspondence.
+            </p>
+          )}
         </div>
       </section>
 
