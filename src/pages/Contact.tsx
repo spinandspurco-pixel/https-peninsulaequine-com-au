@@ -671,7 +671,66 @@ export default function Contact() {
 
                 <div className="w-12 h-px bg-border mx-auto" />
 
-                {/* removed — form is direct enough */}
+                {/* Attachments (optional) */}
+                <RevealOnScroll>
+                  <div className="grid md:grid-cols-[220px_1fr] gap-8 md:gap-12">
+                    <div className="md:pt-1">
+                      <p className="text-[10px] uppercase tracking-[0.25em] text-[hsl(var(--footer-muted))] font-mono mb-2">
+                        07
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Attachments
+                      </h3>
+                      <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
+                    </div>
+                    <div className="space-y-3">
+                      <label
+                        htmlFor="contact-files"
+                        className="flex flex-col items-center justify-center rounded-md border border-dashed border-input bg-background/40 px-4 py-8 text-center cursor-pointer hover:border-accent/60 transition-colors"
+                      >
+                        <span className="text-sm text-foreground/80">
+                          Drop files or click to upload
+                        </span>
+                        <span className="mt-1 text-[11px] text-[hsl(var(--footer-muted))]">
+                          Site plans, photos, drawings · PDF, JPG, PNG, DWG, DOCX, XLSX · max 5 files · 10MB each
+                        </span>
+                        <input
+                          id="contact-files"
+                          data-testid="contact-files"
+                          type="file"
+                          multiple
+                          className="hidden"
+                          accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.dwg,.dxf,.doc,.docx,.xls,.xlsx"
+                          onChange={(e) => { addFiles(e.target.files); e.currentTarget.value = ""; }}
+                        />
+                      </label>
+                      {files.length > 0 && (
+                        <ul className="space-y-1.5">
+                          {files.map((f, i) => (
+                            <li key={`${f.name}-${i}`} className="flex items-center justify-between rounded-sm border border-border/60 bg-background/40 px-3 py-2 text-xs">
+                              <span className="truncate pr-3 text-foreground/80">
+                                {f.name} <span className="text-[hsl(var(--footer-muted))]">· {(f.size / 1024 / 1024).toFixed(2)}MB</span>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => removeFile(i)}
+                                className="text-[10px] uppercase tracking-[0.15em] text-[hsl(var(--footer-muted))] hover:text-foreground"
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {fileError && (
+                        <p className="text-xs text-destructive">{fileError}</p>
+                      )}
+                    </div>
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
 
                 {/* Submit */}
                 <div className="text-center space-y-3">
