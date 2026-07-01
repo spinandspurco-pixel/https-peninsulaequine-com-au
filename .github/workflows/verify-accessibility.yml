@@ -83,7 +83,20 @@ jobs:
             bunx playwright install --with-deps chromium
           fi
 
+      # Shared build cache — see strict-build.yml for the full pattern.
+      - name: Cache build output (dist + Vite deps)
+        id: build-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist
+            node_modules/.vite
+          key: ${{ runner.os }}-dist-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-dist-
+
       - name: Build site
+        if: steps.build-cache.outputs.cache-hit != 'true'
         run: bun run build
 
       - name: Serve dist
