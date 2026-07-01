@@ -709,6 +709,53 @@ export function ClientDiagPanel() {
             </div>
           </div>
 
+          <div
+            style={{
+              marginTop: 4,
+              marginBottom: 4,
+              padding: "6px 8px",
+              border: "1px solid #2a313a",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
+              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>LATENCY THRESHOLDS (ms)</span>
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={latencyThresholds.warn}
+                  onChange={(e) =>
+                    persistThresholds({ ...latencyThresholds, warn: Math.max(0, Number(e.target.value) || 0) })
+                  }
+                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
+                />
+                <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={latencyThresholds.crit}
+                  onChange={(e) =>
+                    persistThresholds({ ...latencyThresholds, crit: Math.max(0, Number(e.target.value) || 0) })
+                  }
+                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
+                />
+                <button onClick={() => persistThresholds({ warn: 200, crit: 500 })} style={btn} title="Reset to 200 / 500">
+                  reset
+                </button>
+              </div>
+            </div>
+            <div style={{ opacity: 0.5, fontSize: 10 }}>
+              <span style={{ color: "#86efac" }}>green</span> &lt; {latencyThresholds.warn} ·{" "}
+              <span style={{ color: "#fde68a" }}>yellow</span> ≥ {latencyThresholds.warn} ·{" "}
+              <span style={{ color: "#ff8a8a" }}>red</span> ≥ {latencyThresholds.crit}
+            </div>
+          </div>
+
+
+
 
           <div
             style={{
