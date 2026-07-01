@@ -2837,6 +2837,10 @@ export type Database = {
       }
       hq_graph_backfill_media_suggestions: { Args: never; Returns: number }
       is_e2e_test_user: { Args: { _user_id: string }; Returns: boolean }
+      link_inquiry_attachments: {
+        Args: { _ids: string[]; _inquiry_id: string }
+        Returns: number
+      }
       list_staff_directory: {
         Args: never
         Returns: {
