@@ -116,6 +116,13 @@ export default function AdminInquiries() {
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
+  const [activePresetId, setActivePresetId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
+  });
+  const [savingPreset, setSavingPreset] = useState(false);
+  const [presetDraftName, setPresetDraftName] = useState("");
 
   // Clear selection when the visible dataset changes.
   useEffect(() => {
