@@ -336,6 +336,7 @@ export default function LessonInquiry({
             else submit();
           }}
         >
+          <HoneypotField guard={spamGuard} />
           {step === 0 && <StepFocus data={data} set={set} errors={errors} lockedType={lockedType} />}
 
 
