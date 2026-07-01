@@ -102,7 +102,40 @@ export default function LessonInquiry({
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
 
+  const MAX_FILES = 5;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10 MB per file
+  const ALLOWED = /\.(jpe?g|png|webp|heic|pdf|doc|docx)$/i;
+
+  const addFiles = (incoming: FileList | File[]) => {
+    setFileError(null);
+    const list = Array.from(incoming);
+    const merged = [...files];
+    for (const f of list) {
+      if (merged.length >= MAX_FILES) {
+        setFileError(`Up to ${MAX_FILES} files.`);
+        break;
+      }
+      if (!ALLOWED.test(f.name)) {
+        setFileError(`${f.name}: unsupported file type.`);
+        continue;
+      }
+      if (f.size > MAX_SIZE) {
+        setFileError(`${f.name}: exceeds 10 MB.`);
+        continue;
+      }
+      if (f.size === 0) {
+        setFileError(`${f.name}: empty file.`);
+        continue;
+      }
+      if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
+    }
+    setFiles(merged);
+  };
+
+  const removeFile = (i: number) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
