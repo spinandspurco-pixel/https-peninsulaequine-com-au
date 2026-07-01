@@ -44,7 +44,7 @@ describe("RetryOutcomeErrorBoundary", () => {
     expect(
       screen.getByText(/The retry outcome panel failed to render/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/outcome exploded/)).toBeInTheDocument();
+    expect(screen.getAllByText(/outcome exploded/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Component stack/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Stack trace/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: /Copy debug payload/i })).toBeInTheDocument();
