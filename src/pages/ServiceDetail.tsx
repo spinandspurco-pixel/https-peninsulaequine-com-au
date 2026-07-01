@@ -728,9 +728,9 @@ export default function ServiceDetail() {
                 Experience our facilities firsthand with a riding lesson. 50% deposit secures your spot.
               </p>
               <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link to="/lessons">
+                <Link to="/lessons/book">
                   <Calendar className="mr-2 h-4 w-4" />
-                  Browse Lessons
+                  Book a Lesson
                 </Link>
               </Button>
             </div>
