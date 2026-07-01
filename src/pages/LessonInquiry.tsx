@@ -271,6 +271,8 @@ export default function LessonInquiry({
             preferredDate: parsed.data.timing || undefined,
             additionalNotes: parsed.data.notes || undefined,
             attachmentCount: attachment_urls.length,
+            inquiryId: inserted.id,
+            attachmentIds: attachment_ids,
             source: `lesson-inquiry:${parsed.data.inquiry_type}`,
           },
         })
