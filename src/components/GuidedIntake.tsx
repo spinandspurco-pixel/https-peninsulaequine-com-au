@@ -124,9 +124,12 @@ export function GuidedIntake() {
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const attachmentFolder = useMemo(() => crypto.randomUUID(), [isOpen]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* Reset on close */
   useEffect(() => {
@@ -143,6 +146,7 @@ export function GuidedIntake() {
         setPhone("");
         setLocation("");
         setNotes("");
+        setFiles([]);
         setErrors({});
         setSubmitted(false);
       }, 500);
@@ -153,6 +157,7 @@ export function GuidedIntake() {
       return () => clearTimeout(t);
     }
   }, [isOpen]);
+
 
   const advance = useCallback((selection: string, setter: (v: string) => void) => {
     setter(selection);
