@@ -189,9 +189,12 @@ export default function Contact() {
       // 1. Upload attachments (if any) via the server-side validated edge
       // function BEFORE creating the inquiry row.
       let attachment_urls: string[] = [];
+      let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
         const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
-        attachment_urls = await uploadInquiryAttachments(files);
+        const result = await uploadInquiryAttachments(files);
+        attachment_urls = result.paths;
+        attachments = result.records;
       }
 
       const { error } = await supabase.from("inquiries").insert({
@@ -203,6 +206,7 @@ export default function Contact() {
         preferred_start: form.timeline || null,
         project_details: form.details.trim().slice(0, 2000) || null,
         attachment_urls,
+        attachments: attachments as unknown as never,
         notes: [
           form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
           form.propertyType ? `Type: ${form.propertyType}` : "",

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { formatBytes, shortMime } from "@/lib/attachmentFormat";
 import { format } from "date-fns";
 import {
   Mail,
@@ -40,6 +41,7 @@ interface FullInquiry {
   budget_range: string | null;
   preferred_start: string | null;
   attachment_urls: string[] | null;
+  attachments: AttachmentMeta[] | null;
   lead_tier: string | null;
   lead_tags: string[] | null;
   status: string;
@@ -47,9 +49,20 @@ interface FullInquiry {
   updated_at: string;
 }
 
+interface AttachmentMeta {
+  path: string;
+  name?: string | null;
+  size?: number | null;
+  mime?: string | null;
+  uploaded_at?: string | null;
+}
+
 interface Attachment {
   raw: string;
   name: string;
+  size: number | null;
+  mime: string | null;
+  uploaded_at: string | null;
   url: string | null;
 }
 
@@ -96,7 +109,7 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
       supabase
         .from("inquiries")
         .select(
-          "id,name,email,phone,preferred_contact,services,preferred_service,horse_name,horse_breed,horse_age,experience_level,project_vision,project_details,budget_range,preferred_start,attachment_urls,lead_tier,lead_tags,status,created_at,updated_at"
+          "id,name,email,phone,preferred_contact,services,preferred_service,horse_name,horse_breed,horse_age,experience_level,project_vision,project_details,budget_range,preferred_start,attachment_urls,attachments,lead_tier,lead_tags,status,created_at,updated_at"
         )
         .eq("id", inquiryId)
         .maybeSingle(),
@@ -116,24 +129,38 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
       toast.error("Couldn't load inquiry.");
       return;
     }
-    setInquiry(inq as FullInquiry);
+    setInquiry(inq as unknown as FullInquiry);
     setNotes((noteRows ?? []) as NoteRow[]);
     setActivity((actRows ?? []) as ActivityRow[]);
 
+    // Prefer rich metadata from `attachments`; fall back to `attachment_urls`.
+    const meta = (Array.isArray(inq.attachments) ? inq.attachments : []) as unknown as AttachmentMeta[];
     const urls = (inq.attachment_urls ?? []) as string[];
-    if (urls.length === 0) {
+    const merged: AttachmentMeta[] = meta.length > 0
+      ? meta
+      : urls.map((p) => ({ path: p, name: p.split("/").pop() ?? p }));
+
+    if (merged.length === 0) {
       setAttachments([]);
       return;
     }
     const resolved = await Promise.all(
-      urls.map(async (raw): Promise<Attachment> => {
-        const name = raw.split("/").pop() ?? raw;
-        if (/^https?:\/\//i.test(raw)) return { raw, name, url: raw };
+      merged.map(async (m): Promise<Attachment> => {
+        const raw = m.path;
+        const name = m.name ?? raw.split("/").pop() ?? raw;
+        const base = {
+          raw,
+          name,
+          size: m.size ?? null,
+          mime: m.mime ?? null,
+          uploaded_at: m.uploaded_at ?? null,
+        };
+        if (/^https?:\/\//i.test(raw)) return { ...base, url: raw };
         const path = raw.replace(/^inquiry-attachments\//, "");
         const { data: signed } = await supabase.storage
           .from("inquiry-attachments")
           .createSignedUrl(path, 60 * 60);
-        return { raw, name, url: signed?.signedUrl ?? null };
+        return { ...base, url: signed?.signedUrl ?? null };
       })
     );
     setAttachments(resolved);
@@ -349,13 +376,17 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
 
               {/* Attachments */}
               <Section label="Files" index="05">
-                {!inquiry.attachment_urls || inquiry.attachment_urls.length === 0 ? (
+                {attachments.length === 0 ? (
                   <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/30 pl-1">
                     No files attached
                   </p>
                 ) : (
                   <ul className="space-y-2">
-                    {attachments.map((att) => (
+                    {attachments.map((att) => {
+                      const sizeLabel = att.size != null ? formatBytes(att.size) : null;
+                      const mimeLabel = att.mime ? shortMime(att.mime) : null;
+                      const meta = [mimeLabel, sizeLabel].filter(Boolean).join(" · ");
+                      return (
                       <li key={att.raw}>
                         {att.url ? (
                           <a
@@ -365,24 +396,35 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
                             className="group flex items-center gap-3 py-2 border-t border-border/[0.08] hover:border-accent/40 transition-colors"
                           >
                             <Paperclip className="h-3 w-3 text-muted-foreground/40 group-hover:text-accent/70 transition-colors" />
-                            <span className="flex-1 text-[12px] font-light text-foreground/70 group-hover:text-foreground/95 transition-colors truncate">
+                            <span className="flex-1 min-w-0 text-[12px] font-light text-foreground/70 group-hover:text-foreground/95 transition-colors truncate">
                               {att.name}
                             </span>
+                            {meta && (
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40 whitespace-nowrap">
+                                {meta}
+                              </span>
+                            )}
                             <ExternalLink className="h-3 w-3 text-muted-foreground/30 group-hover:text-accent/70 transition-colors" />
                           </a>
                         ) : (
                           <div className="flex items-center gap-3 py-2 border-t border-border/[0.08]">
                             <Paperclip className="h-3 w-3 text-muted-foreground/30" />
-                            <span className="flex-1 text-[12px] font-light text-muted-foreground/40 truncate">
+                            <span className="flex-1 min-w-0 text-[12px] font-light text-muted-foreground/40 truncate">
                               {att.name}
                             </span>
+                            {meta && (
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 whitespace-nowrap">
+                                {meta}
+                              </span>
+                            )}
                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30">
                               Unavailable
                             </span>
                           </div>
                         )}
                       </li>
-                    ))}
+                      );
+                    })}
                   </ul>
                 )}
               </Section>

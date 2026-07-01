@@ -178,9 +178,12 @@ export default function LessonInquiry({
       // Upload attachments via the server-side validated edge function
       // (enforces size, MIME/extension, and magic-byte checks).
       let attachment_urls: string[] = [];
+      let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
         const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
-        attachment_urls = await uploadInquiryAttachments(files);
+        const result = await uploadInquiryAttachments(files);
+        attachment_urls = result.paths;
+        attachments = result.records;
       }
 
       const services: string[] =
@@ -201,6 +204,7 @@ export default function LessonInquiry({
           project_details: parsed.data.notes || null,
           preferred_start: parsed.data.timing,
           attachment_urls,
+          attachments: attachments as unknown as never,
           status: "new",
         })
         .select("id")
