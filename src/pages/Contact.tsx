@@ -184,7 +184,12 @@ export default function Contact() {
       setErrors({ scopes: "Please select at least one." });
       return;
     }
+    if (REQUIRE_ATTACHMENTS && files.length === 0) {
+      setFileError("Please attach at least one file before submitting.");
+      return;
+    }
     setErrors({});
+    setFileError(null);
     setSubmitting(true);
 
     try {
