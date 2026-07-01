@@ -1,5 +1,9 @@
 # Peninsula Equine
 
+[![Security gate](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml)
+
+
+
 Production codebase for **peninsulaequine.systems** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
 
 > Single-bundle React SPA. Backend on Lovable Cloud (Supabase). Edited via Lovable, synced to GitHub, deployable to Lovable hosting or Vercel.
