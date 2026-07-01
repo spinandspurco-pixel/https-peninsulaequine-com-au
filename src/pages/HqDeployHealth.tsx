@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
+import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
