@@ -1089,50 +1089,111 @@ export function ClientDiagPanel() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
               <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>LATENCY THRESHOLDS (ms)</span>
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.warn}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, warn: Math.max(0, Number(e.target.value) || 0) })
+              <button
+                onClick={() => {
+                  try {
+                    window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
+                  } catch {
+                    /* ignore */
                   }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.crit}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, crit: Math.max(0, Number(e.target.value) || 0) })
-                  }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <button
-                  onClick={() => {
-                    try {
-                      window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
-                    } catch {
-                      /* ignore */
-                    }
-                    persistThresholds({ warn: 200, crit: 500 });
-                  }}
-                  style={btn}
-                  disabled={latencyThresholds.warn === 200 && latencyThresholds.crit === 500}
-                  title="Restore defaults: 200 ms warn · 500 ms crit"
-                >
-                  reset defaults
-                </button>
-              </div>
+                  persistThresholds({ default: { ...DEFAULT_PAIR } });
+                }}
+                style={btn}
+                disabled={
+                  latencyThresholds.default.warn === DEFAULT_PAIR.warn &&
+                  latencyThresholds.default.crit === DEFAULT_PAIR.crit &&
+                  !latencyThresholds.buildInfo &&
+                  !latencyThresholds.health &&
+                  !latencyThresholds.diag
+                }
+                title="Restore default 200/500 ms and clear all per-endpoint overrides"
+              >
+                reset defaults
+              </button>
             </div>
-            <div style={{ opacity: 0.5, fontSize: 10 }}>
-              <span style={{ color: "#86efac" }}>green</span> &lt; {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#fde68a" }}>yellow</span> ≥ {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#ff8a8a" }}>red</span> ≥ {latencyThresholds.crit}
+            {(() => {
+              type Row = { key: EndpointKey | "default"; label: string };
+              const rows: Row[] = [
+                { key: "default", label: "default (fallback)" },
+                { key: "buildInfo", label: "/api/build-info" },
+                { key: "health", label: "/api/health" },
+                { key: "diag", label: "/api/diag" },
+              ];
+              const rowStyle: React.CSSProperties = {
+                display: "grid",
+                gridTemplateColumns: "1fr auto auto auto auto auto",
+                gap: 4,
+                alignItems: "center",
+                marginBottom: 3,
+              };
+              const inputStyle: React.CSSProperties = {
+                width: 56,
+                background: "transparent",
+                color: "#e6edf3",
+                border: "1px solid #2a313a",
+                padding: "1px 4px",
+                fontSize: 10,
+              };
+              return rows.map(({ key, label }) => {
+                const isDefault = key === "default";
+                const override = !isDefault ? latencyThresholds[key as EndpointKey] : undefined;
+                const active = isDefault ? latencyThresholds.default : (override ?? latencyThresholds.default);
+                const inherited = !isDefault && !override;
+                const update = (patch: Partial<ThresholdPair>) => {
+                  if (isDefault) {
+                    persistThresholds({
+                      ...latencyThresholds,
+                      default: { ...latencyThresholds.default, ...patch },
+                    });
+                  } else {
+                    setEndpointPair(key as EndpointKey, { ...active, ...patch });
+                  }
+                };
+                return (
+                  <div key={key} style={rowStyle}>
+                    <span style={{ opacity: inherited ? 0.5 : 0.85, fontSize: 10 }}>
+                      {label}
+                      {inherited ? " · inherit" : ""}
+                    </span>
+                    <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.warn}
+                      onChange={(e) => update({ warn: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.crit}
+                      onChange={(e) => update({ crit: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    {!isDefault ? (
+                      <button
+                        onClick={() => setEndpointPair(key as EndpointKey, null)}
+                        style={{ ...btn, opacity: override ? 1 : 0.4 }}
+                        disabled={!override}
+                        title="Clear override — inherit default"
+                      >
+                        clear
+                      </button>
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                );
+              });
+            })()}
+            <div style={{ opacity: 0.5, fontSize: 10, marginTop: 2 }}>
+              <span style={{ color: "#86efac" }}>green</span> &lt; warn ·{" "}
+              <span style={{ color: "#fde68a" }}>yellow</span> ≥ warn ·{" "}
+              <span style={{ color: "#ff8a8a" }}>red</span> ≥ crit. Per-endpoint values override the default.
             </div>
           </div>
+
 
 
 
