@@ -136,7 +136,11 @@ export default function AdminEvents() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{ev.title}</h3>
-                        {!ev.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {ev.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" />{format(new Date(ev.event_date), "MMM d, yyyy")}</span>
@@ -145,6 +149,15 @@ export default function AdminEvents() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePublish(ev)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ev.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {ev.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
