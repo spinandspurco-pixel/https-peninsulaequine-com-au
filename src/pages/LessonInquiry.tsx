@@ -83,6 +83,7 @@ export type InquiryPageProps = {
   headerTitle?: string;
   headerSubtitle?: string;
   backLink?: { to: string; label: string };
+  requireAttachments?: boolean;
 };
 
 export default function LessonInquiry({
@@ -93,6 +94,7 @@ export default function LessonInquiry({
   headerTitle = "Request a lesson or consult",
   headerSubtitle = "A short guided intake. Under two minutes.",
   backLink = { to: "/lessons", label: "Back to lessons" },
+  requireAttachments = false,
 }: InquiryPageProps = {}) {
   usePageMeta({ title: metaTitle, description: metaDescription });
 
