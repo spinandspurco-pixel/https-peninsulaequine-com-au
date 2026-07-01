@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
@@ -61,6 +61,56 @@ export function ClientDiagPanel() {
   const [buildHistory, setBuildHistory] = useState<number[]>([]);
   const HISTORY_MAX = 10;
 
+  // Unified probe history — last N entries across all endpoints, so users
+  // can compare latency and payload hash over time.
+  type ProbeEntry = {
+    id: string;
+    endpoint: "build-info" | "health" | "diag";
+    fetchedAt: string;
+    latencyMs: number;
+    ok: boolean;
+    httpStatus?: number;
+    error?: string;
+    payloadHash?: string;
+    bytes?: number;
+  };
+  const PROBE_HISTORY_MAX = 20;
+  const [probeHistory, setProbeHistory] = useState<ProbeEntry[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem("pe.diag.probeHistory");
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.slice(-PROBE_HISTORY_MAX) : [];
+    } catch {
+      return [];
+    }
+  });
+  const pushProbe = useCallback((entry: Omit<ProbeEntry, "id">) => {
+    setProbeHistory((prev) => {
+      const next = [
+        ...prev,
+        { ...entry, id: `${entry.fetchedAt}-${entry.endpoint}-${Math.random().toString(36).slice(2, 7)}` },
+      ].slice(-PROBE_HISTORY_MAX);
+      try {
+        window.localStorage.setItem("pe.diag.probeHistory", JSON.stringify(next));
+      } catch {
+        /* ignore quota */
+      }
+      return next;
+    });
+  }, []);
+
+  // Short deterministic hash of a payload string (FNV-1a 32-bit, hex).
+  const hashPayload = (text: string): string => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+    }
+    return h.toString(16).padStart(8, "0");
+  };
+
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
 
@@ -84,11 +134,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setServerBuild({ error: `HTTP ${r.status}`, status: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "build-info",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as BuildInfo;
+      const j = JSON.parse(text) as BuildInfo;
       setServerBuild({
         buildTime: j.buildTime,
         buildCommit: j.buildCommit,
@@ -97,10 +159,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "build-info",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setServerBuild({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setServerBuild({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "build-info", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchHealth = useCallback(async () => {
     const stop = measure();
@@ -108,11 +182,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "health",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as HealthResponse;
+      const j = JSON.parse(text) as HealthResponse;
       setHealth({
         status: j.status,
         service: j.service,
@@ -122,10 +208,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "health",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setHealth({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setHealth({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "health", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchDiag = useCallback(async () => {
     const stop = measure();
@@ -133,11 +231,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/diag", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setDiag({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "diag",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as DiagResponse;
+      const j = JSON.parse(text) as DiagResponse;
       setDiag({
         service: j.service,
         checkedAt: j.checkedAt,
@@ -147,10 +257,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "diag",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setDiag({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "diag", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const lastBuildStamp = serverBuild?.fetchedAt ?? null;
   const lastHealthStamp = health?.fetchedAt ?? null;
@@ -1249,6 +1371,99 @@ export function ClientDiagPanel() {
                 re-probe
               </button>
             </div>
+          </details>
+          <details style={{ marginTop: 6 }} open>
+            <summary style={{ cursor: "pointer", opacity: 0.7 }}>
+              probe history ({probeHistory.length}/{PROBE_HISTORY_MAX})
+            </summary>
+            {probeHistory.length === 0 ? (
+              <div style={{ opacity: 0.5, fontSize: 10, marginTop: 4 }}>
+                No probes recorded yet. Run "probe now" or wait for auto-probe.
+              </div>
+            ) : (
+              <div style={{ marginTop: 4 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "78px 78px 44px 60px 74px 1fr",
+                    columnGap: 8,
+                    rowGap: 2,
+                    fontSize: 10,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  }}
+                >
+                  <div style={{ opacity: 0.5 }}>time</div>
+                  <div style={{ opacity: 0.5 }}>endpoint</div>
+                  <div style={{ opacity: 0.5 }}>ok</div>
+                  <div style={{ opacity: 0.5 }}>latency</div>
+                  <div style={{ opacity: 0.5 }}>hash</div>
+                  <div style={{ opacity: 0.5 }}>notes</div>
+                  {[...probeHistory]
+                    .slice()
+                    .reverse()
+                    .map((p, idx, arr) => {
+                      const prevSameEndpoint = arr
+                        .slice(idx + 1)
+                        .find((x) => x.endpoint === p.endpoint);
+                      const hashChanged =
+                        !!prevSameEndpoint &&
+                        !!p.payloadHash &&
+                        !!prevSameEndpoint.payloadHash &&
+                        prevSameEndpoint.payloadHash !== p.payloadHash;
+                      return (
+                        <Fragment key={p.id}>
+                          <div>{p.fetchedAt.slice(11, 19)}</div>
+                          <div>{p.endpoint}</div>
+                          <div style={{ color: p.ok ? "#7fbf7f" : "#ff8a8a" }}>
+                            {p.ok ? "✓" : "✗"}
+                            {typeof p.httpStatus === "number" ? ` ${p.httpStatus}` : ""}
+                          </div>
+                          <div style={{ color: latencyColor(p.latencyMs) }}>{p.latencyMs} ms</div>
+                          <div
+                            style={{ color: hashChanged ? "#eab308" : undefined }}
+                            title={hashChanged ? "payload changed since previous probe" : ""}
+                          >
+                            {p.payloadHash ?? "—"}
+                            {hashChanged ? " Δ" : ""}
+                          </div>
+                          <div style={{ opacity: 0.7, wordBreak: "break-all" }}>
+                            {p.error
+                              ? `error: ${p.error.length > 60 ? p.error.slice(0, 60) + "…" : p.error}`
+                              : typeof p.bytes === "number"
+                                ? `${p.bytes} B`
+                                : ""}
+                          </div>
+                        </Fragment>
+                      );
+                    })}
+                </div>
+                <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const json = JSON.stringify(probeHistory, null, 2);
+                      navigator.clipboard?.writeText(json).catch(() => {});
+                    }}
+                    title="Copy full probe history as JSON"
+                  >
+                    copy JSON
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      setProbeHistory([]);
+                      try {
+                        window.localStorage.removeItem("pe.diag.probeHistory");
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                  >
+                    clear
+                  </button>
+                </div>
+              </div>
+            )}
           </details>
           <details style={{ marginTop: 6 }}>
             <summary style={{ cursor: "pointer", opacity: 0.7 }}>auth log buffer ({entries.length})</summary>
