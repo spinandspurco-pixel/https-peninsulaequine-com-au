@@ -69,6 +69,7 @@ export default function AdminEvents() {
       capacity: editItem.capacity ?? null,
       image_url: editItem.image_url || null,
       active: editItem.active ?? true,
+      featured: (editItem as any).featured ?? false,
     };
 
     if (editItem.id) {
