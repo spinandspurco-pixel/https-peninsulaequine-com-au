@@ -14,6 +14,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
 import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 // ── Schema ────────────────────────────────────────────
 
@@ -144,9 +145,18 @@ export default function LessonInquiry({
       if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
     }
     setFiles(merged);
+    uploader.syncFiles(merged);
   };
 
-  const removeFile = (i: number) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
+  const uploader = useAttachmentUpload();
+
+  const removeFile = (i: number) => {
+    setFiles((prev) => {
+      const next = prev.filter((_, idx) => idx !== i);
+      uploader.syncFiles(next);
+      return next;
+    });
+  };
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
@@ -206,11 +216,10 @@ export default function LessonInquiry({
       let attachment_ids: string[] = [];
       let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
-        const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
-        const result = await uploadInquiryAttachments(files);
-        attachment_urls = result.paths;
-        attachment_ids = result.ids;
-        attachments = result.records;
+        const records = await uploader.uploadAll(files);
+        attachments = records;
+        attachment_ids = records.map((r) => r.id);
+        attachment_urls = records.map((r) => r.path);
       }
 
       const services: string[] =
@@ -361,6 +370,9 @@ export default function LessonInquiry({
               onRemoveFile={removeFile}
               maxFiles={MAX_FILES}
               requireAttachments={requireAttachments}
+              uploadStatuses={uploader.statuses}
+              onRetryUpload={() => uploader.uploadAll(files).catch(() => {})}
+              uploaderBusy={uploader.isUploading || submitting}
             />
           )}
 
@@ -581,9 +593,12 @@ type TimingProps = StepProps & {
   onRemoveFile: (i: number) => void;
   maxFiles: number;
   requireAttachments?: boolean;
+  uploadStatuses?: import("@/hooks/useAttachmentUpload").AttachmentStatus[];
+  onRetryUpload?: () => void;
+  uploaderBusy?: boolean;
 };
 
-function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments }: TimingProps) {
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments, uploadStatuses, onRetryUpload, uploaderBusy }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
@@ -671,7 +686,13 @@ function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveF
         </label>
         {fileError && <p className="mt-2 text-xs text-destructive">{fileError}</p>}
         <div className="mt-3">
-          <AttachmentPreviewList files={files} onRemove={onRemoveFile} />
+          <AttachmentPreviewList
+            files={files}
+            onRemove={onRemoveFile}
+            statuses={uploadStatuses}
+            onRetry={onRetryUpload}
+            busy={uploaderBusy}
+          />
         </div>
       </div>
 

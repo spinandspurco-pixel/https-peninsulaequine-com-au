@@ -15,6 +15,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
 import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 
 
@@ -141,6 +142,8 @@ export default function Contact() {
   // Flip to true (or wire to form state) to require attachments before submit.
   const REQUIRE_ATTACHMENTS = false;
 
+  const uploader = useAttachmentUpload();
+
   const addFiles = (incoming: FileList | null) => {
     if (!incoming) return;
     setFileError(null);
@@ -153,10 +156,16 @@ export default function Contact() {
       next.push(f);
     }
     setFiles(next);
+    uploader.syncFiles(next);
   };
 
-  const removeFile = (idx: number) =>
-    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  const removeFile = (idx: number) => {
+    setFiles((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      uploader.syncFiles(next);
+      return next;
+    });
+  };
 
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -209,11 +218,10 @@ export default function Contact() {
       let attachment_ids: string[] = [];
       let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
-        const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
-        const result = await uploadInquiryAttachments(files);
-        attachment_urls = result.paths;
-        attachment_ids = result.ids;
-        attachments = result.records;
+        const records = await uploader.uploadAll(files);
+        attachments = records;
+        attachment_ids = records.map((r) => r.id);
+        attachment_urls = records.map((r) => r.path);
       }
 
       const { data: submitResp, error } = await supabase.functions.invoke(
@@ -743,7 +751,13 @@ export default function Contact() {
                         />
                       </label>
                       {files.length > 0 && (
-                        <AttachmentPreviewList files={files} onRemove={removeFile} />
+                        <AttachmentPreviewList
+                          files={files}
+                          onRemove={removeFile}
+                          statuses={uploader.statuses}
+                          onRetry={() => uploader.uploadAll(files).catch(() => {})}
+                          busy={uploader.isUploading || submitting}
+                        />
                       )}
                       {fileError && (
                         <p className="text-xs text-destructive">{fileError}</p>

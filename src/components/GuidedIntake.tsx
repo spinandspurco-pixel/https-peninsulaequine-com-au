@@ -7,7 +7,6 @@ import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useSiteChrome } from "@/hooks/useSiteChrome";
 import {
-  uploadInquiryAttachments,
   linkAttachmentsToInquiry,
   UploadValidationError,
   type AttachmentRecord,
@@ -16,6 +15,7 @@ import { z } from "zod";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
 import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -134,6 +134,7 @@ export function GuidedIntake() {
   const spamGuard = useSpamGuard();
   const attachmentFolder = useMemo(() => crypto.randomUUID(), [isOpen]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploader = useAttachmentUpload();
 
   /* Reset on close */
   useEffect(() => {
@@ -151,6 +152,7 @@ export function GuidedIntake() {
         setLocation("");
         setNotes("");
         setFiles([]);
+        uploader.reset();
         setErrors({});
         setSubmitted(false);
       }, 500);
@@ -204,6 +206,7 @@ export function GuidedIntake() {
       next.push(f);
     }
     setFiles(next);
+    uploader.syncFiles(next);
     setErrors((prev) => ({
       ...prev,
       files: nextErrors.join(" ") || "",
@@ -211,7 +214,11 @@ export function GuidedIntake() {
   };
 
   const removeFile = (idx: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== idx));
+    setFiles((prev) => {
+      const nxt = prev.filter((_, i) => i !== idx);
+      uploader.syncFiles(nxt);
+      return nxt;
+    });
   };
 
   const handleSubmit = async () => {
@@ -243,10 +250,10 @@ export function GuidedIntake() {
       let attachmentIds: string[] = [];
       let attachmentPaths: string[] = [];
       if (files.length) {
-        const uploaded = await uploadInquiryAttachments(files, attachmentFolder);
-        attachmentRecords = uploaded.records;
-        attachmentIds = uploaded.ids;
-        attachmentPaths = uploaded.paths;
+        const records = await uploader.uploadAll(files);
+        attachmentRecords = records;
+        attachmentIds = records.map((r) => r.id);
+        attachmentPaths = records.map((r) => r.path);
       }
 
       // 2. Persist the inquiry row (returning id so we can link attachments).
@@ -543,7 +550,13 @@ export function GuidedIntake() {
               />
             </label>
 
-            <AttachmentPreviewList files={files} onRemove={removeFile} />
+            <AttachmentPreviewList
+              files={files}
+              onRemove={removeFile}
+              statuses={uploader.statuses}
+              onRetry={() => uploader.uploadAll(files).catch(() => {})}
+              busy={uploader.isUploading || submitting}
+            />
 
             {errors.files && (
               <p className="text-xs text-destructive/70">{errors.files}</p>
