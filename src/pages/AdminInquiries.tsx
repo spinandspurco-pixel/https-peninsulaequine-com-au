@@ -368,9 +368,84 @@ export default function AdminInquiries() {
     }
   }, [debouncedSearch, statusFilter, sort]);
 
+  const allPresets = useMemo<FilterPreset[]>(
+    () => [...BUILTIN_PRESETS, ...customPresets],
+    [customPresets],
+  );
+
+  const applyPreset = useCallback((preset: FilterPreset) => {
+    setStatusFilter(preset.status);
+    setSort(preset.sort);
+    setSearch(preset.search);
+    setDebouncedSearch(preset.search);
+    setPage(0);
+    setActivePresetId(preset.id);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(ACTIVE_PRESET_STORAGE_KEY, preset.id);
+    }
+  }, []);
+
+  // Clear active preset marker if the user diverges from it manually.
+  useEffect(() => {
+    if (!activePresetId) return;
+    const active = allPresets.find((p) => p.id === activePresetId);
+    if (!active) return;
+    const diverged =
+      active.status !== statusFilter ||
+      active.sort !== sort ||
+      active.search !== debouncedSearch;
+    if (diverged) {
+      setActivePresetId(null);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(ACTIVE_PRESET_STORAGE_KEY);
+      }
+    }
+  }, [statusFilter, sort, debouncedSearch, activePresetId, allPresets]);
+
+  const persistCustomPresets = useCallback((next: FilterPreset[]) => {
+    setCustomPresets(next);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(next));
+    }
+  }, []);
+
+  const saveCurrentAsPreset = useCallback(() => {
+    const name = presetDraftName.trim();
+    if (!name) {
+      toast.error("Name your preset first.");
+      return;
+    }
+    const id = `custom:${Date.now().toString(36)}`;
+    const preset: FilterPreset = {
+      id,
+      label: name.slice(0, 40),
+      status: statusFilter,
+      sort,
+      search: debouncedSearch,
+    };
+    persistCustomPresets([...customPresets, preset]);
+    setActivePresetId(id);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(ACTIVE_PRESET_STORAGE_KEY, id);
+    }
+    setPresetDraftName("");
+    setSavingPreset(false);
+    toast.success(`Saved preset "${preset.label}".`);
+  }, [presetDraftName, statusFilter, sort, debouncedSearch, customPresets, persistCustomPresets]);
+
+  const deletePreset = useCallback((id: string) => {
+    persistCustomPresets(customPresets.filter((p) => p.id !== id));
+    if (activePresetId === id) {
+      setActivePresetId(null);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(ACTIVE_PRESET_STORAGE_KEY);
+      }
+    }
+  }, [customPresets, activePresetId, persistCustomPresets]);
 
 
   return (
+
     <Layout>
       <main className="bg-background text-foreground type-architectural min-h-screen">
         <div className="section-container max-w-[1280px] pt-28 pb-24">
