@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  appendEntry,
+  clearHistory,
+  historyToJson,
+  loadHistory,
+  type OAuthDiagnosticsEntry,
+} from "@/lib/oauthDiagnosticsHistory";
 
 /**
  * Google OAuth provider verification panel.
