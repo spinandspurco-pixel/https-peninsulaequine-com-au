@@ -5,8 +5,46 @@ import { HqNav } from "@/components/hq/HqNav";
 import { supabase } from "@/integrations/supabase/client";
 import { format, formatDistanceToNow } from "date-fns";
 import { Search, RefreshCw, Inbox } from "lucide-react";
+import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+type BulkAction = "approve" | "complete" | "delete";
+
+const BULK_COPY: Record<BulkAction, { verb: string; title: string; body: (n: number) => string; confirm: string; destructive?: boolean }> = {
+  approve: {
+    verb: "Approve",
+    title: "Approve selected inquiries?",
+    body: (n) => `${n} ${n === 1 ? "inquiry" : "inquiries"} will move to In Progress.`,
+    confirm: "Approve",
+  },
+  complete: {
+    verb: "Mark complete",
+    title: "Mark selected inquiries complete?",
+    body: (n) => `${n} ${n === 1 ? "inquiry" : "inquiries"} will move to Closed.`,
+    confirm: "Mark complete",
+  },
+  delete: {
+    verb: "Delete",
+    title: "Delete selected inquiries?",
+    body: (n) =>
+      `${n} ${n === 1 ? "inquiry" : "inquiries"} and any linked notes will be permanently removed. This cannot be undone.`,
+    confirm: "Delete permanently",
+    destructive: true,
+  },
+};
+
 
 type SortKey = "newest" | "oldest" | "updated";
 
@@ -38,6 +76,14 @@ export default function AdminInquiries() {
   const [page, setPage] = useState(0);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
+  const [bulkRunning, setBulkRunning] = useState(false);
+
+  // Clear selection when the visible dataset changes.
+  useEffect(() => {
+    setSelected(new Set());
+  }, [debouncedSearch, statusFilter, sort, page]);
 
   useEffect(() => {
     document.title = "Inquiries | Peninsula Equine HQ";
@@ -106,6 +152,62 @@ export default function AdminInquiries() {
   };
 
   const totalPages = useMemo(() => Math.max(1, Math.ceil(count / PAGE_SIZE)), [count]);
+
+  const allOnPageSelected = rows.length > 0 && rows.every((r) => selected.has(r.id));
+  const someOnPageSelected = rows.some((r) => selected.has(r.id));
+
+  const toggleOne = useCallback((id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const togglePage = useCallback(() => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (rows.every((r) => next.has(r.id))) {
+        rows.forEach((r) => next.delete(r.id));
+      } else {
+        rows.forEach((r) => next.add(r.id));
+      }
+      return next;
+    });
+  }, [rows]);
+
+  const runBulk = useCallback(async (action: BulkAction) => {
+    const ids = Array.from(selected);
+    if (ids.length === 0) return;
+    setBulkRunning(true);
+    try {
+      if (action === "delete") {
+        const { error: err } = await supabase.from("inquiries").delete().in("id", ids);
+        if (err) throw err;
+        toast.success(`Deleted ${ids.length} ${ids.length === 1 ? "inquiry" : "inquiries"}.`);
+      } else {
+        const nextStatus: InquiryStatus = action === "approve" ? "in-progress" : "closed";
+        const { error: err } = await supabase
+          .from("inquiries")
+          .update({ status: nextStatus, updated_at: new Date().toISOString() })
+          .in("id", ids);
+        if (err) throw err;
+        toast.success(
+          `${BULK_COPY[action].verb}d ${ids.length} ${ids.length === 1 ? "inquiry" : "inquiries"}.`,
+        );
+      }
+      setSelected(new Set());
+      setPendingAction(null);
+      await load();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Bulk action failed";
+      toast.error(msg);
+    } finally {
+      setBulkRunning(false);
+    }
+  }, [selected, load]);
+
 
   return (
     <Layout>
@@ -193,16 +295,88 @@ export default function AdminInquiries() {
             </div>
           )}
 
+          {/* Bulk action bar */}
+          {rows.length > 0 && (
+            <div className="mb-3 flex flex-wrap items-center gap-6 border-b border-border/[0.12] pb-3 px-2">
+              <label className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/55 cursor-pointer">
+                <Checkbox
+                  checked={
+                    allOnPageSelected
+                      ? true
+                      : someOnPageSelected
+                        ? "indeterminate"
+                        : false
+                  }
+                  onCheckedChange={togglePage}
+                  aria-label="Select all inquiries on this page"
+                />
+                <span>
+                  {selected.size > 0
+                    ? `${selected.size} selected`
+                    : "Select all on page"}
+                </span>
+              </label>
+              {selected.size > 0 && (
+                <div className="flex flex-wrap items-center gap-5 ml-auto">
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("approve")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-emerald-400/85 hover:text-emerald-300 disabled:opacity-40 transition-colors"
+                  >
+                    Approve → In Progress
+                  </button>
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("complete")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/70 hover:text-foreground disabled:opacity-40 transition-colors"
+                  >
+                    Mark complete
+                  </button>
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("delete")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-red-400/85 hover:text-red-300 disabled:opacity-40 transition-colors"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(new Set())}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground/45 hover:text-foreground/70 transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <ul className="divide-y divide-border/[0.08] border-t border-border/[0.12]">
             {rows.map((r) => {
               const preview = r.project_vision ?? r.project_details ?? "";
+              const isChecked = selected.has(r.id);
               return (
-                <li key={r.id}>
+                <li
+                  key={r.id}
+                  className={`grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
+                    isChecked ? "bg-accent/[0.04]" : "hover:bg-foreground/[0.015]"
+                  }`}
+                >
+                  <div className="col-span-1 sm:col-span-1 flex items-start pt-1">
+                    <Checkbox
+                      checked={isChecked}
+                      onCheckedChange={() => toggleOne(r.id)}
+                      aria-label={`Select inquiry from ${r.name}`}
+                    />
+                  </div>
                   <button
                     onClick={() => open(r.id)}
-                    className="w-full text-left grid grid-cols-12 gap-4 py-5 hover:bg-foreground/[0.015] transition-colors duration-300 px-2"
+                    className="col-span-11 text-left grid grid-cols-11 gap-4"
                   >
-                    <div className="col-span-12 sm:col-span-3 font-mono uppercase text-[10px] tracking-[0.35em] text-foreground/45">
+                    <div className="col-span-11 sm:col-span-3 font-mono uppercase text-[10px] tracking-[0.35em] text-foreground/45">
                       <div className="text-foreground/70">
                         {format(new Date(r.created_at), "dd MMM yyyy")}
                       </div>
@@ -210,7 +384,7 @@ export default function AdminInquiries() {
                         {formatDistanceToNow(new Date(r.created_at), { addSuffix: true })}
                       </div>
                     </div>
-                    <div className="col-span-12 sm:col-span-6 space-y-1.5">
+                    <div className="col-span-11 sm:col-span-5 space-y-1.5">
                       <div className="flex flex-wrap items-baseline gap-3">
                         <span className="font-serif text-[1.05rem] leading-snug text-foreground/90">
                           {r.name}
@@ -242,7 +416,7 @@ export default function AdminInquiries() {
                         </div>
                       )}
                     </div>
-                    <div className="col-span-12 sm:col-span-3 flex sm:justify-end items-start">
+                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start">
                       <span
                         className={`font-mono text-[10px] uppercase tracking-[0.3em] ${
                           STATUS_TONE[r.status] ?? "text-foreground/55"
@@ -256,6 +430,7 @@ export default function AdminInquiries() {
               );
             })}
           </ul>
+
 
           {/* Pagination */}
           {count > PAGE_SIZE && (
@@ -291,7 +466,45 @@ export default function AdminInquiries() {
         }}
         onChanged={load}
       />
+
+      <AlertDialog
+        open={pendingAction !== null}
+        onOpenChange={(o) => {
+          if (!o && !bulkRunning) setPendingAction(null);
+        }}
+      >
+        <AlertDialogContent>
+          {pendingAction && (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{BULK_COPY[pendingAction].title}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {BULK_COPY[pendingAction].body(selected.size)}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={bulkRunning}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={bulkRunning}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (pendingAction) void runBulk(pendingAction);
+                  }}
+                  className={
+                    BULK_COPY[pendingAction].destructive
+                      ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      : undefined
+                  }
+                >
+                  {bulkRunning ? "Working…" : BULK_COPY[pendingAction].confirm}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
+
   );
 }
 
