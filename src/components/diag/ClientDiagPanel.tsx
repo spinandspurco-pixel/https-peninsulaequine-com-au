@@ -56,9 +56,14 @@ export function ClientDiagPanel() {
   const [health, setHealth] = useState<HealthState>(null);
   const [diag, setDiag] = useState<DiagState>(null);
 
+  const [healthHistory, setHealthHistory] = useState<number[]>([]);
+  const [diagHistory, setDiagHistory] = useState<number[]>([]);
+  const [buildHistory, setBuildHistory] = useState<number[]>([]);
+  const HISTORY_MAX = 10;
 
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
+
 
   const measure = () => {
     const start =
