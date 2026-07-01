@@ -33,6 +33,9 @@ function assertSender(): Response | null {
   return null;
 }
 
+const esc = (v: unknown) =>
+  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
+
 // ── Welcome Series Emails ──────────────────────────────────────────
 
 function emailStep1(name: string): { subject: string; html: string } {
