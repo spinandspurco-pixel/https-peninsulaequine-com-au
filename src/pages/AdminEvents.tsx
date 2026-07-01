@@ -25,6 +25,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
+import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 
 type ManagedEvent = Tables<"managed_events">;
 
@@ -45,7 +46,7 @@ export default function AdminEvents() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const { data } = await supabase.from("managed_events").select("*").order("event_date", { ascending: true });
+    const { data } = await supabase.from("managed_events").select("*").order("sort_order", { ascending: true }).order("event_date", { ascending: true });
     setItems(data || []);
     setIsLoading(false);
   };
@@ -129,10 +130,25 @@ export default function AdminEvents() {
           ) : items.length === 0 ? (
             <Card><CardContent className="py-12 text-center text-muted-foreground">No events yet.</CardContent></Card>
           ) : (
-            <div className="space-y-3">
-              {items.map((ev) => (
+            <SortableList
+              items={items}
+              disabled={isPreview}
+              onReorder={async (ids) => {
+                const prev = items;
+                const map = new Map(items.map((i) => [i.id, i]));
+                setItems(ids.map((id, i) => ({ ...(map.get(id) as ManagedEvent), sort_order: i })));
+                const { error } = await persistSortOrder(supabase as any, "managed_events", ids);
+                if (error) {
+                  toast.error("Failed to save order");
+                  setItems(prev);
+                } else {
+                  toast.success("Order saved");
+                }
+              }}
+              renderItem={(ev, dragHandle) => (
                 <Card key={ev.id} className="group">
                   <CardContent className="flex items-center gap-4 py-4">
+                    {dragHandle}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{ev.title}</h3>
@@ -163,8 +179,8 @@ export default function AdminEvents() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              )}
+            />
           )}
         </div>
       </div>

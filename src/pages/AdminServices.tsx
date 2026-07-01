@@ -19,7 +19,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
@@ -137,11 +138,25 @@ export default function AdminServices() {
           ) : services.length === 0 ? (
             <Card><CardContent className="py-12 text-center text-muted-foreground">No services yet. Click "Add Service" to create one.</CardContent></Card>
           ) : (
-            <div className="space-y-3">
-              {services.map((s) => (
+            <SortableList
+              items={services}
+              disabled={isPreview}
+              onReorder={async (ids) => {
+                const prev = services;
+                const map = new Map(services.map((s) => [s.id, s]));
+                setServices(ids.map((id, i) => ({ ...(map.get(id) as ManagedService), sort_order: i })));
+                const { error } = await persistSortOrder(supabase as any, "managed_services", ids);
+                if (error) {
+                  toast.error("Failed to save order");
+                  setServices(prev);
+                } else {
+                  toast.success("Order saved");
+                }
+              }}
+              renderItem={(s, dragHandle) => (
                 <Card key={s.id} className="group">
                   <CardContent className="flex items-center gap-4 py-4">
-                    <GripVertical className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+                    {dragHandle}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-foreground truncate">{s.title}</h3>
@@ -177,8 +192,8 @@ export default function AdminServices() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              )}
+            />
           )}
         </div>
       </div>
