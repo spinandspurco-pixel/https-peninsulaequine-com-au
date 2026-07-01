@@ -18,7 +18,7 @@ const renderWithEnv = (opts: {
   prod?: boolean;
   mode?: string;
 }) => {
-  vi.stubEnv("PROD", opts.prod ? "true" : "");
+  vi.stubEnv("PROD", opts.prod === true);
   vi.stubEnv("MODE", opts.mode ?? "development");
   vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", opts.key ?? "");
   return render(<EnvKeyDebug />);
