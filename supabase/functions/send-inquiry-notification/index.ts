@@ -621,7 +621,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: HQ_FROM,
         to: notifyRecipients,
         subject: `New Project Inquiry from ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
-        html: emailHtml,
+        html: emailHtmlWithAttachments,
         reply_to: inquiry.email,
       }),
       // Send the confirmation email to the submitter with .ics calendar invite
@@ -636,7 +636,7 @@ const handler = async (req: Request): Promise<Response> => {
       sendViaGmail({
         to: notifyRecipients,
         subject: `[Gmail] New Project Inquiry — ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
-        html: emailHtml,
+        html: emailHtmlWithAttachments,
         replyTo: inquiry.email,
       }),
     ]);
