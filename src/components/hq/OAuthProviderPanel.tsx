@@ -34,16 +34,40 @@ function statusColor(s: "ok" | "warn" | "fail" | "info"): string {
   }
 }
 
-function extractClientId(input: string): string | null {
+function extractParam(input: string, name: string): string | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
   try {
     const u = new URL(trimmed);
-    const cid = u.searchParams.get("client_id");
-    if (cid) return cid;
+    const v = u.searchParams.get(name);
+    if (v) return v;
   } catch { /* fall through to regex */ }
-  const m = trimmed.match(/[?&#]client_id=([^&\s]+)/);
+  const m = trimmed.match(new RegExp(`[?&#]${name}=([^&\\s]+)`));
   return m ? decodeURIComponent(m[1]) : null;
+}
+
+function extractClientId(input: string): string | null {
+  return extractParam(input, "client_id");
+}
+
+export function extractRedirectUri(input: string): string | null {
+  return extractParam(input, "redirect_uri");
+}
+
+export function compareRedirectUri(
+  observed: string | null,
+  expected: string | null,
+): "ok" | "fail" | "info" {
+  if (!observed || !expected) return "info";
+  const norm = (u: string) => {
+    try {
+      const url = new URL(u);
+      return `${url.protocol}//${url.host}${url.pathname.replace(/\/+$/, "")}`.toLowerCase();
+    } catch {
+      return u.trim().replace(/\/+$/, "").toLowerCase();
+    }
+  };
+  return norm(observed) === norm(expected) ? "ok" : "fail";
 }
 
 export function OAuthProviderPanel({
@@ -82,6 +106,11 @@ export function OAuthProviderPanel({
   }, [url, appOrigin]);
 
   const observedClientId = useMemo(() => extractClientId(pastedUrl), [pastedUrl]);
+  const observedRedirectUri = useMemo(() => extractRedirectUri(pastedUrl), [pastedUrl]);
+  const redirectStatus = useMemo(
+    () => compareRedirectUri(observedRedirectUri, expectedCallback),
+    [observedRedirectUri, expectedCallback],
+  );
 
   const intendedNorm = intendedClientId.trim();
   const status: "ok" | "warn" | "fail" | "info" = !observedClientId
@@ -232,6 +261,48 @@ export function OAuthProviderPanel({
           <code className="font-mono opacity-85 break-all" style={{ color: status === "fail" ? statusColor("fail") : undefined }}>
             {observedClientId || <span className="opacity-40">(awaiting paste)</span>}
           </code>
+        </div>
+
+        {/* Redirect URI validation */}
+        <div className="mt-4 pt-3 border-t border-foreground/10">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+              Redirect URI validation
+            </div>
+            <span
+              className="text-[0.55rem] font-mono"
+              style={{ color: statusColor(redirectStatus), letterSpacing: "0.2em" }}
+            >
+              {redirectStatus === "ok" ? "MATCH" : redirectStatus === "fail" ? "MISMATCH" : "IDLE"}
+            </span>
+          </div>
+          <div
+            className="text-[0.7rem] font-light leading-relaxed mb-2"
+            style={{ color: statusColor(redirectStatus) }}
+          >
+            {redirectStatus === "ok"
+              ? "MATCH — Google is redirecting to the expected Supabase callback."
+              : redirectStatus === "fail"
+                ? "MISMATCH — the redirect_uri Google received does not equal the expected Supabase callback. Update Google Cloud → Authorized redirect URIs, or Supabase Site/Callback URL."
+                : "Idle — paste the Google authorize URL above to compare redirect_uri."}
+          </div>
+          <div className="grid grid-cols-[10rem_1fr] gap-x-3 gap-y-1.5 text-[0.7rem]">
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
+              Expected
+            </div>
+            <code className="font-mono opacity-85 break-all">
+              {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
+            </code>
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
+              Observed
+            </div>
+            <code
+              className="font-mono opacity-85 break-all"
+              style={{ color: redirectStatus === "fail" ? statusColor("fail") : undefined }}
+            >
+              {observedRedirectUri || <span className="opacity-40">(awaiting paste)</span>}
+            </code>
+          </div>
         </div>
       </div>
     </div>
