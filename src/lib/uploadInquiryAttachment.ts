@@ -75,64 +75,122 @@ export function friendlyUploadMessage(
   }
 }
 
+export interface UploadOptions {
+  /** Fires with a 0..1 progress fraction while the request body streams. */
+  onProgress?: (progress: number) => void;
+  /** Optional AbortSignal to cancel the in-flight upload. */
+  signal?: AbortSignal;
+}
+
 /**
  * Uploads a single inquiry attachment via the server-side
- * `validate-inquiry-upload` edge function, which enforces size,
- * MIME/extension, and magic-byte checks before writing to Storage.
+ * `validate-inquiry-upload` edge function. Uses XHR so we can surface
+ * upload-progress events and support cancellation.
  */
 export async function uploadInquiryAttachment(
   file: File,
   folder: string,
+  opts: UploadOptions = {},
 ): Promise<UploadedAttachment> {
   const body = new FormData();
   body.append("file", file);
   body.append("folder", folder);
 
-  const { data, error } = await supabase.functions.invoke<UploadedAttachment>(
-    "validate-inquiry-upload",
-    { body },
-  );
-  if (error) {
-    const ctx = (error as unknown as { context?: Response }).context;
-    let code = "upload_failed";
-    let message = error.message || "Upload failed";
-    let details: Record<string, unknown> | undefined;
-    const status = ctx?.status;
-    if (ctx && typeof ctx.json === "function") {
-      try {
-        const payload = await ctx.json();
-        // New shape: { error: string, code, details? }
-        if (typeof payload?.error === "string") {
-          message = payload.error;
-          if (typeof payload?.code === "string") code = payload.code;
-          if (payload?.details && typeof payload.details === "object") {
-            details = payload.details as Record<string, unknown>;
-          }
-        } else if (payload?.error?.message) {
-          // Legacy shape: { error: { code, message } }
-          message = payload.error.message;
-          if (typeof payload.error.code === "string") code = payload.error.code;
-        }
-      } catch {
-        /* ignore body parse errors */
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-inquiry-upload`;
+  const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+  const { data: sessionData } = await supabase.auth.getSession();
+  const bearer = sessionData?.session?.access_token || anon;
+
+  return new Promise<UploadedAttachment>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("apikey", anon);
+    xhr.setRequestHeader("Authorization", `Bearer ${bearer}`);
+    xhr.responseType = "json";
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && opts.onProgress) {
+        opts.onProgress(Math.min(1, e.loaded / e.total));
       }
+    };
+
+    const abortHandler = () => {
+      xhr.abort();
+    };
+    if (opts.signal) {
+      if (opts.signal.aborted) {
+        reject(
+          new UploadValidationError({
+            message: "Upload cancelled.",
+            code: "aborted",
+            fileName: file.name,
+          }),
+        );
+        return;
+      }
+      opts.signal.addEventListener("abort", abortHandler, { once: true });
     }
-    throw new UploadValidationError({
-      message: friendlyUploadMessage(code, details, file.name),
-      code,
-      details,
-      fileName: file.name,
-      status,
-    });
-  }
-  if (!data?.path) {
-    throw new UploadValidationError({
-      message: friendlyUploadMessage("upload_failed", undefined, file.name),
-      code: "upload_failed",
-      fileName: file.name,
-    });
-  }
-  return data;
+
+    const cleanup = () => {
+      if (opts.signal) opts.signal.removeEventListener("abort", abortHandler);
+    };
+
+    xhr.onload = () => {
+      cleanup();
+      const status = xhr.status;
+      const payload = xhr.response as
+        | { path?: string; id?: string; size?: number; mime?: string; name?: string; error?: unknown; code?: string; details?: Record<string, unknown> }
+        | null;
+
+      if (status >= 200 && status < 300 && payload?.path) {
+        resolve(payload as UploadedAttachment);
+        return;
+      }
+
+      let code = "upload_failed";
+      let details: Record<string, unknown> | undefined;
+      if (payload && typeof payload === "object") {
+        if (typeof payload.code === "string") code = payload.code;
+        if (payload.details && typeof payload.details === "object") {
+          details = payload.details as Record<string, unknown>;
+        }
+      }
+      if (status === 0) code = "network_error";
+      reject(
+        new UploadValidationError({
+          message: friendlyUploadMessage(code, details, file.name),
+          code,
+          details,
+          fileName: file.name,
+          status,
+        }),
+      );
+    };
+
+    xhr.onerror = () => {
+      cleanup();
+      reject(
+        new UploadValidationError({
+          message: friendlyUploadMessage("network_error", undefined, file.name),
+          code: "network_error",
+          fileName: file.name,
+        }),
+      );
+    };
+
+    xhr.onabort = () => {
+      cleanup();
+      reject(
+        new UploadValidationError({
+          message: "Upload cancelled.",
+          code: "aborted",
+          fileName: file.name,
+        }),
+      );
+    };
+
+    xhr.send(body);
+  });
 }
 
 export interface AttachmentRecord {
@@ -144,14 +202,24 @@ export interface AttachmentRecord {
   uploaded_at: string;
 }
 
+/**
+ * Sequential multi-file upload. Retained for callers that don't need
+ * per-file progress reporting; prefer `useAttachmentUpload` in UI.
+ */
 export async function uploadInquiryAttachments(
   files: File[],
   folder = crypto.randomUUID(),
+  opts: {
+    onFileProgress?: (index: number, progress: number) => void;
+  } = {},
 ): Promise<{ ids: string[]; paths: string[]; records: AttachmentRecord[] }> {
-  // Sequential so the first failure surfaces cleanly with its file name.
   const uploaded: UploadedAttachment[] = [];
-  for (const f of files) {
-    uploaded.push(await uploadInquiryAttachment(f, folder));
+  for (let i = 0; i < files.length; i++) {
+    uploaded.push(
+      await uploadInquiryAttachment(files[i], folder, {
+        onProgress: opts.onFileProgress ? (p) => opts.onFileProgress!(i, p) : undefined,
+      }),
+    );
   }
   const now = new Date().toISOString();
   const records: AttachmentRecord[] = uploaded.map((u) => ({
