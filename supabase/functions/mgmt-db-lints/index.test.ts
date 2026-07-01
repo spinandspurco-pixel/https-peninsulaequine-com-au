@@ -128,6 +128,24 @@ Deno.test("redact: no-op when token env var is unset", () => {
 // 2. handler(): missing token
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Helper: assert every response conforms to the v1 envelope.
+function assertEnvelopeShape(body: unknown) {
+  assert(body && typeof body === "object", "body must be an object");
+  const b = body as Record<string, unknown>;
+  assert(b.status === "ok" || b.status === "error", "status must be ok|error");
+  assert(Array.isArray(b.lints), "lints must be an array");
+  const req = b.request as Record<string, unknown> | undefined;
+  assert(req && typeof req === "object", "request must be present");
+  assertEquals(typeof req!.endpoint, "string");
+  assertEquals(typeof req!.project_ref, "string");
+  assertEquals(typeof req!.fetched_at, "string");
+  assertEquals(typeof req!.duration_ms, "number");
+  if (b.status === "error") {
+    const err = b.error as Record<string, unknown> | undefined;
+    assert(err && typeof err.code === "string" && typeof err.message === "string");
+  }
+}
+
 Deno.test("handler: 500 server_misconfigured when token missing", async () => {
   setToken(null);
   const capture = captureConsoleError();
@@ -140,18 +158,16 @@ Deno.test("handler: 500 server_misconfigured when token missing", async () => {
     );
     assertEquals(res.status, 500);
     const body = await res.json();
-    assertEquals(body.error, "server_misconfigured");
-    // Even the error path must not echo the env-var name in the body.
+    assertEnvelopeShape(body);
+    assertEquals(body.status, "error");
+    assertEquals(body.error.code, "server_misconfigured");
+    assertEquals(body.lints.length, 0);
     const raw = JSON.stringify(body);
     assert(!raw.includes("SB_MGMT_ACCESS_TOKEN"));
   } finally {
     capture.restore();
   }
 });
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 3. handler(): missing Authorization → 401
-// ─────────────────────────────────────────────────────────────────────────────
 
 Deno.test("handler: 401 unauthenticated when Authorization header missing", async () => {
   setToken(SECRET_TOKEN);
@@ -162,36 +178,29 @@ Deno.test("handler: 401 unauthenticated when Authorization header missing", asyn
     );
     assertEquals(res.status, 401);
     const body = await res.json();
-    assertEquals(body.error, "unauthenticated");
-    // Short-circuit: never reached auth.getUser or the Management API.
+    assertEnvelopeShape(body);
+    assertEquals(body.error.code, "unauthenticated");
     assertEquals(stub.calls.length, 0);
   } finally {
     stub.restore();
   }
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 4. handler(): non-admin → 403
-// ─────────────────────────────────────────────────────────────────────────────
-
 Deno.test({ name: "handler: 403 forbidden for authenticated non-admin", sanitizeOps: false, sanitizeResources: false, fn: async () => {
   setToken(SECRET_TOKEN);
   const stub = stubFetch((url) => {
-    // GoTrue user lookup succeeds
     if (url.includes("/auth/v1/user")) {
       return new Response(
         JSON.stringify({ id: "00000000-0000-0000-0000-000000000001", aud: "authenticated" }),
         { status: 200, headers: { "Content-Type": "application/json" } },
       );
     }
-    // has_role RPC returns false
     if (url.includes("/rest/v1/rpc/has_role")) {
       return new Response("false", {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
-    // Any call to api.supabase.com would be a test failure.
     if (url.includes("api.supabase.com")) {
       throw new Error(`unexpected mgmt-api call to ${url}`);
     }
@@ -206,24 +215,17 @@ Deno.test({ name: "handler: 403 forbidden for authenticated non-admin", sanitize
     );
     assertEquals(res.status, 403);
     const body = await res.json();
-    assertEquals(body.error, "forbidden");
-    // No call was made to the Management API endpoint.
+    assertEnvelopeShape(body);
+    assertEquals(body.error.code, "forbidden");
     assert(!stub.calls.some((c) => c.url.includes("api.supabase.com")));
   } finally {
     stub.restore();
   }
 } });
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 5. handler(): upstream error responses and logs never contain the token
-// ─────────────────────────────────────────────────────────────────────────────
-
 Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", sanitizeOps: false, sanitizeResources: false, fn: async () => {
   setToken(SECRET_TOKEN);
   const capture = captureConsoleError();
-  // Simulate an upstream that echoes the Authorization header back — a
-  // realistic worst case for accidental token leaks.
   const stub = stubFetch((url, init) => {
     if (url.includes("/auth/v1/user")) {
       return new Response(
@@ -241,7 +243,6 @@ Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", s
       const auth = (init?.headers as Record<string, string> | undefined)?.["Authorization"] ??
         (init?.headers as Record<string, string> | undefined)?.["authorization"] ??
         "";
-      // Deliberately echo the token back in the error body.
       return new Response(
         JSON.stringify({ message: "invalid token", echoed_auth: auth }),
         { status: 401, headers: { "Content-Type": "application/json" } },
@@ -259,15 +260,13 @@ Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", s
     assertEquals(res.status, 502);
     const rawBody = await res.text();
     const parsed = JSON.parse(rawBody);
-    assertEquals(parsed.error, "mgmt_api_error");
-    assertEquals(parsed.status, 401);
-    // The core guarantee — no token substring in the outgoing body,
-    // even though the upstream echoed it.
+    assertEnvelopeShape(parsed);
+    assertEquals(parsed.status, "error");
+    assertEquals(parsed.error.code, "mgmt_api_error");
+    assertEquals(parsed.error.upstream_status, 401);
     assert(!rawBody.includes(SECRET_TOKEN), "response body must not contain the token");
     assert(!rawBody.includes("SB_MGMT_ACCESS_TOKEN"), "response body must not contain env-var name");
     assertStringIncludes(rawBody, REDACTED);
-
-    // Captured console.error lines are all post-redaction.
     for (const line of capture.lines) {
       assert(!line.includes(SECRET_TOKEN), `log line leaked token: ${line}`);
     }
@@ -276,4 +275,48 @@ Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", s
     capture.restore();
   }
 } });
+
+Deno.test({ name: "handler: 200 ok envelope on successful upstream", sanitizeOps: false, sanitizeResources: false, fn: async () => {
+  setToken(SECRET_TOKEN);
+  const stub = stubFetch((url) => {
+    if (url.includes("/auth/v1/user")) {
+      return new Response(
+        JSON.stringify({ id: "00000000-0000-0000-0000-000000000003", aud: "authenticated" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    if (url.includes("/rest/v1/rpc/has_role")) {
+      return new Response("true", { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    if (url.includes("api.supabase.com")) {
+      return new Response(
+        JSON.stringify([
+          { name: "rls_disabled", level: "ERROR", title: "RLS disabled" },
+          { name: "info_lint", level: "INFO", title: "Info" },
+        ]),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return new Response("unhandled", { status: 500 });
+  });
+  try {
+    const res = await handler(
+      new Request("https://fn.local/mgmt-db-lints", {
+        method: "GET",
+        headers: { Authorization: "Bearer admin.jwt" },
+      }),
+    );
+    assertEquals(res.status, 200);
+    assertEquals(res.headers.get("X-Envelope-Version"), "1");
+    const body = await res.json();
+    assertEnvelopeShape(body);
+    assertEquals(body.status, "ok");
+    assertEquals(body.request.endpoint, "lints");
+    assertEquals(body.lints.length, 2);
+    assertEquals(body.lints[0].name, "rls_disabled");
+  } finally {
+    stub.restore();
+  }
+} });
+
 
