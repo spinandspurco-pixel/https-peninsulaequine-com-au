@@ -158,15 +158,9 @@ describe("Supabase Management API allowlist", () => {
 
   it("every api.supabase.com call targets an allowlisted path", () => {
     const violations = hits.filter((h) => !ALLOWED_PATHS.includes(h.normalised));
-    const rendered = violations.map((v) => `  ${v.file}:${v.line} → ${v.path}`).join("\n");
     expect(
       violations,
-      violations.length === 0
-        ? ""
-        : `Un-allowlisted Management API call(s) detected. If legitimate, add ` +
-            `the normalised path to ALLOWED_ENDPOINTS in src/test/mgmt-api-allowlist.test.ts ` +
-            `AND update scripts/ci/verifyMgmtTokenScopes.ts so the scope probe covers ` +
-            `the new capability.\n${rendered}`,
+      violations.length === 0 ? "" : renderPathDiff(hits, violations),
     ).toEqual([]);
   });
 
@@ -174,21 +168,78 @@ describe("Supabase Management API allowlist", () => {
     const violations = hits
       .filter((h) => ALLOWED_PATHS.includes(h.normalised))
       .filter((h) => !ALLOWED_ENDPOINTS[h.normalised].includes(h.method));
-    const rendered = violations
-      .map((v) => `  ${v.file}:${v.line} → ${v.method} ${v.path} (allowed: ${ALLOWED_ENDPOINTS[v.normalised].join(", ")})`)
-      .join("\n");
     expect(
       violations,
-      violations.length === 0
-        ? ""
-        : `Management API call uses a method not permitted for that endpoint. ` +
-            `Broadening a read-only path to a write method requires a security review ` +
-            `and a token-scope update. If legitimate, extend ALLOWED_ENDPOINTS in ` +
-            `src/test/mgmt-api-allowlist.test.ts and scripts/ci/verifyMgmtTokenScopes.ts.` +
-            `\n${rendered}`,
+      violations.length === 0 ? "" : renderMethodDiff(violations),
     ).toEqual([]);
   });
 });
+
+function groupByNormalised(hs: Hit[]): Map<string, Hit[]> {
+  const g = new Map<string, Hit[]>();
+  for (const h of hs) {
+    const arr = g.get(h.normalised) ?? [];
+    arr.push(h);
+    g.set(h.normalised, arr);
+  }
+  return g;
+}
+
+function renderPathDiff(allHits: Hit[], violations: Hit[]): string {
+  const discoveredNorms = new Set(allHits.map((h) => h.normalised));
+  const grouped = groupByNormalised(violations);
+  const unexpected = [...grouped.keys()].sort();
+  const unusedAllowed = ALLOWED_PATHS.filter((p) => !discoveredNorms.has(p)).sort();
+
+  const lines: string[] = [];
+  lines.push("Un-allowlisted Management API call(s) detected.");
+  lines.push("");
+  lines.push("── Discovered vs ALLOWED_PATHS ──");
+  for (const p of ALLOWED_PATHS) lines.push(`    ${p}`);
+  for (const p of unexpected) lines.push(`  + ${p}   (not in ALLOWED_PATHS)`);
+  for (const p of unusedAllowed) lines.push(`  - ${p}   (allowlisted but no call site found)`);
+  lines.push("");
+  lines.push("── Offending call sites ──");
+  for (const [norm, hs] of grouped) {
+    lines.push(`  ${norm}`);
+    for (const h of hs) {
+      const rawSuffix = h.path !== norm ? `   raw: ${h.path}` : "";
+      lines.push(`    • ${h.file}:${h.line}  [${h.method}]${rawSuffix}`);
+    }
+  }
+  lines.push("");
+  lines.push(
+    "Fix: if legitimate, add the normalised path (with allowed methods) to " +
+      "ALLOWED_ENDPOINTS in src/test/mgmt-api-allowlist.test.ts AND update " +
+      "scripts/ci/verifyMgmtTokenScopes.ts so the scope probe covers the new capability.",
+  );
+  return lines.join("\n");
+}
+
+function renderMethodDiff(violations: Hit[]): string {
+  const grouped = groupByNormalised(violations);
+  const lines: string[] = [];
+  lines.push("Management API call uses a method not permitted for that endpoint.");
+  lines.push("");
+  lines.push("── Method drift ──");
+  for (const [norm, hs] of grouped) {
+    const allowed = ALLOWED_ENDPOINTS[norm].join(", ");
+    const observed = [...new Set(hs.map((h) => h.method))].sort().join(", ");
+    lines.push(`  ${norm}`);
+    lines.push(`    allowed:  [${allowed}]`);
+    lines.push(`    observed: [${observed}]`);
+    for (const h of hs) {
+      lines.push(`    • ${h.file}:${h.line}  [${h.method}]  ${h.path}`);
+    }
+  }
+  lines.push("");
+  lines.push(
+    "Fix: broadening a read-only path to a write method requires a security " +
+      "review and a token-scope update. If legitimate, extend ALLOWED_ENDPOINTS " +
+      "and scripts/ci/verifyMgmtTokenScopes.ts.",
+  );
+  return lines.join("\n");
+}
 
 describe("URL normaliser", () => {
   const CANON = "/v1/projects/{ref}/database/lints";
