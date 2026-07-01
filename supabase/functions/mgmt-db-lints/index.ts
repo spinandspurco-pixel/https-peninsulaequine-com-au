@@ -13,7 +13,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 const PROJECT_REF = "aizkqajrzkvwuobisnzr";
-const REDACTED = "[REDACTED:SB_MGMT_ACCESS_TOKEN]";
+const REDACTED = "[REDACTED_MGMT_TOKEN]";
 const TOKEN_NAME = "SB_MGMT_ACCESS_TOKEN";
 
 // Endpoints this function is permitted to call. Keep in sync with
