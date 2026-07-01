@@ -457,6 +457,7 @@ export default function Contact() {
               </RevealOnScroll>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-16">
+                <HoneypotField guard={spamGuard} />
                 {/* Section 1 — Contact Details */}
                 <RevealOnScroll direction="up">
                   <div className="space-y-6">
