@@ -521,6 +521,8 @@ export function ClientDiagPanel() {
   let supaKeyShape = "missing";
   let supaKeyLen = 0;
   let supaKeyPrefix = "—";
+  let supaKeyChecksum = "—";
+  let supaKeyMasked = "—";
   if (supaKey) {
     supaKeyLen = supaKey.length;
     if (supaKey.startsWith("sb_publishable_")) {
@@ -537,6 +539,17 @@ export function ClientDiagPanel() {
       supaKeyShape = "unknown format";
       supaKeyPrefix = "(unrecognised)";
     }
+    // Non-cryptographic djb2 checksum → 4 hex chars. Sufficient to detect
+    // "same key across environments" without exposing key material. Never
+    // reversible to the original secret.
+    let h = 5381;
+    for (let i = 0; i < supaKey.length; i++) {
+      h = ((h << 5) + h + supaKey.charCodeAt(i)) & 0xffffffff;
+    }
+    supaKeyChecksum = (h >>> 0).toString(16).padStart(8, "0").slice(-4);
+    // Masked representation: prefix + bullets + checksum. Never render supaKey directly.
+    const prefixForMask = supaKeyPrefix === "(unrecognised)" ? "" : supaKeyPrefix.replace("…", "");
+    supaKeyMasked = `${prefixForMask}${"•".repeat(6)}…(chk:${supaKeyChecksum})`;
   }
 
   const lastEvent = [...entries].reverse().find((e) => e.scope.startsWith("event:"));
@@ -1644,7 +1657,9 @@ export function ClientDiagPanel() {
                             family,
                             status: palette.label,
                             message: palette.msg,
+                            masked: supaKeyMasked,
                             prefix: supaKeyPrefix,
+                            checksum: supaKeyChecksum,
                             length: supaKeyLen || null,
                             shape: supaKeyShape,
                             expectedPrefix: "sb_publishable_",
@@ -1698,7 +1713,9 @@ export function ClientDiagPanel() {
                   </span>
                 </div>
                 <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
+                {row("masked", supaKeyMasked)}
                 {row("prefix", supaKeyPrefix)}
+                {row("checksum", supaKeyChecksum)}
                 {row("length", supaKeyLen || "—")}
                 {row("expected", "sb_publishable_*")}
                 {!ok && row("action", "Rotate via Lovable Cloud → API keys, then republish")}
