@@ -228,6 +228,7 @@ export default function HqDeployHealth() {
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
+    setRetryProgress({ attempt: 0, max: 4 });
     try {
       const { outcome, finalProbes } = await runRetryPromotion<ProbeResult>({
         targets: TARGETS,
@@ -240,6 +241,7 @@ export default function HqDeployHealth() {
         // Re-use the currently-visible probes as the "before" snapshot when
         // available so the retry doesn't double-fetch on the first pass.
         initialBefore: results.length ? results : null,
+        onAttempt: (attempt, max) => setRetryProgress({ attempt, max }),
       });
 
       // Persist the final probe pass (URLs already stripped of cache-bust).
