@@ -107,6 +107,13 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
     process.exit(2);
   }
   const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
+  try {
+    assertMgmtCall(url, "GET");
+  } catch (err) {
+    const msg = err instanceof MgmtApiGuardError ? err.message : String(err);
+    console.error(`ERROR: mgmt guard blocked call: ${msg}`);
+    process.exit(2);
+  }
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
   if (!res.ok) {
 
