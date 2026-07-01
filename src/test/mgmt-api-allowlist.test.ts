@@ -24,10 +24,14 @@ const REPO_ROOT = join(__dirname, "..", "..");
 const SCAN_ROOTS = ["scripts", "supabase/functions", "src"];
 
 // Endpoint templates the app is allowed to call. `{ref}` matches any
-// project ref; any other path segment must match literally.
-const ALLOWED_PATHS: readonly string[] = [
-  "/v1/projects/{ref}/database/lints",
-];
+// project ref; any other path segment must match literally. Each path
+// is paired with the exact HTTP methods it may be invoked with so a
+// future edit cannot quietly upgrade a read to a write against the
+// same URL (which would require broader token scopes).
+const ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
+  "/v1/projects/{ref}/database/lints": ["GET"],
+};
+const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
 
 // Files whose entire purpose is to enumerate Management API endpoints.
 // They document surface area rather than call it in production flows.
@@ -70,6 +74,23 @@ interface Hit {
   line: number;
   path: string;
   normalised: string;
+  method: string;
+}
+
+// Look forward from the URL line for the first `method: "VERB"` in the
+// same fetch/RequestInit literal. Bounded to 15 lines so we can't
+// accidentally pick up an unrelated method: further down the file.
+// If no explicit method is set, `fetch` defaults to GET.
+const METHOD_RE = /method\s*:\s*["'`]([A-Z]+)["'`]/;
+const METHOD_LOOKAHEAD = 15;
+
+function detectMethod(lines: string[], startIdx: number): string {
+  const end = Math.min(lines.length, startIdx + METHOD_LOOKAHEAD);
+  for (let i = startIdx; i < end; i++) {
+    const m = lines[i].match(METHOD_RE);
+    if (m) return m[1].toUpperCase();
+  }
+  return "GET";
 }
 
 function collectHits(): Hit[] {
@@ -88,6 +109,7 @@ function collectHits(): Hit[] {
             line: idx + 1,
             path: raw,
             normalised: normalise(raw),
+            method: detectMethod(lines, idx),
           });
         }
       });
@@ -113,9 +135,28 @@ describe("Supabase Management API allowlist", () => {
       violations.length === 0
         ? ""
         : `Un-allowlisted Management API call(s) detected. If legitimate, add ` +
-            `the normalised path to ALLOWED_PATHS in src/test/mgmt-api-allowlist.test.ts ` +
+            `the normalised path to ALLOWED_ENDPOINTS in src/test/mgmt-api-allowlist.test.ts ` +
             `AND update scripts/ci/verifyMgmtTokenScopes.ts so the scope probe covers ` +
             `the new capability.\n${rendered}`,
+    ).toEqual([]);
+  });
+
+  it("every call uses an HTTP method allowed for that endpoint", () => {
+    const violations = hits
+      .filter((h) => ALLOWED_PATHS.includes(h.normalised))
+      .filter((h) => !ALLOWED_ENDPOINTS[h.normalised].includes(h.method));
+    const rendered = violations
+      .map((v) => `  ${v.file}:${v.line} → ${v.method} ${v.path} (allowed: ${ALLOWED_ENDPOINTS[v.normalised].join(", ")})`)
+      .join("\n");
+    expect(
+      violations,
+      violations.length === 0
+        ? ""
+        : `Management API call uses a method not permitted for that endpoint. ` +
+            `Broadening a read-only path to a write method requires a security review ` +
+            `and a token-scope update. If legitimate, extend ALLOWED_ENDPOINTS in ` +
+            `src/test/mgmt-api-allowlist.test.ts and scripts/ci/verifyMgmtTokenScopes.ts.` +
+            `\n${rendered}`,
     ).toEqual([]);
   });
 });
