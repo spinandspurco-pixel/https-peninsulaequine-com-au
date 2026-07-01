@@ -799,7 +799,7 @@ export default function Lessons() {
 
   return (
     <Layout>
-      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/book-lesson" />
+      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/lessons/book" />
 
       <PageHeader
         title="Riding Lessons"
@@ -897,7 +897,8 @@ export default function Lessons() {
 
               <div className="flex flex-wrap gap-3">
                 <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link to="/book-lesson">
+                  <Link to="/lessons/book">
+
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     Book a Lesson
                   </Link>
@@ -1003,7 +1004,7 @@ export default function Lessons() {
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              <Link to="/book-lesson">
+              <Link to="/lessons/book">
                 <CalendarIcon className="mr-2 h-5 w-5" />
                 Book a Lesson
                 <ArrowRight className="ml-2 h-4 w-4" />
