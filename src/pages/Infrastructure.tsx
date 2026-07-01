@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 import heroAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import muddySiteAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
 const heroImg = heroAsset.url;
