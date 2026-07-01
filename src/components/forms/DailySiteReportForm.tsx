@@ -19,6 +19,16 @@ export function DailySiteReportForm({ onSubmit, loading, userId, defaults }: { o
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch { /* ignore parse errors */ }
+    return null;
+  };
+
+  const [form, setForm] = useState(() => {
+    const saved = getInitial();
+    return {
+      project_name: defaults?.project_name || saved?.project_name || "",
+      site_address: defaults?.site_address || saved?.site_address || "",
+      date: format(new Date(), "yyyy-MM-dd"),
+      reported_by: saved?.reported_by || "",
       weather: saved?.weather || "fine",
       start_time: saved?.start_time || "07:00",
       end_time: saved?.end_time || "15:30",

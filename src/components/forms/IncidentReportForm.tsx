@@ -20,6 +20,15 @@ export function IncidentReportForm({ onSubmit, loading, userId, defaults }: { on
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch { /* ignore parse errors */ }
+    return null;
+  };
+
+  const [form, setForm] = useState(() => {
+    const saved = getInitial();
+    return {
+      project_name: defaults?.project_name || saved?.project_name || "",
+      site_address: defaults?.site_address || saved?.site_address || "",
+      incident_date: format(new Date(), "yyyy-MM-dd"),
       incident_time: format(new Date(), "HH:mm"),
       reported_by: saved?.reported_by || "",
       severity: saved?.severity || "minor",

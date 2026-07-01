@@ -64,6 +64,16 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
       const saved = localStorage.getItem(SWMS_DRAFT_KEY);
       if (saved) return JSON.parse(saved);
     } catch { /* ignore parse errors */ }
+    return null;
+  };
+
+  const [form, setForm] = useState(() => {
+    const saved = getInitial();
+    return {
+      project_name: defaults?.project_name || saved?.project_name || "",
+      site_address: defaults?.site_address || saved?.site_address || "",
+      date: format(new Date(), "yyyy-MM-dd"),
+      principal_contractor: "Peninsula Equine",
       prepared_by: saved?.prepared_by || "",
       work_description: saved?.work_description || "",
       selected_hazards: saved?.selected_hazards || [] as number[],
