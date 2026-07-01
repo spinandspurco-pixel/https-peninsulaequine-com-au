@@ -185,6 +185,16 @@ export default function AdminEvents() {
                       >
                         {ev.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleFeatured(ev)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((ev as any).featured ? "Remove from homepage" : "Feature on homepage")}
+                        className={(ev as any).featured ? "text-amber-400" : ""}
+                      >
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
