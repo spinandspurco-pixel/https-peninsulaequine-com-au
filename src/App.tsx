@@ -13,6 +13,7 @@ import { IntakeProvider } from "./hooks/useIntake";
 import { AuthProvider } from "./hooks/useAuth";
 import { AuthDebugPanel } from "./components/AuthDebugPanel";
 import { ClientDiagPanel } from "./components/diag/ClientDiagPanel";
+import { EnvKeyDebug } from "./components/diag/EnvKeyDebug";
 import { GuidedIntake } from "./components/GuidedIntake";
 import { SiteRail } from "./components/layout/SiteRail";
 
