@@ -19,7 +19,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
