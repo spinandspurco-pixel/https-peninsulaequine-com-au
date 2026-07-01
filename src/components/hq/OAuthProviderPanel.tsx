@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  fetchOAuthProviderConfig,
-  saveOAuthProviderConfig,
-  type OAuthProviderConfig,
-} from "@/lib/oauthProviderConfig";
+  appendEntry,
+  clearHistory,
+  historyToJson,
+  loadHistory,
+  type OAuthDiagnosticsEntry,
+} from "@/lib/oauthDiagnosticsHistory";
 
 /**
  * Google OAuth provider verification panel.
@@ -93,12 +95,8 @@ export function OAuthProviderPanel({
     try { return window.localStorage.getItem(LAST_PASTED_KEY) ?? ""; } catch { return ""; }
   });
   const [copiedAt, setCopiedAt] = useState<number | null>(null);
-  const [remote, setRemote] = useState<OAuthProviderConfig | null>(null);
-  const [remoteExpected, setRemoteExpected] = useState<string>("");
-  const [syncState, setSyncState] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [history, setHistory] = useState<OAuthDiagnosticsEntry[]>(() => loadHistory());
+  const [historyCopiedAt, setHistoryCopiedAt] = useState<number | null>(null);
 
   useEffect(() => {
     try { window.localStorage.setItem(INTENDED_KEY, intendedClientId); } catch { /* ignore */ }
@@ -106,47 +104,6 @@ export function OAuthProviderPanel({
   useEffect(() => {
     try { window.localStorage.setItem(LAST_PASTED_KEY, pastedUrl); } catch { /* ignore */ }
   }, [pastedUrl]);
-
-  // Load persisted config from Lovable Cloud once (admin-only via RLS).
-  useEffect(() => {
-    let cancelled = false;
-    setSyncState("loading");
-    fetchOAuthProviderConfig("google")
-      .then((cfg) => {
-        if (cancelled) return;
-        setRemote(cfg);
-        setSyncState("loaded");
-        if (cfg?.intended_client_id) setIntendedClientId(cfg.intended_client_id);
-        if (cfg?.expected_redirect_uri) setRemoteExpected(cfg.expected_redirect_uri);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        // Non-admins (or unauth) get blocked by RLS — fall back silently.
-        setSyncState("unavailable");
-      });
-    return () => { cancelled = true; };
-  }, []);
-
-  const effectiveExpectedCallback = remoteExpected.trim() || expectedCallback;
-
-  const save = async () => {
-    setSaving(true);
-    setSaveError(null);
-    try {
-      const saved = await saveOAuthProviderConfig({
-        intended_client_id: intendedClientId.trim() || null,
-        expected_redirect_uri: remoteExpected.trim() || expectedCallback || null,
-      });
-      setRemote(saved);
-      setSavedAt(Date.now());
-      window.setTimeout(() => setSavedAt(null), 2000);
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : "Save failed");
-    } finally {
-      setSaving(false);
-    }
-  };
-
 
   const authorizeUrl = useMemo(() => {
     if (!url) return null;
@@ -160,8 +117,8 @@ export function OAuthProviderPanel({
   const observedClientId = useMemo(() => extractClientId(pastedUrl), [pastedUrl]);
   const observedRedirectUri = useMemo(() => extractRedirectUri(pastedUrl), [pastedUrl]);
   const redirectStatus = useMemo(
-    () => compareRedirectUri(observedRedirectUri, effectiveExpectedCallback),
-    [observedRedirectUri, effectiveExpectedCallback],
+    () => compareRedirectUri(observedRedirectUri, expectedCallback),
+    [observedRedirectUri, expectedCallback],
   );
 
   const intendedNorm = intendedClientId.trim();
@@ -192,6 +149,54 @@ export function OAuthProviderPanel({
   const looksLikeGoogleClientId = (v: string) =>
     /^\d{6,}-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(v.trim());
 
+  // Debounced recording: whenever the pasted URL yields a parseable value
+  // (client_id or redirect_uri), log an entry after the admin stops typing.
+  const recordTimerRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!pastedUrl.trim()) return;
+    if (!observedClientId && !observedRedirectUri) return;
+    if (recordTimerRef.current !== null) {
+      window.clearTimeout(recordTimerRef.current);
+    }
+    recordTimerRef.current = window.setTimeout(() => {
+      const next = appendEntry({
+        providedUrl: pastedUrl,
+        clientId: observedClientId,
+        redirectUri: observedRedirectUri,
+        intendedClientId: intendedNorm || null,
+        expectedRedirectUri: expectedCallback ?? null,
+        clientStatus: status,
+        redirectStatus,
+      });
+      setHistory(next);
+    }, 600);
+    return () => {
+      if (recordTimerRef.current !== null) {
+        window.clearTimeout(recordTimerRef.current);
+      }
+    };
+  }, [pastedUrl, observedClientId, observedRedirectUri, intendedNorm, expectedCallback, status, redirectStatus]);
+
+  const onClearHistory = () => {
+    clearHistory();
+    setHistory([]);
+  };
+  const onCopyHistory = () => {
+    void navigator.clipboard.writeText(historyToJson(history)).then(() => {
+      setHistoryCopiedAt(Date.now());
+      window.setTimeout(() => setHistoryCopiedAt(null), 1500);
+    });
+  };
+  const fmtTs = (ts: number) => {
+    const d = new Date(ts);
+    return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+  };
+  const shortId = (v: string | null) => {
+    if (!v) return "—";
+    return v.length > 42 ? `${v.slice(0, 20)}…${v.slice(-16)}` : v;
+  };
+  const shortUrl = (v: string) => (v.length > 80 ? `${v.slice(0, 60)}…${v.slice(-16)}` : v);
+
   return (
     <div className="mb-8 border border-foreground/10 rounded-sm">
       <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
@@ -211,32 +216,17 @@ export function OAuthProviderPanel({
 
       {/* Expected callback URI — always visible, with copy */}
       <div className="px-4 py-3 border-b border-foreground/10">
-        <div className="flex items-center justify-between mb-1.5 gap-4">
-          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
-            Expected callback URI (Google → Authorized redirect URIs)
-          </div>
-          <span
-            className="text-[0.55rem] font-mono opacity-60"
-            style={{ letterSpacing: "0.2em" }}
-            title="Where the expected value is coming from"
-          >
-            {syncState === "loading"
-              ? "SYNCING…"
-              : syncState === "loaded" && remoteExpected.trim()
-                ? "FROM APP CONFIG"
-                : syncState === "unavailable"
-                  ? "LOCAL ONLY"
-                  : "FROM ENV"}
-          </span>
+        <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">
+          Expected callback URI (Google → Authorized redirect URIs)
         </div>
         <div className="flex items-center gap-3">
           <code className="flex-1 text-[0.75rem] font-mono opacity-90 break-all">
-            {effectiveExpectedCallback ?? "(missing VITE_SUPABASE_URL)"}
+            {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
           </code>
-          {effectiveExpectedCallback && (
+          {expectedCallback && (
             <button
               type="button"
-              onClick={() => copy(effectiveExpectedCallback)}
+              onClick={() => copy(expectedCallback)}
               className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
             >
               {copiedAt ? "Copied" : "Copy"}
@@ -247,33 +237,12 @@ export function OAuthProviderPanel({
           Paste this exact value into Google Cloud Console → APIs &amp; Services → Credentials →
           your OAuth 2.0 Client → Authorized redirect URIs.
         </div>
-        <div className="mt-3">
-          <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-1.5">
-            Override expected redirect URI <span className="opacity-50 normal-case tracking-normal">(saved to app config)</span>
-          </label>
-          <input
-            type="text"
-            value={remoteExpected}
-            onChange={(e) => setRemoteExpected(e.target.value)}
-            placeholder={expectedCallback ?? "https://<project>.supabase.co/auth/v1/callback"}
-            spellCheck={false}
-            autoComplete="off"
-            className="w-full bg-transparent border border-foreground/20 focus:border-foreground/50 outline-none px-2.5 py-1.5 text-[0.75rem] font-mono opacity-90 placeholder:opacity-25"
-          />
-          <div className="text-[0.6rem] opacity-45 mt-1 font-light">
-            Leave blank to fall back to the value derived from <code className="font-mono opacity-80">VITE_SUPABASE_URL</code>.
-          </div>
-        </div>
       </div>
-
 
       {/* Intended Client ID input */}
       <div className="px-4 py-3 border-b border-foreground/10">
         <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-2">
-          Intended Google Client ID{" "}
-          <span className="opacity-50 normal-case tracking-normal">
-            (cached locally, synced via Save to app config)
-          </span>
+          Intended Google Client ID <span className="opacity-50 normal-case tracking-normal">(persisted locally)</span>
         </label>
         <input
           type="text"
@@ -290,32 +259,7 @@ export function OAuthProviderPanel({
             <code className="font-mono opacity-90"> ….apps.googleusercontent.com</code>.
           </div>
         )}
-
-        {/* Save to app config */}
-        <div className="mt-3 flex items-center gap-4 flex-wrap">
-          <button
-            type="button"
-            onClick={save}
-            disabled={saving || syncState === "unavailable"}
-            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border border-foreground/25 hover:border-foreground/60 px-3 py-1.5 transition-opacity disabled:opacity-30"
-          >
-            {saving ? "Saving…" : savedAt ? "Saved" : "Save to app config"}
-          </button>
-          <div className="text-[0.6rem] opacity-55 font-light">
-            {syncState === "unavailable"
-              ? "App-config sync unavailable (admin role required)."
-              : remote?.updated_at
-                ? `Last synced ${new Date(remote.updated_at).toLocaleString()}`
-                : "Not yet saved to app config — currently cached in this browser only."}
-          </div>
-          {saveError && (
-            <div className="text-[0.6rem]" style={{ color: statusColor("fail") }}>
-              {saveError}
-            </div>
-          )}
-        </div>
       </div>
-
 
       {/* Probe row */}
       <div className="px-4 py-3 border-b border-foreground/10">
@@ -404,7 +348,7 @@ export function OAuthProviderPanel({
               Expected
             </div>
             <code className="font-mono opacity-85 break-all">
-              {effectiveExpectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
+              {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
             </code>
             <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
               Observed
@@ -419,186 +363,86 @@ export function OAuthProviderPanel({
         </div>
       </div>
 
-      {/* Google Cloud setup helper — copy-ready redirect URI + checklist */}
-      <GoogleSetupHelper
-        expectedCallback={effectiveExpectedCallback}
-        appOrigin={appOrigin}
-        intendedClientId={intendedNorm}
-        onCopy={copy}
-      />
-    </div>
-  );
-}
-
-function GoogleSetupHelper({
-  expectedCallback,
-  appOrigin,
-  intendedClientId,
-  onCopy,
-}: {
-  expectedCallback: string | null;
-  appOrigin: string;
-  intendedClientId: string;
-  onCopy: (text: string) => void;
-}) {
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
-
-  const originHost = useMemo(() => {
-    try { return new URL(appOrigin).origin; } catch { return appOrigin || ""; }
-  }, [appOrigin]);
-
-  // Google allows multiple redirect URIs on one client. Provide every host we
-  // know the app is served from so a single copy-paste covers dev + prod.
-  const redirectUris = useMemo(() => {
-    const set = new Set<string>();
-    if (expectedCallback) set.add(expectedCallback);
-    return Array.from(set);
-  }, [expectedCallback]);
-
-  const authorizedOrigins = useMemo(() => {
-    const set = new Set<string>();
-    if (originHost) set.add(originHost);
-    if (expectedCallback) {
-      try { set.add(new URL(expectedCallback).origin); } catch { /* ignore */ }
-    }
-    return Array.from(set);
-  }, [originHost, expectedCallback]);
-
-  const copyBlock = (key: string, text: string) => {
-    onCopy(text);
-    setCopiedKey(key);
-    window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
-  };
-
-  const checklist: { label: string; done: boolean; hint?: string }[] = [
-    {
-      label: "OAuth consent screen configured (User type, app name, support email)",
-      done: false,
-      hint: "Google Cloud → APIs & Services → OAuth consent screen",
-    },
-    {
-      label: "Scopes: openid, .../auth/userinfo.email, .../auth/userinfo.profile",
-      done: false,
-    },
-    {
-      label: "OAuth 2.0 Client ID created (Web application)",
-      done: Boolean(intendedClientId),
-      hint: intendedClientId ? "Intended Client ID recorded above" : "Paste the Client ID into the Intended field above",
-    },
-    {
-      label: "Authorized JavaScript origins include this app's origin",
-      done: false,
-      hint: authorizedOrigins.join(", ") || "(unknown origin)",
-    },
-    {
-      label: "Authorized redirect URIs include the Supabase callback",
-      done: false,
-      hint: expectedCallback ?? "(missing VITE_SUPABASE_URL)",
-    },
-    {
-      label: "Client ID + Secret pasted into Supabase → Authentication → Providers → Google",
-      done: false,
-    },
-    {
-      label: "Google provider toggle is ENABLED in Supabase",
-      done: false,
-    },
-  ];
-
-  return (
-    <div className="border-t border-foreground/10">
-      <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55">
-        Google Cloud — Setup helper
-      </div>
-
-      <div className="px-4 py-3 border-b border-foreground/10">
-        <div className="flex items-center justify-between mb-1.5 gap-4">
-          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
-            Authorized redirect URIs (paste verbatim)
+      {/* Diagnostics history log */}
+      <div className="border-t border-foreground/10">
+        <div className="px-4 py-2.5 border-b border-foreground/10 flex items-center justify-between gap-4">
+          <div className="text-[0.6rem] tracking-[0.4em] uppercase opacity-55">
+            Diagnostics history <span className="opacity-60 normal-case tracking-normal">({history.length})</span>
           </div>
-          <button
-            type="button"
-            onClick={() => copyBlock("redirects", redirectUris.join("\n"))}
-            disabled={redirectUris.length === 0}
-            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
-          >
-            {copiedKey === "redirects" ? "Copied" : "Copy"}
-          </button>
-        </div>
-        <pre className="text-[0.72rem] font-mono opacity-90 whitespace-pre-wrap break-all bg-foreground/[0.02] border border-foreground/10 rounded-sm px-2.5 py-2">
-{redirectUris.length ? redirectUris.join("\n") : "(no redirect URI available — set VITE_SUPABASE_URL)"}
-        </pre>
-        <div className="text-[0.6rem] opacity-45 mt-1.5 font-light">
-          One entry per line. Google Cloud → Credentials → your OAuth 2.0 Client → Authorized redirect URIs → Add URI.
-        </div>
-      </div>
-
-      <div className="px-4 py-3 border-b border-foreground/10">
-        <div className="flex items-center justify-between mb-1.5 gap-4">
-          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
-            Authorized JavaScript origins (paste verbatim)
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={onCopyHistory}
+              disabled={history.length === 0}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+            >
+              {historyCopiedAt ? "Copied" : "Copy JSON"}
+            </button>
+            <button
+              type="button"
+              onClick={onClearHistory}
+              disabled={history.length === 0}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+            >
+              Clear
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => copyBlock("origins", authorizedOrigins.join("\n"))}
-            disabled={authorizedOrigins.length === 0}
-            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
-          >
-            {copiedKey === "origins" ? "Copied" : "Copy"}
-          </button>
         </div>
-        <pre className="text-[0.72rem] font-mono opacity-90 whitespace-pre-wrap break-all bg-foreground/[0.02] border border-foreground/10 rounded-sm px-2.5 py-2">
-{authorizedOrigins.length ? authorizedOrigins.join("\n") : "(unknown origin)"}
-        </pre>
-      </div>
-
-      <div className="px-4 py-3">
-        <div className="flex items-center justify-between mb-2 gap-4">
-          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
-            Admin checklist
+        {history.length === 0 ? (
+          <div className="px-4 py-3 text-[0.7rem] opacity-55 font-light">
+            No verification attempts logged yet. Paste an authorize URL above to record one.
           </div>
-          <button
-            type="button"
-            onClick={() => copyBlock(
-              "checklist",
-              [
-                "Google OAuth client setup checklist",
-                ...checklist.map((c) => `- [${c.done ? "x" : " "}] ${c.label}${c.hint ? `  (${c.hint})` : ""}`),
-                "",
-                "Authorized redirect URIs:",
-                ...redirectUris.map((u) => `  ${u}`),
-                "",
-                "Authorized JavaScript origins:",
-                ...authorizedOrigins.map((o) => `  ${o}`),
-              ].join("\n"),
-            )}
-            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
-          >
-            {copiedKey === "checklist" ? "Copied" : "Copy checklist"}
-          </button>
+        ) : (
+          <div className="max-h-72 overflow-auto">
+            <table className="w-full text-[0.68rem] font-mono">
+              <thead className="text-[0.55rem] tracking-[0.25em] uppercase opacity-55">
+                <tr className="border-b border-foreground/10">
+                  <th className="text-left font-normal px-4 py-1.5 w-40">Timestamp</th>
+                  <th className="text-left font-normal px-2 py-1.5">Client ID</th>
+                  <th className="text-left font-normal px-2 py-1.5">Redirect URI</th>
+                  <th className="text-left font-normal px-2 py-1.5 w-20">Client</th>
+                  <th className="text-left font-normal px-4 py-1.5 w-20">Redirect</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((e) => (
+                  <tr key={e.ts} className="border-b border-foreground/5 align-top">
+                    <td className="px-4 py-1.5 opacity-75 whitespace-nowrap">{fmtTs(e.ts)}</td>
+                    <td
+                      className="px-2 py-1.5 break-all"
+                      title={e.clientId ?? ""}
+                    >
+                      <div style={{ color: e.clientStatus === "fail" ? statusColor("fail") : undefined }}>
+                        {shortId(e.clientId)}
+                      </div>
+                      <div className="opacity-40 text-[0.6rem]" title={e.providedUrl}>
+                        {shortUrl(e.providedUrl)}
+                      </div>
+                    </td>
+                    <td className="px-2 py-1.5 opacity-85 break-all" title={e.redirectUri ?? ""}>
+                      {e.redirectUri ? shortId(e.redirectUri) : "—"}
+                    </td>
+                    <td
+                      className="px-2 py-1.5"
+                      style={{ color: statusColor(e.clientStatus), letterSpacing: "0.15em" }}
+                    >
+                      {e.clientStatus === "ok" ? "MATCH" : e.clientStatus === "fail" ? "MISS" : e.clientStatus === "warn" ? "CAP" : "IDLE"}
+                    </td>
+                    <td
+                      className="px-4 py-1.5"
+                      style={{ color: statusColor(e.redirectStatus), letterSpacing: "0.15em" }}
+                    >
+                      {e.redirectStatus === "ok" ? "MATCH" : e.redirectStatus === "fail" ? "MISS" : "IDLE"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="px-4 py-2 border-t border-foreground/10 text-[0.6rem] opacity-45 font-light">
+          Stored locally in this browser only. Nothing sent to a server. Capped at the last 25 entries.
         </div>
-        <ul className="text-[0.7rem] font-light leading-relaxed space-y-1.5">
-          {checklist.map((c) => (
-            <li key={c.label} className="flex gap-2.5">
-              <span
-                aria-hidden
-                className="mt-[0.35em] shrink-0 w-2.5 h-2.5 border rounded-[1px]"
-                style={{
-                  borderColor: c.done ? statusColor("ok") : "rgba(232,230,225,0.35)",
-                  background: c.done ? statusColor("ok") : "transparent",
-                }}
-              />
-              <span className="opacity-85">
-                {c.label}
-                {c.hint && (
-                  <span className="opacity-50 block text-[0.65rem] font-mono mt-0.5 break-all">
-                    {c.hint}
-                  </span>
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
