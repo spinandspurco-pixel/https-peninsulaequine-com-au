@@ -1411,7 +1411,7 @@ export function ClientDiagPanel() {
                         !!prevSameEndpoint.payloadHash &&
                         prevSameEndpoint.payloadHash !== p.payloadHash;
                       return (
-                        <React.Fragment key={p.id}>
+                        <Fragment key={p.id}>
                           <div>{p.fetchedAt.slice(11, 19)}</div>
                           <div>{p.endpoint}</div>
                           <div style={{ color: p.ok ? "#7fbf7f" : "#ff8a8a" }}>
@@ -1433,7 +1433,7 @@ export function ClientDiagPanel() {
                                 ? `${p.bytes} B`
                                 : ""}
                           </div>
-                        </React.Fragment>
+                        </Fragment>
                       );
                     })}
                 </div>
