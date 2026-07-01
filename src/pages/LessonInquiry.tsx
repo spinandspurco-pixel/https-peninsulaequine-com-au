@@ -120,19 +120,20 @@ export default function LessonInquiry({
     const merged = [...files];
     for (const f of list) {
       if (merged.length >= MAX_FILES) {
-        setFileError(`Up to ${MAX_FILES} files.`);
+        setFileError(`You can attach up to ${MAX_FILES} files. "${f.name}" wasn't added.`);
         break;
       }
       if (!ALLOWED.test(f.name)) {
-        setFileError(`${f.name}: unsupported file type.`);
+        setFileError(`"${f.name}" isn't a supported file type. Use JPG, PNG, WEBP, HEIC, PDF, or DOC.`);
         continue;
       }
       if (f.size > MAX_SIZE) {
-        setFileError(`${f.name}: exceeds 10 MB.`);
+        const mb = (f.size / 1024 / 1024).toFixed(1);
+        setFileError(`"${f.name}" is ${mb} MB — the limit is 10 MB per file.`);
         continue;
       }
       if (f.size === 0) {
-        setFileError(`${f.name}: empty file.`);
+        setFileError(`"${f.name}" is empty. Choose a different file.`);
         continue;
       }
       if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
