@@ -575,9 +575,10 @@ type TimingProps = StepProps & {
   onAddFiles: (list: FileList | File[]) => void;
   onRemoveFile: (i: number) => void;
   maxFiles: number;
+  requireAttachments?: boolean;
 };
 
-function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles }: TimingProps) {
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
