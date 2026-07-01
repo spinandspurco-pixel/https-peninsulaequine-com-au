@@ -15,6 +15,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
 import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 
 
