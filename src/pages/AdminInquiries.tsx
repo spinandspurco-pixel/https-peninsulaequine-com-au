@@ -64,6 +64,42 @@ interface Row {
 
 const PAGE_SIZE = 25;
 
+interface FilterPreset {
+  id: string;
+  label: string;
+  status: "all" | InquiryStatus;
+  sort: SortKey;
+  search: string;
+  builtin?: boolean;
+}
+
+const BUILTIN_PRESETS: FilterPreset[] = [
+  { id: "builtin:new", label: "New", status: "new", sort: "newest", search: "", builtin: true },
+  { id: "builtin:in-progress", label: "In Progress", status: "in-progress", sort: "updated", search: "", builtin: true },
+  { id: "builtin:needs-follow-up", label: "Needs Follow-Up", status: "awaiting-response", sort: "updated", search: "", builtin: true },
+  { id: "builtin:quoted", label: "Quoted", status: "quoted", sort: "updated", search: "", builtin: true },
+  { id: "builtin:won", label: "Won", status: "won", sort: "newest", search: "", builtin: true },
+];
+
+const PRESETS_STORAGE_KEY = "hq.inquiries.presets.v1";
+const ACTIVE_PRESET_STORAGE_KEY = "hq.inquiries.activePreset.v1";
+
+function loadCustomPresets(): FilterPreset[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(PRESETS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((p): p is FilterPreset =>
+      p && typeof p.id === "string" && typeof p.label === "string" && typeof p.status === "string" && typeof p.sort === "string",
+    );
+  } catch {
+    return [];
+  }
+}
+
+
 export default function AdminInquiries() {
   const [rows, setRows] = useState<Row[]>([]);
   const [count, setCount] = useState(0);
