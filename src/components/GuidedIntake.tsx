@@ -251,10 +251,10 @@ export function GuidedIntake() {
       let attachmentIds: string[] = [];
       let attachmentPaths: string[] = [];
       if (files.length) {
-        const uploaded = await uploadInquiryAttachments(files, attachmentFolder);
-        attachmentRecords = uploaded.records;
-        attachmentIds = uploaded.ids;
-        attachmentPaths = uploaded.paths;
+        const records = await uploader.uploadAll(files);
+        attachmentRecords = records;
+        attachmentIds = records.map((r) => r.id);
+        attachmentPaths = records.map((r) => r.path);
       }
 
       // 2. Persist the inquiry row (returning id so we can link attachments).
