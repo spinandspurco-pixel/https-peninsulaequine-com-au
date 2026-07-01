@@ -139,12 +139,26 @@ export function OAuthProviderPanel({
           ? "Observed Client ID captured. Enter the intended value above to compare."
           : "Idle — open the authorize URL and paste the resulting Google URL below.";
 
-  const copy = (text: string) => {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const copy = (text: string, key = "default") => {
     void navigator.clipboard.writeText(text).then(() => {
       setCopiedAt(Date.now());
-      window.setTimeout(() => setCopiedAt(null), 1500);
+      setCopiedKey(key);
+      window.setTimeout(() => {
+        setCopiedAt(null);
+        setCopiedKey((k) => (k === key ? null : k));
+      }, 1500);
     });
   };
+  const CopyBtn = ({ text, k, label = "Copy" }: { text: string; k: string; label?: string }) => (
+    <button
+      type="button"
+      onClick={() => copy(text, k)}
+      className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
+    >
+      {copiedKey === k ? "Copied" : label}
+    </button>
+  );
 
   const looksLikeGoogleClientId = (v: string) =>
     /^\d{6,}-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(v.trim());
@@ -223,15 +237,7 @@ export function OAuthProviderPanel({
           <code className="flex-1 text-[0.75rem] font-mono opacity-90 break-all">
             {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
           </code>
-          {expectedCallback && (
-            <button
-              type="button"
-              onClick={() => copy(expectedCallback)}
-              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
-            >
-              {copiedAt ? "Copied" : "Copy"}
-            </button>
-          )}
+          {expectedCallback && <CopyBtn text={expectedCallback} k="expected-callback" />}
         </div>
         <div className="text-[0.6rem] opacity-45 mt-1.5 font-light">
           Paste this exact value into Google Cloud Console → APIs &amp; Services → Credentials →
@@ -299,25 +305,48 @@ export function OAuthProviderPanel({
 
       {/* Comparison */}
       <div className="px-4 py-3">
-        <div
-          className="text-[0.7rem] font-light leading-relaxed mb-2"
-          style={{ color: statusColor(status) }}
-        >
-          {statusLine}
+        <div className="flex items-center justify-between gap-4 mb-2">
+          <div
+            className="text-[0.7rem] font-light leading-relaxed"
+            style={{ color: statusColor(status) }}
+          >
+            {statusLine}
+          </div>
+          <span
+            className="text-[0.55rem] font-mono shrink-0"
+            style={{ color: statusColor(status), letterSpacing: "0.2em" }}
+          >
+            {status === "ok" ? "MATCH" : status === "fail" ? "MISMATCH" : status === "warn" ? "CAPTURED" : "IDLE"}
+          </span>
         </div>
-        <div className="grid grid-cols-[10rem_1fr] gap-x-3 gap-y-1.5 text-[0.7rem]">
+        <div className="grid grid-cols-[10rem_1fr_auto] gap-x-3 gap-y-1.5 text-[0.7rem] items-start">
           <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
             Intended
           </div>
           <code className="font-mono opacity-85 break-all">
             {intendedNorm || <span className="opacity-40">(not set)</span>}
           </code>
+          <div className="pt-0.5">
+            {intendedNorm ? <CopyBtn text={intendedNorm} k="intended-client-id" /> : <span />}
+          </div>
+
           <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
             Observed
           </div>
           <code className="font-mono opacity-85 break-all" style={{ color: status === "fail" ? statusColor("fail") : undefined }}>
             {observedClientId || <span className="opacity-40">(awaiting paste)</span>}
           </code>
+          <div className="pt-0.5 flex items-center gap-2">
+            {observedClientId && (
+              <span
+                className="text-[0.55rem] font-mono"
+                style={{ color: statusColor(status), letterSpacing: "0.2em" }}
+              >
+                {status === "ok" ? "MATCH" : status === "fail" ? "MISMATCH" : "CAPTURED"}
+              </span>
+            )}
+            {observedClientId ? <CopyBtn text={observedClientId} k="observed-client-id" /> : <span />}
+          </div>
         </div>
 
         {/* Redirect URI validation */}
@@ -343,13 +372,17 @@ export function OAuthProviderPanel({
                 ? "MISMATCH — the redirect_uri Google received does not equal the expected Supabase callback. Update Google Cloud → Authorized redirect URIs, or Supabase Site/Callback URL."
                 : "Idle — paste the Google authorize URL above to compare redirect_uri."}
           </div>
-          <div className="grid grid-cols-[10rem_1fr] gap-x-3 gap-y-1.5 text-[0.7rem]">
+          <div className="grid grid-cols-[10rem_1fr_auto] gap-x-3 gap-y-1.5 text-[0.7rem] items-start">
             <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
               Expected
             </div>
             <code className="font-mono opacity-85 break-all">
               {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
             </code>
+            <div className="pt-0.5">
+              {expectedCallback ? <CopyBtn text={expectedCallback} k="expected-callback-row" /> : <span />}
+            </div>
+
             <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
               Observed
             </div>
@@ -359,6 +392,17 @@ export function OAuthProviderPanel({
             >
               {observedRedirectUri || <span className="opacity-40">(awaiting paste)</span>}
             </code>
+            <div className="pt-0.5 flex items-center gap-2">
+              {observedRedirectUri && (
+                <span
+                  className="text-[0.55rem] font-mono"
+                  style={{ color: statusColor(redirectStatus), letterSpacing: "0.2em" }}
+                >
+                  {redirectStatus === "ok" ? "MATCH" : redirectStatus === "fail" ? "MISMATCH" : "CAPTURED"}
+                </span>
+              )}
+              {observedRedirectUri ? <CopyBtn text={observedRedirectUri} k="observed-redirect-uri" /> : <span />}
+            </div>
           </div>
         </div>
       </div>
