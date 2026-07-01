@@ -46,7 +46,7 @@ export default function AdminEvents() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const { data } = await supabase.from("managed_events").select("*").order("event_date", { ascending: true });
+    const { data } = await supabase.from("managed_events").select("*").order("sort_order", { ascending: true }).order("event_date", { ascending: true });
     setItems(data || []);
     setIsLoading(false);
   };
