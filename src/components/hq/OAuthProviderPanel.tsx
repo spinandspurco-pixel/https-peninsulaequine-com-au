@@ -270,7 +270,10 @@ export function OAuthProviderPanel({
       {/* Intended Client ID input */}
       <div className="px-4 py-3 border-b border-foreground/10">
         <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-2">
-          Intended Google Client ID <span className="opacity-50 normal-case tracking-normal">(persisted locally)</span>
+          Intended Google Client ID{" "}
+          <span className="opacity-50 normal-case tracking-normal">
+            (cached locally, synced via Save to app config)
+          </span>
         </label>
         <input
           type="text"
@@ -287,7 +290,32 @@ export function OAuthProviderPanel({
             <code className="font-mono opacity-90"> ….apps.googleusercontent.com</code>.
           </div>
         )}
+
+        {/* Save to app config */}
+        <div className="mt-3 flex items-center gap-4 flex-wrap">
+          <button
+            type="button"
+            onClick={save}
+            disabled={saving || syncState === "unavailable"}
+            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border border-foreground/25 hover:border-foreground/60 px-3 py-1.5 transition-opacity disabled:opacity-30"
+          >
+            {saving ? "Saving…" : savedAt ? "Saved" : "Save to app config"}
+          </button>
+          <div className="text-[0.6rem] opacity-55 font-light">
+            {syncState === "unavailable"
+              ? "App-config sync unavailable (admin role required)."
+              : remote?.updated_at
+                ? `Last synced ${new Date(remote.updated_at).toLocaleString()}`
+                : "Not yet saved to app config — currently cached in this browser only."}
+          </div>
+          {saveError && (
+            <div className="text-[0.6rem]" style={{ color: statusColor("fail") }}>
+              {saveError}
+            </div>
+          )}
+        </div>
       </div>
+
 
       {/* Probe row */}
       <div className="px-4 py-3 border-b border-foreground/10">
