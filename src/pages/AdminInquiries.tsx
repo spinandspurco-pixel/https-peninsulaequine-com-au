@@ -238,7 +238,7 @@ export default function AdminInquiries() {
     } else {
       setAttachmentCounts({});
     }
-  }, [debouncedSearch, statusFilter, sort, page]);
+  }, [debouncedSearch, statusFilter, sort, page, attachmentsOnly]);
 
   useEffect(() => {
     load();
