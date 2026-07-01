@@ -39,7 +39,10 @@ Deno.test("fails safely (500) when SB_MGMT_ACCESS_TOKEN is missing", async () =>
 
   assertEquals(res.status, 500);
   const parsed = JSON.parse(body);
-  assertEquals(parsed.error, "server_misconfigured");
+  assertEquals(parsed.status, "error");
+  assertEquals(parsed.error.code, "server_misconfigured");
+  assert(Array.isArray(parsed.lints));
+
 
   // Response must never leak the env-var name or the (would-be) token value.
   assert(!body.includes("SB_MGMT_ACCESS_TOKEN"), "env-var name must not appear in response");
@@ -55,7 +58,7 @@ Deno.test("secret present → succeeds past the config check (401 without caller
   // the auth gate, not the server-misconfigured branch.
   assertEquals(res.status, 401);
   const parsed = JSON.parse(body);
-  assertEquals(parsed.error, "unauthenticated");
+  assertEquals(parsed.error.code, "unauthenticated");
   assert(!body.includes(TEST_TOKEN), "token value must never appear in response");
   assert(
     !body.includes("SB_MGMT_ACCESS_TOKEN"),
@@ -98,5 +101,5 @@ Deno.test("non-GET methods are rejected safely with the secret missing", async (
   const body = await res.text();
   assertEquals(res.status, 405);
   const parsed = JSON.parse(body);
-  assertEquals(parsed.error, "method_not_allowed");
+  assertEquals(parsed.error.code, "method_not_allowed");
 });
