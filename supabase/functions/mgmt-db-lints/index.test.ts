@@ -275,4 +275,5 @@ Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", s
     stub.restore();
     capture.restore();
   }
-});
+} });
+
