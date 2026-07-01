@@ -26,6 +26,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { assertMgmtCall, MgmtApiGuardError } from "../_shared/mgmtApiGuard.ts";
 
 const PROJECT_REF = "aizkqajrzkvwuobisnzr";
 const REDACTED = "[REDACTED_MGMT_TOKEN]";
