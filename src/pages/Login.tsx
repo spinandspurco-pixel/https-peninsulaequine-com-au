@@ -135,6 +135,11 @@ function classifyOAuthError(message: string): SignInError {
 
 
 export default function Login() {
+  usePageMeta({
+    title: "Sign In — Peninsula Equine HQ",
+    description: "Sign in to Peninsula Equine HQ.",
+    path: "/login",
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
