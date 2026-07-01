@@ -263,6 +263,7 @@ export default function AdminTestimonials() {
                           <Badge variant="secondary" className="text-xs">Draft</Badge>
                         )}
                         {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
+                        {(t as any).featured && <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-400">Homepage</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
                       <div className="flex items-center gap-2 mt-1">
