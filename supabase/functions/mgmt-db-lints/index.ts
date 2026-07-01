@@ -187,4 +187,13 @@ export async function handler(req: Request): Promise<Response> {
   }
 }
 
-Deno.serve(handler);
+// Wrap the handler so any error that escapes the try/catch inside is
+// scrubbed before Deno's default request-error logger sees it.
+Deno.serve(async (req) => {
+  try {
+    return await handler(req);
+  } catch (e) {
+    console.error("handler crashed", redact(e));
+    return json({ error: "internal_error" }, 500);
+  }
+});
