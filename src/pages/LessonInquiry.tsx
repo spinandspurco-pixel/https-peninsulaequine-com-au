@@ -632,7 +632,12 @@ function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveF
 
       <div>
         <Label htmlFor="attachments" className="text-xs uppercase tracking-[0.3em] text-foreground/60">
-          Attachments <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+          Attachments{" "}
+          {requireAttachments ? (
+            <span className="text-destructive normal-case tracking-normal">(required)</span>
+          ) : (
+            <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+          )}
         </Label>
         <label
           htmlFor="attachments"
