@@ -42,9 +42,18 @@ const EXEMPT_FILES: readonly string[] = [
 ];
 
 // Match `https://api.supabase.com<path>` where <path> is a template literal
-// or string that may contain `${...}` interpolations. We stop at the first
-// backtick, quote, or whitespace so we capture just the URL body.
-const URL_RE = /https:\/\/api\.supabase\.com([^\s`"'?#]*)/g;
+// or string that may contain `${...}` interpolations. We deliberately
+// include `?` and `#` in the capture so `normalise()` can strip them and
+// prove that `/lints` and `/lints?foo=bar` collapse to the same template.
+// Capture stops at the first backtick, quote, or whitespace.
+const URL_RE = /https:\/\/api\.supabase\.com([^\s`"']*)/g;
+
+// Known concrete project refs that appear as literal strings in code. Any
+// literal ref must collapse to `{ref}` so a hard-coded URL cannot bypass
+// the interpolation-based normalisation.
+const KNOWN_PROJECT_REFS: readonly string[] = [
+  "aizkqajrzkvwuobisnzr",
+];
 
 function walk(dir: string, out: string[] = []): string[] {
   let entries: string[];
@@ -64,9 +73,28 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 function normalise(rawPath: string): string {
-  // Replace any `${...}` interpolation with `{ref}` so the path template
-  // matches the allowlist regardless of which variable holds the project ref.
-  return rawPath.replace(/\$\{[^}]+\}/g, "{ref}");
+  let p = rawPath;
+  // 1. Strip query string and fragment so `/lints?x=1#y` == `/lints`.
+  p = p.replace(/[?#].*$/, "");
+  // 2. Collapse any `${...}` interpolation (with any whitespace / quoting
+  //    inside the braces) to a single `{ref}` marker. This covers
+  //    `${ref}`, `${projectRef}`, `${ PROJECT_REF }`, `${cfg.ref}`, etc.
+  p = p.replace(/\$\{\s*[^}]+?\s*\}/g, "{ref}");
+  // 3. Collapse known hard-coded project refs so a literal URL cannot
+  //    slip past the template-only matcher.
+  for (const ref of KNOWN_PROJECT_REFS) {
+    // Only replace when the ref sits between `/projects/` and the next
+    // `/` so unrelated occurrences of the string are left alone.
+    p = p.replace(
+      new RegExp(`(/projects/)${ref}(?=/|$)`, "g"),
+      "$1{ref}",
+    );
+  }
+  // 4. Collapse repeated slashes then strip a single trailing slash so
+  //    `/lints/` and `/lints` are the same endpoint.
+  p = p.replace(/\/{2,}/g, "/");
+  if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+  return p;
 }
 
 interface Hit {
