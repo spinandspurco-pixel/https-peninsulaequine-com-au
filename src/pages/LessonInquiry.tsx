@@ -686,7 +686,13 @@ function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveF
         </label>
         {fileError && <p className="mt-2 text-xs text-destructive">{fileError}</p>}
         <div className="mt-3">
-          <AttachmentPreviewList files={files} onRemove={onRemoveFile} />
+          <AttachmentPreviewList
+            files={files}
+            onRemove={onRemoveFile}
+            statuses={uploadStatuses}
+            onRetry={onRetryUpload}
+            busy={uploaderBusy}
+          />
         </div>
       </div>
 
