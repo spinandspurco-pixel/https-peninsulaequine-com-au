@@ -160,6 +160,10 @@ export function ClientDiagPanel() {
     }
   }, [fetchBuildInfo, fetchHealth, fetchDiag]);
 
+  const [probing, setProbing] = useState(false);
+  const [lastProbeAt, setLastProbeAt] = useState<number | null>(null);
+
+
   useEffect(() => {
     void fetchBuildInfo();
   }, [fetchBuildInfo]);
