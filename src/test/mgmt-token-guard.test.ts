@@ -20,6 +20,7 @@ const DIST_DIR = resolve(ROOT, "dist");
 // error messages) when walking `src/`.
 const ALLOWED_REFERENCES = new Set<string>([
   resolve(__dirname, "mgmt-token-guard.test.ts"),
+  resolve(__dirname, "mgmt-api-allowlist.test.ts"),
 ]);
 
 function walk(dir: string): string[] {
