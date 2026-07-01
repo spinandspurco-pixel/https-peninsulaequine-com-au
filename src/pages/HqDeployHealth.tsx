@@ -49,6 +49,14 @@ const LEGACY_MARKER = "eyJhbGci";
 const MODERN_MARKER = "sb_publishable_";
 const BUNDLE_RE = /\/assets\/(index-[A-Za-z0-9_-]+\.js)/;
 
+const RETRY_MAX_ATTEMPTS = 4;
+const RETRY_BACKOFF_MS = (i: number) => 1500 * (i + 1);
+const RETRY_BACKOFF_SCHEDULE_MS = Array.from(
+  { length: RETRY_MAX_ATTEMPTS },
+  (_, i) => RETRY_BACKOFF_MS(i),
+);
+const RETRY_LOG_TRAIL_LIMIT = 8;
+
 type ProbeResult = {
   label: string;
   url: string;
