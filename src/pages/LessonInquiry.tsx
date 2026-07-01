@@ -175,25 +175,12 @@ export default function LessonInquiry({
     }
     setSubmitting(true);
     try {
-      // Upload attachments first so the paths can be stored on the inquiry row.
+      // Upload attachments via the server-side validated edge function
+      // (enforces size, MIME/extension, and magic-byte checks).
       let attachment_urls: string[] = [];
       if (files.length > 0) {
-        const folder = crypto.randomUUID();
-        attachment_urls = await Promise.all(
-          files.map(async (file) => {
-            const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
-            const path = `${folder}/${Date.now()}-${safeName}`;
-            const { error: upErr } = await supabase.storage
-              .from("inquiry-attachments")
-              .upload(path, file, {
-                cacheControl: "3600",
-                upsert: false,
-                contentType: file.type || undefined,
-              });
-            if (upErr) throw upErr;
-            return path;
-          }),
-        );
+        const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
+        attachment_urls = await uploadInquiryAttachments(files);
       }
 
       const services: string[] =
