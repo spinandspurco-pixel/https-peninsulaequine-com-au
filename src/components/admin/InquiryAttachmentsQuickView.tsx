@@ -137,7 +137,7 @@ export function InquiryAttachmentsQuickView({ inquiryId, count, inquiryName }: P
         align="end"
         sideOffset={8}
         onClick={(e) => e.stopPropagation()}
-        className="w-[340px] p-0 border-border/40 bg-background/98 backdrop-blur"
+        className="w-[400px] p-0 border-border/40 bg-background/98 backdrop-blur"
       >
         <div className="px-4 pt-3 pb-2 border-b border-border/[0.12] flex items-center justify-between">
           <span className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/60">
