@@ -158,6 +158,31 @@ export default function AdminInquiries() {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
+
+    // "Attachments only" — pre-fetch inquiry ids that have at least one attachment.
+    let attachmentOnlyIds: string[] | null = null;
+    if (attachmentsOnly) {
+      const { data: attRows, error: attErr } = await supabase
+        .from("inquiry_attachments")
+        .select("inquiry_id")
+        .not("inquiry_id", "is", null);
+      if (attErr) {
+        setLoading(false);
+        setError(attErr.message);
+        return;
+      }
+      attachmentOnlyIds = Array.from(
+        new Set((attRows ?? []).map((r: any) => r.inquiry_id).filter(Boolean))
+      );
+      if (attachmentOnlyIds.length === 0) {
+        setRows([]);
+        setCount(0);
+        setAttachmentCounts({});
+        setLoading(false);
+        return;
+      }
+    }
+
     let q = supabase
       .from("inquiries")
       .select(
@@ -165,6 +190,7 @@ export default function AdminInquiries() {
         { count: "exact" }
       );
 
+    if (attachmentOnlyIds) q = q.in("id", attachmentOnlyIds);
     if (statusFilter !== "all") q = q.eq("status", statusFilter);
 
     if (debouncedSearch) {
