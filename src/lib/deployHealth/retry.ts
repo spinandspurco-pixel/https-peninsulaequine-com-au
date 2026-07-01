@@ -150,6 +150,11 @@ export async function runRetryPromotion<P extends ProbeLike>(
   try {
     for (let i = 0; i < maxAttempts; i++) {
       attempts = i + 1;
+      try {
+        onAttempt?.(attempts, maxAttempts);
+      } catch {
+        /* progress callback errors must not break the retry loop */
+      }
       afterProbes = await Promise.all(
         targets.map((t) => probe(t.label, `${t.url}?_rh=${i}`)),
       );
