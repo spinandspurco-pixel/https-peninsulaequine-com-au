@@ -70,6 +70,10 @@ export function friendlyUploadMessage(
       return "Upload endpoint rejected the request. Please try again.";
     case "storage_write_failed":
       return `${who} couldn't be saved. Please try again in a moment.`;
+    case "network_error":
+      return `${who} couldn't reach the server. Check your connection and retry.`;
+    case "aborted":
+      return `${who} upload was cancelled.`;
     default:
       return `${who} couldn't be uploaded (${code}).`;
   }
