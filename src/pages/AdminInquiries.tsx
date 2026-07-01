@@ -829,6 +829,16 @@ export default function AdminInquiries() {
                   </button>
                   <button
                     type="button"
+                    disabled={downloadingAttachments || bulkRunning}
+                    onClick={downloadSelectedAttachments}
+                    className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/70 hover:text-accent disabled:opacity-40 transition-colors"
+                  >
+                    <Paperclip className="h-3 w-3" strokeWidth={1.5} />
+                    {downloadingAttachments ? "Zipping…" : "Download attachments"}
+                  </button>
+
+                  <button
+                    type="button"
                     disabled={bulkRunning}
                     onClick={() => setPendingAction("complete")}
                     className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/70 hover:text-foreground disabled:opacity-40 transition-colors"
