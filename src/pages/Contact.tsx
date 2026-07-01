@@ -197,27 +197,32 @@ export default function Contact() {
         attachments = result.records;
       }
 
-      const { error } = await supabase.from("inquiries").insert({
-        name: form.name.trim().slice(0, 100),
-        email: form.email.trim().slice(0, 255),
-        phone: form.phone.trim().slice(0, 30) || null,
-        services: form.scopes,
-        budget_range: form.budget || null,
-        preferred_start: form.timeline || null,
-        project_details: form.details.trim().slice(0, 2000) || null,
-        attachment_urls,
-        attachments: attachments as unknown as never,
-        notes: [
-          form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
-          form.propertyType ? `Type: ${form.propertyType}` : "",
-          form.timeline ? `Timeline: ${form.timeline}` : "",
-          form.budget ? `Investment range: ${form.budget}` : "",
-        ]
-          .filter(Boolean)
-          .join(" | "),
-        status: "new",
-      });
-      if (error) throw error;
+      const { data: submitResp, error } = await supabase.functions.invoke(
+        "submit-inquiry",
+        {
+          body: {
+            name: form.name.trim().slice(0, 100),
+            email: form.email.trim().slice(0, 255),
+            phone: form.phone.trim().slice(0, 30) || null,
+            services: form.scopes,
+            budget_range: form.budget || null,
+            preferred_start: form.timeline || null,
+            project_details: form.details.trim().slice(0, 2000) || null,
+            attachment_urls,
+            attachments,
+            notes: [
+              form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
+              form.propertyType ? `Type: ${form.propertyType}` : "",
+              form.timeline ? `Timeline: ${form.timeline}` : "",
+              form.budget ? `Investment range: ${form.budget}` : "",
+            ]
+              .filter(Boolean)
+              .join(" | "),
+            source: "contact-assessment",
+          },
+        },
+      );
+      if (error || !submitResp?.ok) throw error ?? new Error(submitResp?.code ?? "persist_failed");
 
       supabase.functions
         .invoke("send-inquiry-notification", {
