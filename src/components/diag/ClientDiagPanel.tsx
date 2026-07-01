@@ -720,7 +720,7 @@ export function ClientDiagPanel() {
             : `ok (< ${pair.warn}ms)`
         : "no sample yet";
     const sourceNote = endpoint
-      ? thresholds[endpoint]
+      ? latencyThresholds[endpoint]
         ? " · source: per-endpoint override"
         : " · source: default"
       : "";
