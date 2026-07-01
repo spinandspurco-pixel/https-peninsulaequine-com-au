@@ -424,7 +424,7 @@ describe("runRetryPromotion structured logging", () => {
     expect(attempts.every((a) => a.classification?.stillStuck === true)).toBe(true);
     expect(attempts.every((a) => a.classification?.changed === false)).toBe(true);
 
-    const outcome = events.at(-1)!;
+    const outcome = events[events.length - 1]!;
     expect(outcome.phase).toBe("outcome");
     expect(outcome.classification?.status).toBe("no_change");
     expect(outcome.classification?.message).toMatch(/No change/);
@@ -451,7 +451,7 @@ describe("runRetryPromotion structured logging", () => {
     });
 
     expect(outcome.status).toBe("error");
-    const last = events.at(-1)!;
+    const last = events[events.length - 1]!;
     expect(last.phase).toBe("outcome");
     expect(last.classification?.status).toBe("error");
     expect(last.error).toBe("network down");
