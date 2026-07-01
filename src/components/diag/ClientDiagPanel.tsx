@@ -1437,7 +1437,7 @@ export function ClientDiagPanel() {
                       );
                     })}
                 </div>
-                <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
                   <button
                     style={btn}
                     onClick={() => {
@@ -1447,6 +1447,54 @@ export function ClientDiagPanel() {
                     title="Copy full probe history as JSON"
                   >
                     copy JSON
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const latestByEndpoint: Record<string, ProbeEntry> = {};
+                      for (const p of probeHistory) {
+                        const prev = latestByEndpoint[p.endpoint];
+                        if (!prev || p.ts > prev.ts) latestByEndpoint[p.endpoint] = p;
+                      }
+                      const latest = probeHistory.reduce<ProbeEntry | null>(
+                        (acc, p) => (!acc || p.ts > acc.ts ? p : acc),
+                        null,
+                      );
+                      const payload = {
+                        exportedAt: new Date().toISOString(),
+                        origin: typeof window !== "undefined" ? window.location.origin : null,
+                        latest: latest
+                          ? { ...latest, tsIso: new Date(latest.ts).toISOString() }
+                          : null,
+                        endpoints: Object.fromEntries(
+                          Object.entries(latestByEndpoint).map(([k, v]) => [
+                            k,
+                            { ...v, tsIso: new Date(v.ts).toISOString() },
+                          ]),
+                        ),
+                      };
+                      try {
+                        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `pe-diag-latest-${new Date()
+                          .toISOString()
+                          .replace(/[:.]/g, "-")}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                    title="Download the most recent probe result per endpoint as JSON"
+                    disabled={probeHistory.length === 0}
+                  >
+                    export latest
                   </button>
                   <button
                     style={btn}
