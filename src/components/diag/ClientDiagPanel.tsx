@@ -1454,24 +1454,17 @@ export function ClientDiagPanel() {
                       const latestByEndpoint: Record<string, ProbeEntry> = {};
                       for (const p of probeHistory) {
                         const prev = latestByEndpoint[p.endpoint];
-                        if (!prev || p.ts > prev.ts) latestByEndpoint[p.endpoint] = p;
+                        if (!prev || p.fetchedAt > prev.fetchedAt) latestByEndpoint[p.endpoint] = p;
                       }
                       const latest = probeHistory.reduce<ProbeEntry | null>(
-                        (acc, p) => (!acc || p.ts > acc.ts ? p : acc),
+                        (acc, p) => (!acc || p.fetchedAt > acc.fetchedAt ? p : acc),
                         null,
                       );
                       const payload = {
                         exportedAt: new Date().toISOString(),
                         origin: typeof window !== "undefined" ? window.location.origin : null,
-                        latest: latest
-                          ? { ...latest, tsIso: new Date(latest.ts).toISOString() }
-                          : null,
-                        endpoints: Object.fromEntries(
-                          Object.entries(latestByEndpoint).map(([k, v]) => [
-                            k,
-                            { ...v, tsIso: new Date(v.ts).toISOString() },
-                          ]),
-                        ),
+                        latest,
+                        endpoints: latestByEndpoint,
                       };
                       try {
                         const blob = new Blob([JSON.stringify(payload, null, 2)], {
