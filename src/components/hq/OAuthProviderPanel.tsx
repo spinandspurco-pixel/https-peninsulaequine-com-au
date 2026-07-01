@@ -139,12 +139,26 @@ export function OAuthProviderPanel({
           ? "Observed Client ID captured. Enter the intended value above to compare."
           : "Idle — open the authorize URL and paste the resulting Google URL below.";
 
-  const copy = (text: string) => {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const copy = (text: string, key = "default") => {
     void navigator.clipboard.writeText(text).then(() => {
       setCopiedAt(Date.now());
-      window.setTimeout(() => setCopiedAt(null), 1500);
+      setCopiedKey(key);
+      window.setTimeout(() => {
+        setCopiedAt(null);
+        setCopiedKey((k) => (k === key ? null : k));
+      }, 1500);
     });
   };
+  const CopyBtn = ({ text, k, label = "Copy" }: { text: string; k: string; label?: string }) => (
+    <button
+      type="button"
+      onClick={() => copy(text, k)}
+      className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
+    >
+      {copiedKey === k ? "Copied" : label}
+    </button>
+  );
 
   const looksLikeGoogleClientId = (v: string) =>
     /^\d{6,}-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(v.trim());
