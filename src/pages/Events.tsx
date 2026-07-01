@@ -319,11 +319,6 @@ function EventCalendarSidebar({
 
 // ── Page ──
 export default function Events() {
-  usePageMeta({
-    title: "Clinics & Events — Peninsula Equine",
-    description: "Upcoming clinics, guest instructors and events on the Mornington Peninsula. Reserve your place at Peninsula Equine.",
-    path: "/events",
-  });
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [timeFilter, setTimeFilter] = useState<"upcoming" | "past" | "all">("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
