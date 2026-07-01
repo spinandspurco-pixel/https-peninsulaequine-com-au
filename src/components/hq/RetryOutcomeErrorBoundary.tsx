@@ -11,6 +11,7 @@ interface Props {
 interface State {
   error: Error | null;
   info: ErrorInfo | null;
+  copyStatus: "idle" | "copied" | "failed";
 }
 
 /**
