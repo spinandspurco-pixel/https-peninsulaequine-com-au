@@ -40,6 +40,31 @@ export class UploadValidationError extends Error {
  * Human-friendly copy for every documented error code returned by the
  * `validate-inquiry-upload` edge function (see integration_test.ts).
  */
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+/** Short, friendly summary of the accepted formats used in inline hints. */
+export const ACCEPTED_FORMATS_HINT =
+  "Accepted: PDF, JPG, PNG, HEIC, WebP, GIF, DOC/DOCX, XLS/XLSX, CSV, TXT.";
+
+function summariseAllowedExtensions(details?: Record<string, unknown>): string | null {
+  const list = details?.allowed_extensions;
+  if (Array.isArray(list) && list.length) {
+    const exts = list.map((e) => `.${String(e).replace(/^\./, "")}`).join(", ");
+    return exts;
+  }
+  return null;
+}
+
+/**
+ * Human-friendly copy for every documented error code returned by the
+ * `validate-inquiry-upload` edge function (see integration_test.ts).
+ * Uses server-provided `details` (actual size, actual mime, allowed
+ * extensions, max bytes) to make messages specific and actionable.
+ */
 export function friendlyUploadMessage(
   code: string,
   details?: Record<string, unknown>,
@@ -50,20 +75,37 @@ export function friendlyUploadMessage(
     case "file_required":
       return "Please attach a file before uploading.";
     case "empty_file":
-      return `${who} is empty. Choose a different file.`;
+      return `${who} is empty (0 bytes). Choose a different file.`;
     case "file_too_large": {
       const max = typeof details?.max === "number" ? details.max : 10 * 1024 * 1024;
+      const size = typeof details?.size === "number" ? details.size : null;
       const maxMb = Math.round(max / 1024 / 1024);
-      return `${who} exceeds the ${maxMb} MB limit. Compress it or upload a smaller version.`;
+      const actual = size !== null ? ` It's ${formatBytes(size)}.` : "";
+      return `${who} is too large — the limit is ${maxMb} MB.${actual} Compress it or upload a smaller version.`;
     }
-    case "mime_not_allowed":
-      return `${who} isn't a supported file type. Use PDF, image, or common office formats.`;
+    case "mime_not_allowed": {
+      const mime =
+        typeof details?.mime === "string" && details.mime ? details.mime : "unknown";
+      return `${who} is a ${mime} file, which isn't accepted. ${ACCEPTED_FORMATS_HINT}`;
+    }
     case "invalid_filename":
-      return `${who} has an invalid filename. Rename it without special characters and try again.`;
-    case "extension_mismatch":
-      return `${who} extension doesn't match its contents. Re-save it and try again.`;
-    case "content_mismatch":
-      return `${who} doesn't look like the type it claims to be. Please upload the original file.`;
+      return `${who} has an invalid filename. Rename it using letters, numbers, dots, dashes or underscores and try again.`;
+    case "extension_mismatch": {
+      const allowed = summariseAllowedExtensions(details);
+      const mime =
+        typeof details?.mime === "string" && details.mime ? details.mime : null;
+      const ext =
+        typeof details?.extension === "string" && details.extension
+          ? `.${details.extension}`
+          : "the current extension";
+      const expected = allowed ? ` Expected ${allowed}.` : "";
+      return `${who} has ${ext}, which doesn't match its ${mime ?? "declared"} contents.${expected}`;
+    }
+    case "content_mismatch": {
+      const mime =
+        typeof details?.mime === "string" && details.mime ? details.mime : "declared";
+      return `${who} doesn't look like a real ${mime} file. Please re-export or upload the original.`;
+    }
     case "invalid_folder":
       return "Upload session was invalid. Refresh the page and try again.";
     case "invalid_multipart":
