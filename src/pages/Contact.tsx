@@ -155,8 +155,15 @@ export default function Contact() {
     setFiles(next);
   };
 
-  const removeFile = (idx: number) =>
-    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  const uploader = useAttachmentUpload();
+
+  const removeFile = (idx: number) => {
+    setFiles((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      uploader.syncFiles(next);
+      return next;
+    });
+  };
 
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
