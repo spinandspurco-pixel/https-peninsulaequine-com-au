@@ -349,6 +349,57 @@ export function ClientDiagPanel() {
     </div>
   );
 
+  // Configurable latency thresholds (ms). Persisted in localStorage.
+  const readThresholds = () => {
+    try {
+      const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (typeof p?.warn === "number" && typeof p?.crit === "number") return p as { warn: number; crit: number };
+      }
+    } catch {
+      /* ignore */
+    }
+    return { warn: 200, crit: 500 };
+  };
+  const [latencyThresholds, setLatencyThresholds] = useState<{ warn: number; crit: number }>(readThresholds);
+  const persistThresholds = (next: { warn: number; crit: number }) => {
+    setLatencyThresholds(next);
+    try {
+      window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+  };
+  const latencyColor = (ms: number | null | undefined): string | undefined => {
+    if (typeof ms !== "number" || !isFinite(ms)) return undefined;
+    if (ms >= latencyThresholds.crit) return "#ff8a8a";
+    if (ms >= latencyThresholds.warn) return "#fde68a";
+    return "#86efac";
+  };
+  const latencyRow = (label: string, ms: number | null | undefined) => {
+    const color = latencyColor(ms);
+    const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
+    const tier =
+      typeof ms === "number" && isFinite(ms)
+        ? ms >= latencyThresholds.crit
+          ? " · slow"
+          : ms >= latencyThresholds.warn
+            ? " · warn"
+            : " · ok"
+        : "";
+    return (
+      <div className="flex gap-2 leading-snug">
+        <span className="opacity-50 min-w-[140px]">{label}</span>
+        <span className="font-mono break-all" style={color ? { color } : undefined}>
+          {display}
+          {tier}
+        </span>
+      </div>
+    );
+  };
+
+
   const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
   const clientBuildCommit = typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)";
 
