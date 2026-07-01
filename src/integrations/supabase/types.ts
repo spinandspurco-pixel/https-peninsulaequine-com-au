@@ -1018,6 +1018,7 @@ export type Database = {
       inquiries: {
         Row: {
           attachment_urls: string[] | null
+          attachments: Json
           budget_range: string | null
           created_at: string
           deal_stage: string | null
@@ -1051,6 +1052,7 @@ export type Database = {
         }
         Insert: {
           attachment_urls?: string[] | null
+          attachments?: Json
           budget_range?: string | null
           created_at?: string
           deal_stage?: string | null
@@ -1084,6 +1086,7 @@ export type Database = {
         }
         Update: {
           attachment_urls?: string[] | null
+          attachments?: Json
           budget_range?: string | null
           created_at?: string
           deal_stage?: string | null
