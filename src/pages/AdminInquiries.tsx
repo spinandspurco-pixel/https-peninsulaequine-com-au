@@ -393,9 +393,20 @@ export default function AdminInquiries() {
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
             </button>
+            <button
+              onClick={exportCsv}
+              disabled={exporting || loading}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-accent/80 disabled:opacity-40 transition-colors"
+              aria-label="Export filtered inquiries as CSV"
+              title="Export current filter as CSV"
+            >
+              <Download className={`h-3.5 w-3.5 ${exporting ? "animate-pulse" : ""}`} />
+              <span className="hidden sm:inline">{exporting ? "Exporting…" : "Export CSV"}</span>
+            </button>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
               {String(count).padStart(3, "0")}
             </span>
+
           </div>
 
           {error && (
