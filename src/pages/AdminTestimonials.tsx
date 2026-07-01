@@ -135,6 +135,15 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const toggleFeatured = async (item: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !(item as any).featured;
+    const { error } = await supabase.from("managed_testimonials").update({ featured: next }).eq("id", item.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Featured on homepage" : "Removed from homepage");
+    setItems((prev) => prev.map((x) => (x.id === item.id ? ({ ...x, featured: next } as ManagedTestimonial) : x)));
+  };
+
   // Drag-and-drop reorder handled by SortableList (see below).
 
   useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
