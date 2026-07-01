@@ -16,6 +16,7 @@ import { z } from "zod";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
 import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
