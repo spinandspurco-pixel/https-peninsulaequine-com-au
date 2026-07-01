@@ -1705,6 +1705,53 @@ export function ClientDiagPanel() {
                   <button
                     style={btn}
                     onClick={() => {
+                      const diagnostics = buildDiagnosticPayload();
+                      const latestByEndpoint: Record<string, ProbeEntry> = {};
+                      for (const p of probeHistory) {
+                        const prev = latestByEndpoint[p.endpoint];
+                        if (!prev || p.fetchedAt > prev.fetchedAt) latestByEndpoint[p.endpoint] = p;
+                      }
+                      const payload = {
+                        exportedAt: new Date().toISOString(),
+                        origin: typeof window !== "undefined" ? window.location.origin : null,
+                        thresholds: {
+                          default: latencyThresholds.default,
+                          overrides: {
+                            buildInfo: latencyThresholds.buildInfo ?? null,
+                            health: latencyThresholds.health ?? null,
+                            diag: latencyThresholds.diag ?? null,
+                          },
+                          units: "ms",
+                        },
+                        latestByEndpoint,
+                        probeHistory,
+                        diagnostics,
+                      };
+                      try {
+                        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `pe-diag-snapshot-${new Date()
+                          .toISOString()
+                          .replace(/[:.]/g, "-")}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                    title="Download a full snapshot: latest probe results, timestamps, and current threshold settings"
+                  >
+                    export snapshot
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
                       setProbeHistory([]);
                       try {
                         window.localStorage.removeItem("pe.diag.probeHistory");
