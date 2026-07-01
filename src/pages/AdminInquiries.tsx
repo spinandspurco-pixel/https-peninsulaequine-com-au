@@ -4,7 +4,7 @@ import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { supabase } from "@/integrations/supabase/client";
 import { format, formatDistanceToNow } from "date-fns";
-import { Search, RefreshCw, Inbox, Download } from "lucide-react";
+import { Search, RefreshCw, Inbox, Download, Bookmark, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
@@ -64,6 +64,42 @@ interface Row {
 
 const PAGE_SIZE = 25;
 
+interface FilterPreset {
+  id: string;
+  label: string;
+  status: "all" | InquiryStatus;
+  sort: SortKey;
+  search: string;
+  builtin?: boolean;
+}
+
+const BUILTIN_PRESETS: FilterPreset[] = [
+  { id: "builtin:new", label: "New", status: "new", sort: "newest", search: "", builtin: true },
+  { id: "builtin:in-progress", label: "In Progress", status: "in-progress", sort: "updated", search: "", builtin: true },
+  { id: "builtin:needs-follow-up", label: "Needs Follow-Up", status: "awaiting-response", sort: "updated", search: "", builtin: true },
+  { id: "builtin:quoted", label: "Quoted", status: "quoted", sort: "updated", search: "", builtin: true },
+  { id: "builtin:won", label: "Won", status: "won", sort: "newest", search: "", builtin: true },
+];
+
+const PRESETS_STORAGE_KEY = "hq.inquiries.presets.v1";
+const ACTIVE_PRESET_STORAGE_KEY = "hq.inquiries.activePreset.v1";
+
+function loadCustomPresets(): FilterPreset[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(PRESETS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((p): p is FilterPreset =>
+      p && typeof p.id === "string" && typeof p.label === "string" && typeof p.status === "string" && typeof p.sort === "string",
+    );
+  } catch {
+    return [];
+  }
+}
+
+
 export default function AdminInquiries() {
   const [rows, setRows] = useState<Row[]>([]);
   const [count, setCount] = useState(0);
@@ -80,6 +116,13 @@ export default function AdminInquiries() {
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
+  const [activePresetId, setActivePresetId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
+  });
+  const [savingPreset, setSavingPreset] = useState(false);
+  const [presetDraftName, setPresetDraftName] = useState("");
 
   // Clear selection when the visible dataset changes.
   useEffect(() => {
@@ -325,9 +368,84 @@ export default function AdminInquiries() {
     }
   }, [debouncedSearch, statusFilter, sort]);
 
+  const allPresets = useMemo<FilterPreset[]>(
+    () => [...BUILTIN_PRESETS, ...customPresets],
+    [customPresets],
+  );
+
+  const applyPreset = useCallback((preset: FilterPreset) => {
+    setStatusFilter(preset.status);
+    setSort(preset.sort);
+    setSearch(preset.search);
+    setDebouncedSearch(preset.search);
+    setPage(0);
+    setActivePresetId(preset.id);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(ACTIVE_PRESET_STORAGE_KEY, preset.id);
+    }
+  }, []);
+
+  // Clear active preset marker if the user diverges from it manually.
+  useEffect(() => {
+    if (!activePresetId) return;
+    const active = allPresets.find((p) => p.id === activePresetId);
+    if (!active) return;
+    const diverged =
+      active.status !== statusFilter ||
+      active.sort !== sort ||
+      active.search !== debouncedSearch;
+    if (diverged) {
+      setActivePresetId(null);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(ACTIVE_PRESET_STORAGE_KEY);
+      }
+    }
+  }, [statusFilter, sort, debouncedSearch, activePresetId, allPresets]);
+
+  const persistCustomPresets = useCallback((next: FilterPreset[]) => {
+    setCustomPresets(next);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(next));
+    }
+  }, []);
+
+  const saveCurrentAsPreset = useCallback(() => {
+    const name = presetDraftName.trim();
+    if (!name) {
+      toast.error("Name your preset first.");
+      return;
+    }
+    const id = `custom:${Date.now().toString(36)}`;
+    const preset: FilterPreset = {
+      id,
+      label: name.slice(0, 40),
+      status: statusFilter,
+      sort,
+      search: debouncedSearch,
+    };
+    persistCustomPresets([...customPresets, preset]);
+    setActivePresetId(id);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(ACTIVE_PRESET_STORAGE_KEY, id);
+    }
+    setPresetDraftName("");
+    setSavingPreset(false);
+    toast.success(`Saved preset "${preset.label}".`);
+  }, [presetDraftName, statusFilter, sort, debouncedSearch, customPresets, persistCustomPresets]);
+
+  const deletePreset = useCallback((id: string) => {
+    persistCustomPresets(customPresets.filter((p) => p.id !== id));
+    if (activePresetId === id) {
+      setActivePresetId(null);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(ACTIVE_PRESET_STORAGE_KEY);
+      }
+    }
+  }, [customPresets, activePresetId, persistCustomPresets]);
 
 
   return (
+
     <Layout>
       <main className="bg-background text-foreground type-architectural min-h-screen">
         <div className="section-container max-w-[1280px] pt-28 pb-24">
@@ -376,7 +494,93 @@ export default function AdminInquiries() {
             </div>
           </div>
 
+          {/* Saved filter presets */}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="mr-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.35em] text-muted-foreground/45">
+              <Bookmark className="h-3 w-3" strokeWidth={1.25} />
+              Presets
+            </span>
+            {allPresets.map((preset) => {
+              const active = activePresetId === preset.id;
+              return (
+                <span
+                  key={preset.id}
+                  className={`group inline-flex items-center border transition-colors ${
+                    active
+                      ? "border-accent/60 bg-accent/[0.08] text-accent"
+                      : "border-border/25 text-foreground/60 hover:border-accent/40 hover:text-accent/90"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => applyPreset(preset)}
+                    className="px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em]"
+                  >
+                    {preset.label}
+                  </button>
+                  {!preset.builtin && (
+                    <button
+                      type="button"
+                      onClick={() => deletePreset(preset.id)}
+                      className="border-l border-border/20 px-1.5 py-1 text-muted-foreground/40 hover:text-red-400/90"
+                      aria-label={`Delete preset ${preset.label}`}
+                    >
+                      <X className="h-2.5 w-2.5" strokeWidth={1.5} />
+                    </button>
+                  )}
+                </span>
+              );
+            })}
+            {savingPreset ? (
+              <span className="inline-flex items-center gap-2 border border-accent/40 bg-accent/[0.05] px-2 py-1">
+                <input
+                  autoFocus
+                  value={presetDraftName}
+                  onChange={(e) => setPresetDraftName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") saveCurrentAsPreset();
+                    if (e.key === "Escape") {
+                      setSavingPreset(false);
+                      setPresetDraftName("");
+                    }
+                  }}
+                  placeholder="Preset name"
+                  maxLength={40}
+                  className="w-32 bg-transparent font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/85 placeholder:text-muted-foreground/40 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={saveCurrentAsPreset}
+                  className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent hover:text-accent/80"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSavingPreset(false);
+                    setPresetDraftName("");
+                  }}
+                  className="text-muted-foreground/50 hover:text-foreground/80"
+                  aria-label="Cancel"
+                >
+                  <X className="h-2.5 w-2.5" strokeWidth={1.5} />
+                </button>
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSavingPreset(true)}
+                className="inline-flex items-center gap-1.5 border border-dashed border-border/30 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:border-accent/40 hover:text-accent/90 transition-colors"
+              >
+                <Plus className="h-2.5 w-2.5" strokeWidth={1.5} />
+                Save current
+              </button>
+            )}
+          </div>
+
           {/* Search bar */}
+
           <div className="mb-8 flex items-center gap-4 border-b border-border/20 pb-3">
             <Search className="h-3.5 w-3.5 text-muted-foreground/45" />
             <input
