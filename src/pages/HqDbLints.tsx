@@ -103,7 +103,7 @@ export default function HqDbLints() {
     <Layout>
       <HqNav />
       <div className="mx-auto w-full max-w-6xl px-6 py-10">
-        <HqBreadcrumbs current="Database Lints" sectionOverride="operations" />
+        <HqBreadcrumbs current="Database Lints" />
 
         <header className="mt-6 flex flex-wrap items-end justify-between gap-4">
           <div>
