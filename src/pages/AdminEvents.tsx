@@ -91,6 +91,15 @@ export default function AdminEvents() {
     fetchData();
   };
 
+  const togglePublish = async (ev: ManagedEvent) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !ev.active;
+    const { error } = await supabase.from("managed_events").update({ active: next }).eq("id", ev.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setItems((prev) => prev.map((x) => (x.id === ev.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
