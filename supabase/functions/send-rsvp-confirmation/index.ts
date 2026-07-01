@@ -195,7 +195,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           ${data.eventDescription ? `
           <div style="font-style: italic; color: #555; background: #fff; padding: 14px 16px; border-left: 3px solid #c9a227; margin: 16px 0; font-size: 14px; line-height: 1.7;">
-            ${data.eventDescription.slice(0, 300)}${data.eventDescription.length > 300 ? "…" : ""}
+            ${esc(data.eventDescription.slice(0, 300))}${data.eventDescription.length > 300 ? "…" : ""}
           </div>
           ` : ""}
 
