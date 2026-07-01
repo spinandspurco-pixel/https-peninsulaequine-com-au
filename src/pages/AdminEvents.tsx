@@ -25,6 +25,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
+import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 
 type ManagedEvent = Tables<"managed_events">;
 
