@@ -134,7 +134,7 @@ export default function AdminInquiries() {
   // Clear selection when the visible dataset changes.
   useEffect(() => {
     setSelected(new Set());
-  }, [debouncedSearch, statusFilter, sort, page]);
+  }, [debouncedSearch, statusFilter, sort, page, attachmentsOnly]);
 
   useEffect(() => {
     document.title = "Inquiries | Peninsula Equine HQ";
@@ -148,7 +148,12 @@ export default function AdminInquiries() {
 
   useEffect(() => {
     setPage(0);
-  }, [debouncedSearch, statusFilter, sort]);
+  }, [debouncedSearch, statusFilter, sort, attachmentsOnly]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(ATTACHMENTS_ONLY_STORAGE_KEY, attachmentsOnly ? "1" : "0");
+  }, [attachmentsOnly]);
 
   const load = useCallback(async () => {
     setLoading(true);
