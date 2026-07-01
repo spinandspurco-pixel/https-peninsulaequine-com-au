@@ -1074,8 +1074,20 @@ export function ClientDiagPanel() {
                   }
                   style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
                 />
-                <button onClick={() => persistThresholds({ warn: 200, crit: 500 })} style={btn} title="Reset to 200 / 500">
-                  reset
+                <button
+                  onClick={() => {
+                    try {
+                      window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
+                    } catch {
+                      /* ignore */
+                    }
+                    persistThresholds({ warn: 200, crit: 500 });
+                  }}
+                  style={btn}
+                  disabled={latencyThresholds.warn === 200 && latencyThresholds.crit === 500}
+                  title="Restore defaults: 200 ms warn · 500 ms crit"
+                >
+                  reset defaults
                 </button>
               </div>
             </div>
