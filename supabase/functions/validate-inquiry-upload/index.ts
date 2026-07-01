@@ -199,8 +199,33 @@ export async function handler(req: Request): Promise<Response> {
     return errorResponse(502, "upload_failed", "Failed to store attachment.");
   }
 
+  // 6. Persist metadata row and return its id to the client.
+  const { data: inserted, error: dbErr } = await admin
+    .from("inquiry_attachments")
+    .insert({
+      folder: folderRaw,
+      filename: safeBase,
+      size_bytes: file.size,
+      mime_type: mime,
+      storage_path: path,
+    })
+    .select("id")
+    .single();
+
+  if (dbErr || !inserted?.id) {
+    // Roll back the object so we don't leak orphaned storage entries.
+    await admin.storage.from("inquiry-attachments").remove([path]).catch(() => {});
+    return errorResponse(502, "persist_failed", "Failed to record attachment.");
+  }
+
   return new Response(
-    JSON.stringify({ path, size: file.size, mime, name: safeBase }),
+    JSON.stringify({
+      id: inserted.id,
+      path,
+      size: file.size,
+      mime,
+      name: safeBase,
+    }),
     { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 }

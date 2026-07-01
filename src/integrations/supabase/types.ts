@@ -1164,6 +1164,50 @@ export type Database = {
           },
         ]
       }
+      inquiry_attachments: {
+        Row: {
+          created_at: string
+          filename: string
+          folder: string
+          id: string
+          inquiry_id: string | null
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          filename: string
+          folder: string
+          id?: string
+          inquiry_id?: string | null
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          filename?: string
+          folder?: string
+          id?: string
+          inquiry_id?: string | null
+          mime_type?: string
+          size_bytes?: number
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_attachments_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiry_notes: {
         Row: {
           author_email: string | null
@@ -2793,6 +2837,10 @@ export type Database = {
       }
       hq_graph_backfill_media_suggestions: { Args: never; Returns: number }
       is_e2e_test_user: { Args: { _user_id: string }; Returns: boolean }
+      link_inquiry_attachments: {
+        Args: { _ids: string[]; _inquiry_id: string }
+        Returns: number
+      }
       list_staff_directory: {
         Args: never
         Returns: {

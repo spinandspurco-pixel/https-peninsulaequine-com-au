@@ -85,6 +85,7 @@ const InquirySchema = z.object({
 
   // Attachments (already validated + stored by validate-inquiry-upload)
   attachment_urls: z.array(z.string().max(500)).max(10).optional(),
+  attachment_ids: z.array(z.string().uuid()).max(10).optional(),
   attachments: z.array(AttachmentSchema).max(10).optional(),
 
   // Optional client hint for source/campaign; never trusted for auth.
@@ -164,6 +165,21 @@ export async function handler(req: Request): Promise<Response> {
   if (error || !data) {
     console.error("submit-inquiry: insert failed", error);
     return json({ ok: false, code: "persist_failed" }, 502);
+  }
+
+  // Link previously uploaded attachment rows to this inquiry.
+  const attachmentIds = p.attachment_ids ?? [];
+  if (attachmentIds.length > 0) {
+    const { error: linkErr } = await supabase
+      .from("inquiry_attachments")
+      .update({ inquiry_id: data.id })
+      .in("id", attachmentIds)
+      .is("inquiry_id", null);
+    if (linkErr) {
+      console.error("submit-inquiry: attachment link failed", linkErr);
+      // Non-fatal: the inquiry row was created; attachments can be
+      // reconciled by folder/storage_path.
+    }
   }
 
   const received = {
