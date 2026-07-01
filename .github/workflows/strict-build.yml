@@ -63,10 +63,27 @@ jobs:
           fi
 
 
+      # Shared build cache — reused across strict-build, verify-prerender,
+      # verify-accessibility, and publish-smoke-test on the same commit SHA.
+      # First workflow to finish uploads dist/; the rest restore and skip
+      # the rebuild. `node_modules/.vite` speeds up Vite dep prebundling
+      # even on a cache miss (restored via the fallback key).
+      - name: Cache build output (dist + Vite deps)
+        id: build-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist
+            node_modules/.vite
+          key: ${{ runner.os }}-dist-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-dist-
+
       # Runs prebuild (verify-assets) → strict build (fails on Tailwind/PostCSS warnings)
       # → postbuild (prerender + verify-prerender + verify-internal-links).
       # Any failure in this chain blocks the merge.
       - name: Strict build (Tailwind + PostCSS + prerender + internal links)
+        if: steps.build-cache.outputs.cache-hit != 'true'
         run: bun run build
 
       # ESLint — catches style violations and likely-bug patterns
