@@ -18,17 +18,7 @@ export function DailySiteReportForm({ onSubmit, loading, userId, defaults }: { o
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
-    return null;
-  };
-
-  const [form, setForm] = useState(() => {
-    const saved = getInitial();
-    return {
-      project_name: defaults?.project_name || saved?.project_name || "",
-      site_address: defaults?.site_address || saved?.site_address || "",
-      date: format(new Date(), "yyyy-MM-dd"),
-      reported_by: saved?.reported_by || "",
+    } catch { /* ignore parse errors */ }
       weather: saved?.weather || "fine",
       start_time: saved?.start_time || "07:00",
       end_time: saved?.end_time || "15:30",
@@ -52,7 +42,7 @@ export function DailySiteReportForm({ onSubmit, loading, userId, defaults }: { o
 
   // Auto-save draft
   const saveDraft = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* ignore write errors */ }
   }, [form]);
 
   useEffect(() => {

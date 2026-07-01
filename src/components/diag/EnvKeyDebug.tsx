@@ -15,13 +15,12 @@ import { classifyClientSupabaseKey } from "@/lib/supabaseKeyIndicator";
  */
 export function EnvKeyDebug() {
   const [open, setOpen] = useState(false);
+  const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
+  const info = useMemo(() => classifyClientSupabaseKey(key), [key]);
 
   // Hide completely in production. Vite replaces import.meta.env.PROD at
   // build time, so this whole component tree tree-shakes away in prod bundles.
   if (import.meta.env.PROD) return null;
-
-  const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
-  const info = useMemo(() => classifyClientSupabaseKey(key), [key]);
 
   const prefix =
     info.family === "missing"

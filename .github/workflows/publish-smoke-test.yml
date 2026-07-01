@@ -107,9 +107,9 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          key: ${{ runner.os }}-bun-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-v2-
 
       - name: Install dependencies
         if: steps.gate.outputs.run == 'true'
@@ -126,9 +126,9 @@ jobs:
           path: |
             dist
             node_modules/.vite
-          key: ${{ runner.os }}-dist-${{ github.sha }}
+          key: ${{ runner.os }}-dist-v2-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-dist-
+            ${{ runner.os }}-dist-v2-
 
       # Build locally so the hero-asset hash check has a baseline to compare
       # against. On schedule/webhook runs we skip the build and the check

@@ -63,17 +63,7 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
     try {
       const saved = localStorage.getItem(SWMS_DRAFT_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
-    return null;
-  };
-
-  const [form, setForm] = useState(() => {
-    const saved = getInitial();
-    return {
-      project_name: defaults?.project_name || saved?.project_name || "",
-      site_address: defaults?.site_address || saved?.site_address || "",
-      date: format(new Date(), "yyyy-MM-dd"),
-      principal_contractor: "Peninsula Equine",
+    } catch { /* ignore parse errors */ }
       prepared_by: saved?.prepared_by || "",
       work_description: saved?.work_description || "",
       selected_hazards: saved?.selected_hazards || [] as number[],
@@ -94,7 +84,7 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
 
   // Auto-save draft
   const saveDraft = useCallback(() => {
-    try { localStorage.setItem(SWMS_DRAFT_KEY, JSON.stringify(form)); } catch {}
+    try { localStorage.setItem(SWMS_DRAFT_KEY, JSON.stringify(form)); } catch { /* ignore write errors */ }
   }, [form]);
 
   useEffect(() => {

@@ -81,7 +81,7 @@ export function TestimonialLightbox({ items, initialIndex, onClose }: Testimonia
   const handleTouchEnd = () => {
     if (touchStart === null || touchEnd === null) return;
     const diff = touchStart - touchEnd;
-    if (Math.abs(diff) > 50) { diff > 0 ? goNext() : goPrev(); }
+    if (Math.abs(diff) > 50) { if (diff > 0) { goNext(); } else { goPrev(); } }
     setTouchStart(null);
     setTouchEnd(null);
   };

@@ -52,16 +52,16 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          key: ${{ runner.os }}-bun-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-v2-
 
       - name: Report Bun cache status
         if: matrix.runtime == 'bun'
         run: |
           echo "Bun lockfile hash: ${{ hashFiles('bun.lockb') }}"
           echo "Bun cache hit: ${{ steps.bun-cache.outputs.cache-hit }}"
-          echo "Bun cache primary key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}"
+          echo "Bun cache primary key: ${{ runner.os }}-bun-v2-${{ hashFiles('bun.lockb') }}"
           echo "Bun cache matched key: ${{ steps.bun-cache.outputs.cache-matched-key }}"
           echo "Runner OS: $RUNNER_OS"
           echo "Bun cache restore key 1 (template): ${{ runner.os }}-bun-"
@@ -69,7 +69,7 @@ jobs:
           echo "## Bun Cache Status" >> $GITHUB_STEP_SUMMARY
           echo "- Lockfile hash: \`${{ hashFiles('bun.lockb') }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Cache hit: \`${{ steps.bun-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Primary key: \`${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Primary key: \`${{ runner.os }}-bun-v2-${{ hashFiles('bun.lockb') }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Matched key: \`${{ steps.bun-cache.outputs.cache-matched-key }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Restore keys (resolved):" >> $GITHUB_STEP_SUMMARY
           echo "  - \`${RUNNER_OS}-bun-\`" >> $GITHUB_STEP_SUMMARY

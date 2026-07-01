@@ -19,16 +19,7 @@ export function IncidentReportForm({ onSubmit, loading, userId, defaults }: { on
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
-    return null;
-  };
-
-  const [form, setForm] = useState(() => {
-    const saved = getInitial();
-    return {
-      project_name: defaults?.project_name || saved?.project_name || "",
-      site_address: defaults?.site_address || saved?.site_address || "",
-      incident_date: format(new Date(), "yyyy-MM-dd"),
+    } catch { /* ignore parse errors */ }
       incident_time: format(new Date(), "HH:mm"),
       reported_by: saved?.reported_by || "",
       severity: saved?.severity || "minor",
@@ -56,7 +47,7 @@ export function IncidentReportForm({ onSubmit, loading, userId, defaults }: { on
 
   // Auto-save draft
   const saveDraft = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* ignore write errors */ }
   }, [form]);
 
   useEffect(() => {
