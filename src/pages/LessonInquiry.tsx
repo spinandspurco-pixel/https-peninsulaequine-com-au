@@ -173,6 +173,14 @@ export default function LessonInquiry({
       toast.error("Please review the form for errors");
       return;
     }
+    // Flip to true (or pass via props) when attachments must be included.
+    const REQUIRE_ATTACHMENTS = false;
+    if (REQUIRE_ATTACHMENTS && files.length === 0) {
+      setFileError("Please attach at least one file before submitting.");
+      toast.error("Please attach at least one file before submitting.");
+      return;
+    }
+    setFileError(null);
     setSubmitting(true);
     try {
       // Upload attachments via the server-side validated edge function
@@ -220,7 +228,13 @@ export default function LessonInquiry({
         .catch(() => {});
     } catch (err) {
       console.error(err);
-      toast.error("Submission failed. Please try again or email us directly.");
+      const { UploadValidationError } = await import("@/lib/uploadInquiryAttachment");
+      if (err instanceof UploadValidationError) {
+        setFileError(err.message);
+        toast.error(err.message);
+      } else {
+        toast.error("Submission failed. Please try again or email us directly.");
+      }
     } finally {
       setSubmitting(false);
     }
