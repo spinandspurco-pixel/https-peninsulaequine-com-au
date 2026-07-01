@@ -16,6 +16,8 @@ import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnim
 import { cn } from "@/lib/utils";
 import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
 import { usePageMeta } from "@/lib/usePageMeta";
+import { serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
+import { SITE_BASE } from "@/lib/seo/localBusinessJsonLd";
 
 // ── Approved cinematic asset library ────────────────────────────────────
 // All legacy bright-daytime phone photos (covered-arena-finished-lit,
