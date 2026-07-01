@@ -186,6 +186,22 @@ export default function AdminInquiries() {
     }
     setRows((data ?? []) as Row[]);
     if (typeof total === "number") setCount(total);
+
+    const ids = (data ?? []).map((r: any) => r.id);
+    if (ids.length > 0) {
+      const { data: atts } = await supabase
+        .from("inquiry_attachments")
+        .select("inquiry_id")
+        .in("inquiry_id", ids);
+      const counts: Record<string, number> = {};
+      (atts ?? []).forEach((a: any) => {
+        if (!a.inquiry_id) return;
+        counts[a.inquiry_id] = (counts[a.inquiry_id] ?? 0) + 1;
+      });
+      setAttachmentCounts(counts);
+    } else {
+      setAttachmentCounts({});
+    }
   }, [debouncedSearch, statusFilter, sort, page]);
 
   useEffect(() => {
