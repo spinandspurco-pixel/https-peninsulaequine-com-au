@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
+import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
