@@ -224,20 +224,25 @@ export default function AdminTestimonials() {
           ) : items.length === 0 ? (
             <Card><CardContent className="py-12 text-center text-muted-foreground">No testimonials yet.</CardContent></Card>
           ) : (
-            <div className="space-y-3">
-              {items.map((t, idx) => (
+            <SortableList
+              items={items}
+              disabled={isPreview}
+              onReorder={async (ids) => {
+                const prev = items;
+                const map = new Map(items.map((i) => [i.id, i]));
+                setItems(ids.map((id, i) => ({ ...(map.get(id) as ManagedTestimonial), sort_order: i })));
+                const { error } = await persistSortOrder(supabase as any, "managed_testimonials", ids);
+                if (error) {
+                  toast.error("Failed to save order");
+                  setItems(prev);
+                } else {
+                  toast.success("Order saved");
+                }
+              }}
+              renderItem={(t, dragHandle) => (
                 <Card key={t.id} className={`group ${(t as any).pinned ? "ring-1 ring-accent/30 bg-accent/5" : ""}`}>
                   <CardContent className="flex items-start gap-4 py-4">
-                    {/* Reorder arrows */}
-                    <div className="flex flex-col gap-0.5 shrink-0 pt-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === 0 || isPreview} onClick={() => moveItem(t, "up")}>
-                        <ArrowUp className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === items.length - 1 || isPreview} onClick={() => moveItem(t, "down")}>
-                        <ArrowDown className="h-3 w-3" />
-                      </Button>
-                    </div>
-
+                    <div className="pt-1">{dragHandle}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{t.client_name}</h3>
@@ -284,8 +289,8 @@ export default function AdminTestimonials() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              )}
+            />
           )}
         </div>
       </div>
