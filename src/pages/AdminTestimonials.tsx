@@ -167,6 +167,15 @@ export default function AdminTestimonials() {
       return;
     }
     setSaving(true);
+    const wantFeatured = (editItem as any).featured ?? false;
+    if (wantFeatured) {
+      const others = items.filter((x) => (x as any).featured && x.id !== editItem.id);
+      if (others.length >= FEATURED_LIMIT) {
+        const existing = others[0];
+        await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+      }
+    }
     const payload = {
       client_name: editItem.client_name.trim(),
       client_role: editItem.client_role || null,
@@ -176,7 +185,7 @@ export default function AdminTestimonials() {
       media_url: editItem.media_url || null,
       sort_order: editItem.sort_order ?? 0,
       active: editItem.active ?? true,
-      featured: (editItem as any).featured ?? false,
+      featured: wantFeatured,
     };
 
     if (editItem.id) {
