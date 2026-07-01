@@ -73,7 +73,7 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-playwright-
+            ${{ runner.os }}-playwright-v2-
 
       - name: Install Playwright Chromium
         run: |
