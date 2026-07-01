@@ -1557,6 +1557,7 @@ export type Database = {
           early_bird_price: string | null
           event_date: string
           event_time: string | null
+          featured: boolean
           id: string
           image_url: string | null
           is_demo: boolean
@@ -1582,6 +1583,7 @@ export type Database = {
           early_bird_price?: string | null
           event_date: string
           event_time?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           is_demo?: boolean
@@ -1607,6 +1609,7 @@ export type Database = {
           early_bird_price?: string | null
           event_date?: string
           event_time?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           is_demo?: boolean
@@ -1790,6 +1793,7 @@ export type Database = {
           client_role: string | null
           created_at: string
           created_by: string | null
+          featured: boolean
           id: string
           is_demo: boolean
           media_type: string | null
@@ -1810,6 +1814,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           created_by?: string | null
+          featured?: boolean
           id?: string
           is_demo?: boolean
           media_type?: string | null
@@ -1830,6 +1835,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           created_by?: string | null
+          featured?: boolean
           id?: string
           is_demo?: boolean
           media_type?: string | null
