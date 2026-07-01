@@ -153,6 +153,62 @@ export default function AdminInquiries() {
 
   const totalPages = useMemo(() => Math.max(1, Math.ceil(count / PAGE_SIZE)), [count]);
 
+  const allOnPageSelected = rows.length > 0 && rows.every((r) => selected.has(r.id));
+  const someOnPageSelected = rows.some((r) => selected.has(r.id));
+
+  const toggleOne = useCallback((id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const togglePage = useCallback(() => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (rows.every((r) => next.has(r.id))) {
+        rows.forEach((r) => next.delete(r.id));
+      } else {
+        rows.forEach((r) => next.add(r.id));
+      }
+      return next;
+    });
+  }, [rows]);
+
+  const runBulk = useCallback(async (action: BulkAction) => {
+    const ids = Array.from(selected);
+    if (ids.length === 0) return;
+    setBulkRunning(true);
+    try {
+      if (action === "delete") {
+        const { error: err } = await supabase.from("inquiries").delete().in("id", ids);
+        if (err) throw err;
+        toast.success(`Deleted ${ids.length} ${ids.length === 1 ? "inquiry" : "inquiries"}.`);
+      } else {
+        const nextStatus: InquiryStatus = action === "approve" ? "in-progress" : "closed";
+        const { error: err } = await supabase
+          .from("inquiries")
+          .update({ status: nextStatus, updated_at: new Date().toISOString() })
+          .in("id", ids);
+        if (err) throw err;
+        toast.success(
+          `${BULK_COPY[action].verb}d ${ids.length} ${ids.length === 1 ? "inquiry" : "inquiries"}.`,
+        );
+      }
+      setSelected(new Set());
+      setPendingAction(null);
+      await load();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Bulk action failed";
+      toast.error(msg);
+    } finally {
+      setBulkRunning(false);
+    }
+  }, [selected, load]);
+
+
   return (
     <Layout>
       <main className="bg-background text-foreground type-architectural min-h-screen">
