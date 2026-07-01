@@ -141,3 +141,16 @@ export function getTrainerFilters(testimonials: TestimonialItem[]): string[] {
   });
   return Array.from(trainers).sort();
 }
+
+/**
+ * Fetch only testimonials flagged as `featured` for use in homepage sections.
+ * Falls back to pinned entries, then the first N merged entries.
+ */
+export async function fetchFeaturedTestimonials(limit = 3): Promise<TestimonialItem[]> {
+  const all = await fetchMergedTestimonials();
+  const featured = all.filter((t) => t.featured);
+  if (featured.length > 0) return featured.slice(0, limit);
+  const pinned = all.filter((t) => t.pinned);
+  if (pinned.length > 0) return pinned.slice(0, limit);
+  return all.slice(0, limit);
+}
