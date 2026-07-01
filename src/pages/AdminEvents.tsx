@@ -182,9 +182,11 @@ export default function AdminEvents() {
             <div><Label>Location</Label><Input value={editItem?.location || ""} onChange={(e) => setEditItem({ ...editItem, location: e.target.value })} /></div>
             <div><Label>Capacity</Label><Input type="number" value={editItem?.capacity ?? ""} onChange={(e) => setEditItem({ ...editItem, capacity: e.target.value ? parseInt(e.target.value) : null })} /></div>
             <div><Label>Image URL</Label><Input value={editItem?.image_url || ""} onChange={(e) => setEditItem({ ...editItem, image_url: e.target.value })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
             </div>
           </div>
           <DialogFooter>
