@@ -18,6 +18,10 @@ export interface UseAttachmentUploadResult {
   isUploading: boolean;
   /** True when at least one file finished in the "error" state. */
   hasErrors: boolean;
+  /** Number of files currently in the "error" state. */
+  errorCount: number;
+  /** Concise inline message summarising failed uploads (for use near submit). */
+  errorSummary: string | null;
   /**
    * Uploads any file that isn't already `success`. Resolves with the full
    * record set (in file order) on success, throws on the first failure so
