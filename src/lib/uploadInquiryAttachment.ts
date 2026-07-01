@@ -42,10 +42,27 @@ export async function uploadInquiryAttachment(
   return data;
 }
 
+export interface AttachmentRecord {
+  path: string;
+  name: string;
+  size: number;
+  mime: string;
+  uploaded_at: string;
+}
+
 export async function uploadInquiryAttachments(
   files: File[],
   folder = crypto.randomUUID(),
-): Promise<string[]> {
-  const results = await Promise.all(files.map((f) => uploadInquiryAttachment(f, folder)));
-  return results.map((r) => r.path);
+): Promise<{ paths: string[]; records: AttachmentRecord[] }> {
+  const uploaded = await Promise.all(files.map((f) => uploadInquiryAttachment(f, folder)));
+  const now = new Date().toISOString();
+  const records: AttachmentRecord[] = uploaded.map((u) => ({
+    path: u.path,
+    name: u.name,
+    size: u.size,
+    mime: u.mime,
+    uploaded_at: now,
+  }));
+  return { paths: records.map((r) => r.path), records };
 }
+
