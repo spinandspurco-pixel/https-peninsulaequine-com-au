@@ -183,7 +183,7 @@ const handler = async (req: Request): Promise<Response> => {
               ${data.eventLocation ? `
               <tr>
                 <td style="padding: 7px 0; font-weight: 600; color: #888; font-size: 14px;">📍 Location</td>
-                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${data.eventLocation}</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${esc(data.eventLocation)}</td>
               </tr>
               ` : ""}
               <tr>
