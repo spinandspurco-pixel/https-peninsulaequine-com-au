@@ -93,6 +93,12 @@ export function OAuthProviderPanel({
     try { return window.localStorage.getItem(LAST_PASTED_KEY) ?? ""; } catch { return ""; }
   });
   const [copiedAt, setCopiedAt] = useState<number | null>(null);
+  const [remote, setRemote] = useState<OAuthProviderConfig | null>(null);
+  const [remoteExpected, setRemoteExpected] = useState<string>("");
+  const [syncState, setSyncState] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
 
   useEffect(() => {
     try { window.localStorage.setItem(INTENDED_KEY, intendedClientId); } catch { /* ignore */ }
@@ -100,6 +106,47 @@ export function OAuthProviderPanel({
   useEffect(() => {
     try { window.localStorage.setItem(LAST_PASTED_KEY, pastedUrl); } catch { /* ignore */ }
   }, [pastedUrl]);
+
+  // Load persisted config from Lovable Cloud once (admin-only via RLS).
+  useEffect(() => {
+    let cancelled = false;
+    setSyncState("loading");
+    fetchOAuthProviderConfig("google")
+      .then((cfg) => {
+        if (cancelled) return;
+        setRemote(cfg);
+        setSyncState("loaded");
+        if (cfg?.intended_client_id) setIntendedClientId(cfg.intended_client_id);
+        if (cfg?.expected_redirect_uri) setRemoteExpected(cfg.expected_redirect_uri);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        // Non-admins (or unauth) get blocked by RLS — fall back silently.
+        setSyncState("unavailable");
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const effectiveExpectedCallback = remoteExpected.trim() || expectedCallback;
+
+  const save = async () => {
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const saved = await saveOAuthProviderConfig({
+        intended_client_id: intendedClientId.trim() || null,
+        expected_redirect_uri: remoteExpected.trim() || expectedCallback || null,
+      });
+      setRemote(saved);
+      setSavedAt(Date.now());
+      window.setTimeout(() => setSavedAt(null), 2000);
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
 
   const authorizeUrl = useMemo(() => {
     if (!url) return null;
