@@ -145,7 +145,11 @@ export default function AdminServices() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-foreground truncate">{s.title}</h3>
-                        {!s.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {s.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                         {s.starting_price && (
                           <Badge variant="outline" className="text-xs text-accent border-accent/30">
                             From {s.starting_price}
@@ -155,6 +159,15 @@ export default function AdminServices() {
                       <p className="text-sm text-muted-foreground truncate">{s.short_description}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePublish(s)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : s.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {s.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(s)} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
                         <Pencil className="h-4 w-4" />
                       </Button>
