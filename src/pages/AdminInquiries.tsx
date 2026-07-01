@@ -7,6 +7,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { Search, RefreshCw, Inbox, Download, Bookmark, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
+import { InquiryAttachmentsQuickView } from "@/components/admin/InquiryAttachmentsQuickView";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -117,6 +118,7 @@ export default function AdminInquiries() {
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
+  const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
   const [activePresetId, setActivePresetId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
@@ -184,6 +186,22 @@ export default function AdminInquiries() {
     }
     setRows((data ?? []) as Row[]);
     if (typeof total === "number") setCount(total);
+
+    const ids = (data ?? []).map((r: any) => r.id);
+    if (ids.length > 0) {
+      const { data: atts } = await supabase
+        .from("inquiry_attachments")
+        .select("inquiry_id")
+        .in("inquiry_id", ids);
+      const counts: Record<string, number> = {};
+      (atts ?? []).forEach((a: any) => {
+        if (!a.inquiry_id) return;
+        counts[a.inquiry_id] = (counts[a.inquiry_id] ?? 0) + 1;
+      });
+      setAttachmentCounts(counts);
+    } else {
+      setAttachmentCounts({});
+    }
   }, [debouncedSearch, statusFilter, sort, page]);
 
   useEffect(() => {
@@ -694,7 +712,7 @@ export default function AdminInquiries() {
               return (
                 <li
                   key={r.id}
-                  className={`grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
+                  className={`relative grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
                     isChecked ? "bg-accent/[0.04]" : "hover:bg-foreground/[0.015]"
                   }`}
                 >
@@ -749,7 +767,7 @@ export default function AdminInquiries() {
                         </div>
                       )}
                     </div>
-                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start">
+                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start gap-3">
                       <span
                         className={`font-mono text-[10px] uppercase tracking-[0.3em] ${
                           STATUS_TONE[r.status] ?? "text-foreground/55"
@@ -759,6 +777,15 @@ export default function AdminInquiries() {
                       </span>
                     </div>
                   </button>
+                  {attachmentCounts[r.id] > 0 && (
+                    <div className="absolute right-4 top-5 hidden sm:block">
+                      <InquiryAttachmentsQuickView
+                        inquiryId={r.id}
+                        count={attachmentCounts[r.id]}
+                        inquiryName={r.name}
+                      />
+                    </div>
+                  )}
                 </li>
               );
             })}
