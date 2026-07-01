@@ -175,6 +175,27 @@ export default function LessonInquiry({
     }
     setSubmitting(true);
     try {
+      // Upload attachments first so the paths can be stored on the inquiry row.
+      let attachment_urls: string[] = [];
+      if (files.length > 0) {
+        const folder = crypto.randomUUID();
+        attachment_urls = await Promise.all(
+          files.map(async (file) => {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
+            const path = `${folder}/${Date.now()}-${safeName}`;
+            const { error: upErr } = await supabase.storage
+              .from("inquiry-attachments")
+              .upload(path, file, {
+                cacheControl: "3600",
+                upsert: false,
+                contentType: file.type || undefined,
+              });
+            if (upErr) throw upErr;
+            return path;
+          }),
+        );
+      }
+
       const services: string[] =
         parsed.data.inquiry_type === "lesson" ? ["riding-lessons"] : ["consultation"];
       const { data: inserted, error } = await supabase
@@ -192,6 +213,7 @@ export default function LessonInquiry({
           project_vision: parsed.data.goals,
           project_details: parsed.data.notes || null,
           preferred_start: parsed.data.timing,
+          attachment_urls,
           status: "new",
         })
         .select("id")
@@ -201,7 +223,9 @@ export default function LessonInquiry({
       setConfirmation({ id: inserted.id });
       // fire-and-forget notification
       supabase.functions
-        .invoke("send-inquiry-notification", { body: { inquiry_id: inserted.id } })
+        .invoke("send-inquiry-notification", {
+          body: { inquiry_id: inserted.id, attachmentCount: attachment_urls.length },
+        })
         .catch(() => {});
     } catch (err) {
       console.error(err);
