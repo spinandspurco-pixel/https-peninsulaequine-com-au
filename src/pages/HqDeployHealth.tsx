@@ -854,7 +854,36 @@ export default function HqDeployHealth() {
 
         <RetryOutcomeErrorBoundary
           debugPayload={retryOutcome}
-          onReset={() => setRetryOutcome(null)}
+          debugContext={{
+            projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+            actorEmail: user?.email ?? null,
+            pageBundle: pageBundle ?? null,
+            lastCheckedAt,
+            retrying,
+            retryProgress,
+            lastRetryError,
+            config: {
+              targets: TARGETS,
+              maxAttempts: RETRY_MAX_ATTEMPTS,
+              backoffScheduleMs: RETRY_BACKOFF_SCHEDULE_MS,
+              logTrailLimit: RETRY_LOG_TRAIL_LIMIT,
+            },
+            recentLogEvents: retryLogTrail,
+            currentResults: results.map((r) => ({
+              label: r.label,
+              url: r.url,
+              ok: r.ok,
+              bundleFile: r.bundleFile,
+              stuck: isStuck(r),
+              hasLegacyKey: r.hasLegacyKey,
+              hasModernKey: r.hasModernKey,
+            })),
+          }}
+          onReset={() => {
+            setRetryOutcome(null);
+            setRetryLogTrail([]);
+            setLastRetryError(null);
+          }}
         >
         {retryOutcome && (
           <section
