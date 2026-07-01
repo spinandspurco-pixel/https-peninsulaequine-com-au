@@ -1,4 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  fetchOAuthProviderConfig,
+  saveOAuthProviderConfig,
+  type OAuthProviderConfig,
+} from "@/lib/oauthProviderConfig";
 
 /**
  * Google OAuth provider verification panel.
