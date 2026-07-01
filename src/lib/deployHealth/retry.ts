@@ -37,6 +37,41 @@ export type RetryOutcome = {
   message: string;
 };
 
+export type RetryLogPhase = "before" | "attempt" | "outcome";
+
+export type RetryLogEvent = {
+  /** Stable command name — makes correlation across logs trivial. */
+  command: "runRetryPromotion";
+  phase: RetryLogPhase;
+  /** 0 for the "before" pre-probe, 1..maxAttempts for retry passes, maxAttempts for the final outcome. */
+  attempt: number;
+  maxAttempts: number;
+  /** ISO timestamps for correlation with latency history rows. */
+  startedAt: string;
+  finishedAt: string;
+  /** Wall-clock duration of this phase, in ms. */
+  durationMs: number;
+  /** Per-target probe result recorded during this phase. */
+  targets: Array<{
+    label: string;
+    url: string;
+    ok: boolean;
+    bundleFile: string | null;
+    stuck: boolean;
+  }>;
+  /** Only set on `phase: "attempt" | "outcome"`. */
+  classification?: {
+    stillStuck: boolean;
+    changed: boolean;
+    willRetry: boolean;
+    /** Final RetryOutcome status — only set on `phase: "outcome"`. */
+    status?: RetryStatus;
+    message?: string;
+  };
+  /** Present when the loop threw. */
+  error?: string;
+};
+
 export type RetryDeps<P extends ProbeLike> = {
   targets: RetryTarget[];
   probe: (label: string, url: string) => Promise<P>;
@@ -51,7 +86,14 @@ export type RetryDeps<P extends ProbeLike> = {
    * Lets the UI show "Retrying promotion… (2/4)" without polling.
    */
   onAttempt?: (attempt: number, maxAttempts: number) => void;
+  /**
+   * Structured log callback. Fires once for the "before" pre-probe, once per
+   * retry attempt, and once with the final classification. Support uses these
+   * events to correlate a stuck promotion with the observed latency history.
+   */
+  onLog?: (event: RetryLogEvent) => void;
 };
+
 
 
 export function isStuck(r: ProbeLike): boolean {
