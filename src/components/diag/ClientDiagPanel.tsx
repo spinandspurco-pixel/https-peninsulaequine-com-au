@@ -349,6 +349,57 @@ export function ClientDiagPanel() {
     </div>
   );
 
+  // Configurable latency thresholds (ms). Persisted in localStorage.
+  const readThresholds = () => {
+    try {
+      const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (typeof p?.warn === "number" && typeof p?.crit === "number") return p as { warn: number; crit: number };
+      }
+    } catch {
+      /* ignore */
+    }
+    return { warn: 200, crit: 500 };
+  };
+  const [latencyThresholds, setLatencyThresholds] = useState<{ warn: number; crit: number }>(readThresholds);
+  const persistThresholds = (next: { warn: number; crit: number }) => {
+    setLatencyThresholds(next);
+    try {
+      window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+  };
+  const latencyColor = (ms: number | null | undefined): string | undefined => {
+    if (typeof ms !== "number" || !isFinite(ms)) return undefined;
+    if (ms >= latencyThresholds.crit) return "#ff8a8a";
+    if (ms >= latencyThresholds.warn) return "#fde68a";
+    return "#86efac";
+  };
+  const latencyRow = (label: string, ms: number | null | undefined) => {
+    const color = latencyColor(ms);
+    const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
+    const tier =
+      typeof ms === "number" && isFinite(ms)
+        ? ms >= latencyThresholds.crit
+          ? " · slow"
+          : ms >= latencyThresholds.warn
+            ? " · warn"
+            : " · ok"
+        : "";
+    return (
+      <div className="flex gap-2 leading-snug">
+        <span className="opacity-50 min-w-[140px]">{label}</span>
+        <span className="font-mono break-all" style={color ? { color } : undefined}>
+          {display}
+          {tier}
+        </span>
+      </div>
+    );
+  };
+
+
   const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
   const clientBuildCommit = typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)";
 
@@ -658,6 +709,53 @@ export function ClientDiagPanel() {
             </div>
           </div>
 
+          <div
+            style={{
+              marginTop: 4,
+              marginBottom: 4,
+              padding: "6px 8px",
+              border: "1px solid #2a313a",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
+              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>LATENCY THRESHOLDS (ms)</span>
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={latencyThresholds.warn}
+                  onChange={(e) =>
+                    persistThresholds({ ...latencyThresholds, warn: Math.max(0, Number(e.target.value) || 0) })
+                  }
+                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
+                />
+                <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={latencyThresholds.crit}
+                  onChange={(e) =>
+                    persistThresholds({ ...latencyThresholds, crit: Math.max(0, Number(e.target.value) || 0) })
+                  }
+                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
+                />
+                <button onClick={() => persistThresholds({ warn: 200, crit: 500 })} style={btn} title="Reset to 200 / 500">
+                  reset
+                </button>
+              </div>
+            </div>
+            <div style={{ opacity: 0.5, fontSize: 10 }}>
+              <span style={{ color: "#86efac" }}>green</span> &lt; {latencyThresholds.warn} ·{" "}
+              <span style={{ color: "#fde68a" }}>yellow</span> ≥ {latencyThresholds.warn} ·{" "}
+              <span style={{ color: "#ff8a8a" }}>red</span> ≥ {latencyThresholds.crit}
+            </div>
+          </div>
+
+
+
 
           <div
             style={{
@@ -735,7 +833,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -743,7 +841,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -799,7 +897,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {row("/api/health ms", health?.latencyMs ?? "—")}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null)}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -855,7 +953,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {row("/api/diag ms", diag.latencyMs ?? "—")}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -880,7 +978,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {row("/api/diag ms", diag.latencyMs ?? "—")}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
