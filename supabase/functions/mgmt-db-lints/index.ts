@@ -42,25 +42,35 @@ export function redact(value: unknown): unknown {
     return out;
   };
 
-  if (typeof value === "string") return scrubString(value);
-  if (value instanceof Error) {
-    const message = scrubString(value.message);
-    const clone = new Error(message);
-    clone.name = value.name;
-    if (typeof value.stack === "string") clone.stack = scrubString(value.stack);
-    return clone;
-  }
-  if (value && typeof value === "object") {
-    try {
-      const serialised = JSON.stringify(value);
-      const scrubbed = scrubString(serialised);
-      if (scrubbed !== serialised) return JSON.parse(scrubbed);
-      return value;
-    } catch {
-      return value;
+  const scrubValue = (v: unknown, seen: WeakSet<object>): unknown => {
+    if (typeof v === "string") return scrubString(v);
+    if (v instanceof Error) {
+      const message = scrubString(v.message ?? "");
+      const clone = new Error(message);
+      clone.name = v.name;
+      if (typeof v.stack === "string") clone.stack = scrubString(v.stack);
+      const cause = (v as { cause?: unknown }).cause;
+      if (cause !== undefined) {
+        (clone as { cause?: unknown }).cause = scrubValue(cause, seen);
+      }
+      return clone;
     }
-  }
-  return value;
+    if (v && typeof v === "object") {
+      if (seen.has(v as object)) return v;
+      seen.add(v as object);
+      try {
+        const serialised = JSON.stringify(v);
+        const scrubbed = scrubString(serialised);
+        if (scrubbed !== serialised) return JSON.parse(scrubbed);
+        return v;
+      } catch {
+        return v;
+      }
+    }
+    return v;
+  };
+
+  return scrubValue(value, new WeakSet());
 }
 
 // Install console sanitiser once per cold start. Any console.log/info/warn/
@@ -72,6 +82,35 @@ export function redact(value: unknown): unknown {
     const original = console[m].bind(console);
     console[m] = (...args: unknown[]) => original(...args.map(redact));
   }
+})();
+
+// Global safety net: any error that escapes an async handler and would
+// otherwise be printed unredacted by the Deno runtime gets scrubbed here
+// first. We can't prevent Deno from also logging its own copy, but our
+// scrubbed line lands in the log stream too so operators searching for the
+// token find only [REDACTED_MGMT_TOKEN].
+(function installGlobalErrorHandlers() {
+  const emit = (label: string, err: unknown) => {
+    const safe = redact(err);
+    const line =
+      safe instanceof Error
+        ? `${label}: ${safe.stack ?? safe.message}`
+        : `${label}: ${typeof safe === "string" ? safe : JSON.stringify(safe)}`;
+    try {
+      // Bypass any wrapped console to guarantee output even if the
+      // sanitiser itself threw.
+      Deno.stderr.writeSync(new TextEncoder().encode(line + "\n"));
+    } catch {
+      // best-effort
+    }
+  };
+  globalThis.addEventListener("error", (ev) => {
+    emit("uncaught_error", (ev as ErrorEvent).error ?? (ev as ErrorEvent).message);
+  });
+  globalThis.addEventListener("unhandledrejection", (ev) => {
+    ev.preventDefault();
+    emit("unhandled_rejection", (ev as PromiseRejectionEvent).reason);
+  });
 })();
 
 function json(body: unknown, status = 200) {
