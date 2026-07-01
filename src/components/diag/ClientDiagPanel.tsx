@@ -549,20 +549,32 @@ export function ClientDiagPanel() {
   );
 
   // Configurable latency thresholds (ms). Persisted in localStorage.
-  const readThresholds = () => {
+  // Shape supports a shared `default` plus optional per-endpoint overrides
+  // for /api/build-info, /api/health, /api/diag so each can be fine-tuned.
+  type ThresholdPair = { warn: number; crit: number };
+  type EndpointKey = "buildInfo" | "health" | "diag";
+  type LatencyThresholds = { default: ThresholdPair } & Partial<Record<EndpointKey, ThresholdPair>>;
+  const DEFAULT_PAIR: ThresholdPair = { warn: 200, crit: 500 };
+  const readThresholds = (): LatencyThresholds => {
     try {
       const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
       if (raw) {
         const p = JSON.parse(raw);
-        if (typeof p?.warn === "number" && typeof p?.crit === "number") return p as { warn: number; crit: number };
+        // Migrate legacy shape { warn, crit } → { default: { warn, crit } }
+        if (typeof p?.warn === "number" && typeof p?.crit === "number") {
+          return { default: { warn: p.warn, crit: p.crit } };
+        }
+        if (p?.default && typeof p.default.warn === "number" && typeof p.default.crit === "number") {
+          return p as LatencyThresholds;
+        }
       }
     } catch {
       /* ignore */
     }
-    return { warn: 200, crit: 500 };
+    return { default: { ...DEFAULT_PAIR } };
   };
-  const [latencyThresholds, setLatencyThresholds] = useState<{ warn: number; crit: number }>(readThresholds);
-  const persistThresholds = (next: { warn: number; crit: number }) => {
+  const [latencyThresholds, setLatencyThresholds] = useState<LatencyThresholds>(readThresholds);
+  const persistThresholds = (next: LatencyThresholds) => {
     setLatencyThresholds(next);
     try {
       window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
@@ -570,10 +582,22 @@ export function ClientDiagPanel() {
       /* ignore */
     }
   };
-  const latencyColor = (ms: number | null | undefined): string | undefined => {
+  const pairFor = (endpoint?: EndpointKey): ThresholdPair =>
+    (endpoint && latencyThresholds[endpoint]) || latencyThresholds.default;
+  const setEndpointPair = (endpoint: EndpointKey, pair: ThresholdPair | null) => {
+    const next: LatencyThresholds = { ...latencyThresholds };
+    if (pair === null) {
+      delete next[endpoint];
+    } else {
+      next[endpoint] = pair;
+    }
+    persistThresholds(next);
+  };
+  const latencyColor = (ms: number | null | undefined, endpoint?: EndpointKey): string | undefined => {
     if (typeof ms !== "number" || !isFinite(ms)) return undefined;
-    if (ms >= latencyThresholds.crit) return "#ff8a8a";
-    if (ms >= latencyThresholds.warn) return "#fde68a";
+    const p = pairFor(endpoint);
+    if (ms >= p.crit) return "#ff8a8a";
+    if (ms >= p.warn) return "#fde68a";
     return "#86efac";
   };
   const sparkline = (points: number[]) => {
@@ -612,15 +636,18 @@ export function ClientDiagPanel() {
     opts?: {
       currentError?: { message: string; httpStatus?: number } | null;
       lastError?: LastErr;
+      endpoint?: EndpointKey;
     },
   ) => {
-    const color = latencyColor(ms);
+    const endpoint = opts?.endpoint;
+    const pair = pairFor(endpoint);
+    const color = latencyColor(ms, endpoint);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
       typeof ms === "number" && isFinite(ms)
-        ? ms >= latencyThresholds.crit
+        ? ms >= pair.crit
           ? " · slow"
-          : ms >= latencyThresholds.warn
+          : ms >= pair.warn
             ? " · warn"
             : " · ok"
         : "";
@@ -856,26 +883,35 @@ export function ClientDiagPanel() {
     const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
     const fmtMs = (ms: number | null | undefined) =>
       typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "not measured";
-    const tier = (ms: number | null | undefined) => {
+    const tier = (ms: number | null | undefined, endpoint?: EndpointKey) => {
       if (typeof ms !== "number" || !isFinite(ms)) return "n/a";
-      if (ms >= latencyThresholds.crit) return `slow (≥ ${latencyThresholds.crit} ms)`;
-      if (ms >= latencyThresholds.warn) return `warn (≥ ${latencyThresholds.warn} ms)`;
+      const p = pairFor(endpoint);
+      if (ms >= p.crit) return `slow (≥ ${p.crit} ms)`;
+      if (ms >= p.warn) return `warn (≥ ${p.warn} ms)`;
       return "ok";
+    };
+    const d = latencyThresholds.default;
+    const fmtPair = (k: EndpointKey) => {
+      const p = latencyThresholds[k];
+      return p ? `warn ≥ ${p.warn} · crit ≥ ${p.crit}` : `inherit default`;
     };
     const lines = [
       `# Peninsula HQ diagnostics — captured ${stamp}`,
       `# origin: ${origin}`,
       `# route:  ${path}`,
-      `# latency thresholds: warn ≥ ${latencyThresholds.warn} ms · crit ≥ ${latencyThresholds.crit} ms`,
+      `# latency thresholds (default): warn ≥ ${d.warn} ms · crit ≥ ${d.crit} ms`,
+      `#   /api/build-info override: ${fmtPair("buildInfo")}`,
+      `#   /api/health override:     ${fmtPair("health")}`,
+      `#   /api/diag override:       ${fmtPair("diag")}`,
       `# observed latencies (client-measured, performance.now):`,
-      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
-      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs)}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
-      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs)}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
+      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
+      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs, "health")}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
+      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs, "diag")}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
       `#   document probe:  ${fmtMs(cacheHeaders?.["document.latencyMs"] ? Number(cacheHeaders["document.latencyMs"]) : null)}`,
       `#   bundle probe:    ${fmtMs(cacheHeaders?.["bundle.latencyMs"] ? Number(cacheHeaders["bundle.latencyMs"]) : null)}`,
       ``,
       `# 1. Build info (expected: JSON with buildTime, buildCommit, bundleHash)`,
-      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]`,
+      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]`,
       `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
       `  -D - -o /tmp/build-info.json \\`,
       `  -H 'Accept: application/json' \\`,
@@ -1053,50 +1089,111 @@ export function ClientDiagPanel() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
               <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>LATENCY THRESHOLDS (ms)</span>
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.warn}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, warn: Math.max(0, Number(e.target.value) || 0) })
+              <button
+                onClick={() => {
+                  try {
+                    window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
+                  } catch {
+                    /* ignore */
                   }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.crit}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, crit: Math.max(0, Number(e.target.value) || 0) })
-                  }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <button
-                  onClick={() => {
-                    try {
-                      window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
-                    } catch {
-                      /* ignore */
-                    }
-                    persistThresholds({ warn: 200, crit: 500 });
-                  }}
-                  style={btn}
-                  disabled={latencyThresholds.warn === 200 && latencyThresholds.crit === 500}
-                  title="Restore defaults: 200 ms warn · 500 ms crit"
-                >
-                  reset defaults
-                </button>
-              </div>
+                  persistThresholds({ default: { ...DEFAULT_PAIR } });
+                }}
+                style={btn}
+                disabled={
+                  latencyThresholds.default.warn === DEFAULT_PAIR.warn &&
+                  latencyThresholds.default.crit === DEFAULT_PAIR.crit &&
+                  !latencyThresholds.buildInfo &&
+                  !latencyThresholds.health &&
+                  !latencyThresholds.diag
+                }
+                title="Restore default 200/500 ms and clear all per-endpoint overrides"
+              >
+                reset defaults
+              </button>
             </div>
-            <div style={{ opacity: 0.5, fontSize: 10 }}>
-              <span style={{ color: "#86efac" }}>green</span> &lt; {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#fde68a" }}>yellow</span> ≥ {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#ff8a8a" }}>red</span> ≥ {latencyThresholds.crit}
+            {(() => {
+              type Row = { key: EndpointKey | "default"; label: string };
+              const rows: Row[] = [
+                { key: "default", label: "default (fallback)" },
+                { key: "buildInfo", label: "/api/build-info" },
+                { key: "health", label: "/api/health" },
+                { key: "diag", label: "/api/diag" },
+              ];
+              const rowStyle: React.CSSProperties = {
+                display: "grid",
+                gridTemplateColumns: "1fr auto auto auto auto auto",
+                gap: 4,
+                alignItems: "center",
+                marginBottom: 3,
+              };
+              const inputStyle: React.CSSProperties = {
+                width: 56,
+                background: "transparent",
+                color: "#e6edf3",
+                border: "1px solid #2a313a",
+                padding: "1px 4px",
+                fontSize: 10,
+              };
+              return rows.map(({ key, label }) => {
+                const isDefault = key === "default";
+                const override = !isDefault ? latencyThresholds[key as EndpointKey] : undefined;
+                const active = isDefault ? latencyThresholds.default : (override ?? latencyThresholds.default);
+                const inherited = !isDefault && !override;
+                const update = (patch: Partial<ThresholdPair>) => {
+                  if (isDefault) {
+                    persistThresholds({
+                      ...latencyThresholds,
+                      default: { ...latencyThresholds.default, ...patch },
+                    });
+                  } else {
+                    setEndpointPair(key as EndpointKey, { ...active, ...patch });
+                  }
+                };
+                return (
+                  <div key={key} style={rowStyle}>
+                    <span style={{ opacity: inherited ? 0.5 : 0.85, fontSize: 10 }}>
+                      {label}
+                      {inherited ? " · inherit" : ""}
+                    </span>
+                    <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.warn}
+                      onChange={(e) => update({ warn: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.crit}
+                      onChange={(e) => update({ crit: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    {!isDefault ? (
+                      <button
+                        onClick={() => setEndpointPair(key as EndpointKey, null)}
+                        style={{ ...btn, opacity: override ? 1 : 0.4 }}
+                        disabled={!override}
+                        title="Clear override — inherit default"
+                      >
+                        clear
+                      </button>
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                );
+              });
+            })()}
+            <div style={{ opacity: 0.5, fontSize: 10, marginTop: 2 }}>
+              <span style={{ color: "#86efac" }}>green</span> &lt; warn ·{" "}
+              <span style={{ color: "#fde68a" }}>yellow</span> ≥ warn ·{" "}
+              <span style={{ color: "#ff8a8a" }}>red</span> ≥ crit. Per-endpoint values override the default.
             </div>
           </div>
+
 
 
 
@@ -1177,7 +1274,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -1185,7 +1282,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -1241,7 +1338,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr })}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr, endpoint: "health" })}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -1297,7 +1394,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -1322,7 +1419,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
