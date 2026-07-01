@@ -92,7 +92,6 @@ function SortableRow({
   const handle = (
     <button
       type="button"
-      ref={setNodeRef as unknown as React.Ref<HTMLButtonElement>}
       {...attributes}
       {...listeners}
       aria-label="Drag to reorder"
