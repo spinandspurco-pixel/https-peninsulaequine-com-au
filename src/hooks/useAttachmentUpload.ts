@@ -129,6 +129,19 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
         for (let i = 0; i < files.length; i++) {
           const current = statusesRef.current[i];
           if (current?.state === "success") continue;
+          // Preflight already flagged this file — skip the roundtrip and
+          // keep the inline error surfaced.
+          if (current?.state === "error") {
+            const issue = preflightValidateFile(files[i]);
+            if (issue) {
+              throw new UploadValidationError({
+                message: friendlyUploadMessage(issue.code, issue.details, files[i].name),
+                code: issue.code,
+                details: issue.details,
+                fileName: files[i].name,
+              });
+            }
+          }
 
           patch(i, { state: "uploading", progress: 0 });
           try {
