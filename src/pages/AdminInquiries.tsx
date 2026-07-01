@@ -118,6 +118,7 @@ export default function AdminInquiries() {
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [downloadingAttachments, setDownloadingAttachments] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
   const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
   const [attachmentsOnly, setAttachmentsOnly] = useState<boolean>(() => {
@@ -305,6 +306,102 @@ export default function AdminInquiries() {
       setBulkRunning(false);
     }
   }, [selected, load]);
+
+  const downloadSelectedAttachments = useCallback(async () => {
+    const ids = Array.from(selected);
+    if (ids.length === 0) return;
+    setDownloadingAttachments(true);
+    const toastId = toast.loading("Preparing attachments…");
+    try {
+      const [{ data: attachments, error: attErr }, { data: inquiries, error: inqErr }] = await Promise.all([
+        supabase
+          .from("inquiry_attachments")
+          .select("id, inquiry_id, filename, storage_path, size_bytes, mime_type")
+          .in("inquiry_id", ids),
+        supabase.from("inquiries").select("id, name, email, created_at").in("id", ids),
+      ]);
+      if (attErr) throw attErr;
+      if (inqErr) throw inqErr;
+
+      const rows = attachments ?? [];
+      if (rows.length === 0) {
+        toast.dismiss(toastId);
+        toast.info("No attachments found on the selected inquiries.");
+        return;
+      }
+
+      const slug = (s: string) =>
+        s.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "inquiry";
+
+      const folderById = new Map<string, string>();
+      const used = new Set<string>();
+      for (const i of inquiries ?? []) {
+        const base = `${slug(i.name || i.email || "inquiry")}-${i.id.slice(0, 8)}`;
+        let name = base;
+        let n = 2;
+        while (used.has(name)) name = `${base}-${n++}`;
+        used.add(name);
+        folderById.set(i.id, name);
+      }
+
+      const { default: JSZip } = await import("jszip");
+      const zip = new JSZip();
+      let ok = 0;
+      let failed = 0;
+
+      await Promise.all(
+        rows.map(async (r) => {
+          try {
+            const path = r.storage_path.replace(/^inquiry-attachments\//, "");
+            const { data: signed, error: signErr } = await supabase.storage
+              .from("inquiry-attachments")
+              .createSignedUrl(path, 60 * 10);
+            if (signErr || !signed?.signedUrl) throw signErr ?? new Error("No signed URL");
+            const res = await fetch(signed.signedUrl);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const blob = await res.blob();
+            const folder = folderById.get(r.inquiry_id) ?? `inquiry-${r.inquiry_id.slice(0, 8)}`;
+            const safeName = r.filename.replace(/[\\/:*?"<>|]+/g, "_");
+            zip.file(`${folder}/${safeName}`, blob);
+            ok++;
+          } catch {
+            failed++;
+          }
+        }),
+      );
+
+      if (ok === 0) {
+        toast.dismiss(toastId);
+        toast.error("Could not download any attachments.");
+        return;
+      }
+
+      const blob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = format(new Date(), "yyyyMMdd-HHmm");
+      a.href = url;
+      a.download = `inquiry-attachments-${stamp}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      toast.dismiss(toastId);
+      toast.success(
+        failed > 0
+          ? `Downloaded ${ok} file${ok === 1 ? "" : "s"} · ${failed} failed.`
+          : `Downloaded ${ok} file${ok === 1 ? "" : "s"}.`,
+      );
+    } catch (e) {
+      toast.dismiss(toastId);
+      const msg = e instanceof Error ? e.message : "Download failed";
+      toast.error(msg);
+    } finally {
+      setDownloadingAttachments(false);
+    }
+  }, [selected]);
+
 
   const exportCsv = useCallback(async () => {
     setExporting(true);
@@ -730,6 +827,16 @@ export default function AdminInquiries() {
                   >
                     Approve → In Progress
                   </button>
+                  <button
+                    type="button"
+                    disabled={downloadingAttachments || bulkRunning}
+                    onClick={downloadSelectedAttachments}
+                    className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/70 hover:text-accent disabled:opacity-40 transition-colors"
+                  >
+                    <Paperclip className="h-3 w-3" strokeWidth={1.5} />
+                    {downloadingAttachments ? "Zipping…" : "Download attachments"}
+                  </button>
+
                   <button
                     type="button"
                     disabled={bulkRunning}
