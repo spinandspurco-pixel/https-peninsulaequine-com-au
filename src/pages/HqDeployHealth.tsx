@@ -625,25 +625,42 @@ export default function HqDeployHealth() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <button
-              type="button"
-              onClick={retryPromotion}
-              disabled={retrying || running}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
-              title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
-            >
-              {retrying ? "Retrying promotion…" : "Retry promotion"}
-            </button>
+            <div className="flex flex-col items-start gap-1">
+              <button
+                type="button"
+                onClick={retryPromotion}
+                disabled={retrying || running}
+                aria-busy={retrying}
+                className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
+              >
+                {retrying
+                  ? retryProgress && retryProgress.attempt > 0
+                    ? `Retrying… attempt ${retryProgress.attempt}/${retryProgress.max}`
+                    : "Retrying promotion…"
+                  : "Retry promotion"}
+              </button>
+              <span
+                role="status"
+                aria-live="polite"
+                className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 min-h-[12px]"
+              >
+                {retrying && retryProgress && retryProgress.attempt > 0
+                  ? `Attempt ${retryProgress.attempt} of ${retryProgress.max} in flight`
+                  : ""}
+              </span>
+            </div>
             <button
               type="button"
               onClick={run}
               disabled={running || retrying}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
               title="Immediately re-fetch bundle state, markers, and timestamps"
             >
               {running ? "Re-checking…" : "Re-run checks"}
             </button>
           </div>
+
         </section>
 
         <section
