@@ -181,9 +181,6 @@ function errorResponse(
 
 export async function handler(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") {
-    return errorResponse(405, "method_not_allowed", "Use POST.", { method: req.method });
-  }
 
   // Resolve limits from env each request so operators can adjust without redeploy.
   const { config, errors: configErrors } = loadUploadConfig();
@@ -192,6 +189,34 @@ export async function handler(req: Request): Promise<Response> {
     return errorResponse(500, "server_misconfigured", "Upload limits are misconfigured.");
   }
   const { maxBytes, allowed: ALLOWED } = config;
+
+  // Public config endpoint — lets the client pre-validate before uploading.
+  // Returns the active max byte size and allowed { mime: [extensions] } map.
+  if (req.method === "GET" || req.method === "HEAD") {
+    const url = new URL(req.url);
+    if (url.pathname.endsWith("/config") || url.searchParams.has("config") || req.method === "GET") {
+      const body = JSON.stringify({
+        max_bytes: maxBytes,
+        allowed_types: ALLOWED,
+        allowed_mime: Object.keys(ALLOWED),
+        allowed_extensions: Array.from(
+          new Set(Object.values(ALLOWED).flat()),
+        ).sort(),
+      });
+      return new Response(req.method === "HEAD" ? null : body, {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=60",
+        },
+      });
+    }
+  }
+
+  if (req.method !== "POST") {
+    return errorResponse(405, "method_not_allowed", "Use POST.", { method: req.method });
+  }
 
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().includes("multipart/form-data")) {
