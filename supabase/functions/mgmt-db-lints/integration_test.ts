@@ -67,7 +67,7 @@ Deno.test({
   name: "secret present + fake bearer → 401 without leaking the secret",
   sanitizeResources: false,
   sanitizeOps: false,
-  async fn() {
+  fn: async () => {
   Deno.env.set("SB_MGMT_ACCESS_TOKEN", TEST_TOKEN);
   const res = await handler(makeReq({ auth: "Bearer not.a.real.jwt" }));
   const body = await res.text();
