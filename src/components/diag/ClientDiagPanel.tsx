@@ -204,11 +204,29 @@ export function ClientDiagPanel() {
     void fetchDiag();
   }, [fetchDiag]);
 
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const POLL_MS = 10_000;
+  // Auto-probe interval in seconds; 0 = off. Persisted in localStorage.
+  const POLL_OPTIONS = [0, 5, 10, 30, 60] as const;
+  const [pollSeconds, setPollSeconds] = useState<number>(() => {
+    if (typeof window === "undefined") return 10;
+    const raw = window.localStorage.getItem("pe.diag.pollSeconds");
+    const n = raw == null ? 10 : Number(raw);
+    return POLL_OPTIONS.includes(n as typeof POLL_OPTIONS[number]) ? n : 10;
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.pollSeconds", String(pollSeconds));
+    } catch {
+      /* ignore */
+    }
+  }, [pollSeconds]);
+  const cyclePollSeconds = () => {
+    const idx = POLL_OPTIONS.indexOf(pollSeconds as typeof POLL_OPTIONS[number]);
+    const next = POLL_OPTIONS[(idx + 1) % POLL_OPTIONS.length];
+    setPollSeconds(next);
+  };
 
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!pollSeconds) return;
     const tick = async () => {
       if (document.visibilityState !== "visible") return;
       await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
@@ -216,9 +234,9 @@ export function ClientDiagPanel() {
     };
     const id = window.setInterval(() => {
       void tick();
-    }, POLL_MS);
+    }, pollSeconds * 1000);
     return () => window.clearInterval(id);
-  }, [autoRefresh, fetchBuildInfo, fetchHealth, fetchDiag]);
+  }, [pollSeconds, fetchBuildInfo, fetchHealth, fetchDiag]);
 
 
 
@@ -885,11 +903,11 @@ export function ClientDiagPanel() {
               </span>
               <div style={{ display: "flex", gap: 4 }}>
                 <button
-                  onClick={() => setAutoRefresh((v) => !v)}
-                  style={{ ...btn, color: autoRefresh ? "#7fbf7f" : "#9aa4af" }}
-                  title={`Auto-refresh every ${POLL_MS / 1000}s (pauses when tab hidden)`}
+                  onClick={cyclePollSeconds}
+                  style={{ ...btn, color: pollSeconds ? "#7fbf7f" : "#9aa4af" }}
+                  title="Auto-probe interval — cycles off / 5s / 10s / 30s / 60s. Pauses when tab hidden."
                 >
-                  {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
+                  {pollSeconds ? `auto ${pollSeconds}s ✓` : "auto off"}
                 </button>
                 <button
                   onClick={async () => {
