@@ -333,6 +333,12 @@ export default function AdminTestimonials() {
                 {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
               </Label>
             </div>
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
+              <Switch checked={(editItem as any)?.featured ?? false} onCheckedChange={(v) => setEditItem({ ...editItem, featured: v } as any)} />
+              <Label className="cursor-pointer">
+                {(editItem as any)?.featured ? "Featured — shown in homepage testimonials" : "Not featured on homepage"}
+              </Label>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditItem(null)}>Cancel</Button>
