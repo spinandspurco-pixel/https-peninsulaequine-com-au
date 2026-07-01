@@ -212,7 +212,8 @@ Deno.test({ name: "handler: 403 forbidden for authenticated non-admin", sanitize
   } finally {
     stub.restore();
   }
-});
+} });
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 5. handler(): upstream error responses and logs never contain the token
