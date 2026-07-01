@@ -128,21 +128,15 @@ async function probe(label: string, url: string): Promise<ProbeResult> {
   }
 }
 
+// Local wrapper preserves the existing ProbeResult signature at call sites
+// but delegates the actual staleness rule to the shared lib so the retry
+// loop and its unit tests stay in lock-step.
 function isStuck(r: ProbeResult): boolean {
-  if (!r.ok) return false;
-  // Stuck = legacy JWT still baked in, OR modern publishable key missing.
-  return r.hasLegacyKey === true || r.hasModernKey === false;
+  return isStuckShared(r);
 }
 
-type RetryOutcome = {
-  startedAt: string;
-  finishedAt: string;
-  attempts: number;
-  before: { label: string; bundleFile: string | null; stuck: boolean }[];
-  after: { label: string; bundleFile: string | null; stuck: boolean }[];
-  status: "success" | "partial" | "no_change" | "error";
-  message: string;
-};
+type RetryOutcome = SharedRetryOutcome;
+
 
 export default function HqDeployHealth() {
   const { user, isAdmin, loading: authLoading } = useAuth();
