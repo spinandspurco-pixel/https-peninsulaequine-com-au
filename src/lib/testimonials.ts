@@ -10,6 +10,7 @@ export interface TestimonialItem {
   quote: string;
   rating: number;
   pinned?: boolean;
+  featured?: boolean;
   mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   serviceTags: string[];
