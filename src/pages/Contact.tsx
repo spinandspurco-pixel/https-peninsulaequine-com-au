@@ -268,13 +268,24 @@ export default function Contact() {
         title: "Brief received",
         description: "We'll read the details and respond within two business days.",
       });
-    } catch {
-      trackFormError("contact_assessment", "insert_failed");
-      toast({
-        title: "Submission failed",
-        description: "Please try again or call the office directly.",
-        variant: "destructive",
-      });
+    } catch (err) {
+      const { UploadValidationError } = await import("@/lib/uploadInquiryAttachment");
+      if (err instanceof UploadValidationError) {
+        trackFormError("contact_assessment", `upload_${err.code}`);
+        setFileError(err.message);
+        toast({
+          title: "Attachment rejected",
+          description: err.message,
+          variant: "destructive",
+        });
+      } else {
+        trackFormError("contact_assessment", "insert_failed");
+        toast({
+          title: "Submission failed",
+          description: "Please try again or call the office directly.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSubmitting(false);
     }
