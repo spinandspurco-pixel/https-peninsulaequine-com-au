@@ -56,9 +56,14 @@ export function ClientDiagPanel() {
   const [health, setHealth] = useState<HealthState>(null);
   const [diag, setDiag] = useState<DiagState>(null);
 
+  const [healthHistory, setHealthHistory] = useState<number[]>([]);
+  const [diagHistory, setDiagHistory] = useState<number[]>([]);
+  const [buildHistory, setBuildHistory] = useState<number[]>([]);
+  const HISTORY_MAX = 10;
 
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
+
 
   const measure = () => {
     const start =
@@ -146,6 +151,29 @@ export function ClientDiagPanel() {
       setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
     }
   }, []);
+
+  const lastBuildStamp = serverBuild?.fetchedAt ?? null;
+  const lastHealthStamp = health?.fetchedAt ?? null;
+  const lastDiagStamp = diag?.fetchedAt ?? null;
+  useEffect(() => {
+    const ms = serverBuild?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setBuildHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastBuildStamp, serverBuild?.latencyMs]);
+  useEffect(() => {
+    const ms = health?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setHealthHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastHealthStamp, health?.latencyMs]);
+  useEffect(() => {
+    const ms = diag?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setDiagHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastDiagStamp, diag?.latencyMs]);
+
 
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
@@ -377,7 +405,36 @@ export function ClientDiagPanel() {
     if (ms >= latencyThresholds.warn) return "#fde68a";
     return "#86efac";
   };
-  const latencyRow = (label: string, ms: number | null | undefined) => {
+  const sparkline = (points: number[]) => {
+    if (!points || points.length < 2) return null;
+    const w = 60;
+    const h = 14;
+    const min = Math.min(...points);
+    const max = Math.max(...points);
+    const range = max - min || 1;
+    const step = w / (points.length - 1);
+    const path = points
+      .map((v, i) => {
+        const x = i * step;
+        const y = h - ((v - min) / range) * h;
+        return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(" ");
+    const last = points[points.length - 1];
+    const stroke = latencyColor(last) ?? "currentColor";
+    return (
+      <svg
+        width={w}
+        height={h}
+        viewBox={`0 0 ${w} ${h}`}
+        style={{ opacity: 0.85 }}
+        aria-label={`last ${points.length} latencies: ${points.join(", ")} ms`}
+      >
+        <path d={path} fill="none" stroke={stroke} strokeWidth={1} />
+      </svg>
+    );
+  };
+  const latencyRow = (label: string, ms: number | null | undefined, history?: number[]) => {
     const color = latencyColor(ms);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
@@ -388,16 +445,30 @@ export function ClientDiagPanel() {
             ? " · warn"
             : " · ok"
         : "";
+    const points = history ?? [];
+    const stats =
+      points.length >= 2
+        ? ` · min ${Math.min(...points)} / max ${Math.max(...points)} / n=${points.length}`
+        : "";
     return (
-      <div className="flex gap-2 leading-snug">
+      <div className="flex gap-2 leading-snug items-center">
         <span className="opacity-50 min-w-[140px]">{label}</span>
         <span className="font-mono break-all" style={color ? { color } : undefined}>
           {display}
           {tier}
         </span>
+        {points.length >= 2 ? (
+          <>
+            <span className="inline-flex items-center" title={`last ${points.length}: ${points.join(", ")} ms`}>
+              {sparkline(points)}
+            </span>
+            <span className="opacity-40 font-mono text-[10px]">{stats}</span>
+          </>
+        ) : null}
       </div>
     );
   };
+
 
 
   const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
@@ -437,6 +508,12 @@ export function ClientDiagPanel() {
       url: window.location.href,
       host,
       environment,
+      latencyHistory: {
+        buildInfo: buildHistory,
+        health: healthHistory,
+        diag: diagHistory,
+        max: HISTORY_MAX,
+      },
       client: {
         capturedAt,
         bundleHash: bundleHash,
@@ -863,7 +940,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -871,7 +948,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -927,7 +1004,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {latencyRow("/api/health ms", health?.latencyMs ?? null)}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory)}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -983,7 +1060,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -1008,7 +1085,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
