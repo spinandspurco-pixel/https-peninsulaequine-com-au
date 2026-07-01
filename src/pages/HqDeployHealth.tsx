@@ -145,6 +145,7 @@ export default function HqDeployHealth() {
   const [running, setRunning] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
+  const [retryProgress, setRetryProgress] = useState<{ attempt: number; max: number } | null>(null);
   const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
   const [audit, setAudit] = useState<AuditRow[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
