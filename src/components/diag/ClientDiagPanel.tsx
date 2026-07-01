@@ -1384,6 +1384,16 @@ export function ClientDiagPanel() {
                   {critAutoProbe ? `crit-reprobe ✓${lastCritReprobeAt ? ` · ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)}` : ""}` : "crit-reprobe off"}
                 </button>
                 <button
+                  onClick={() => setLatencyToasts((v) => !v)}
+                  style={{ ...btn, color: latencyToasts ? "#fde68a" : "#9aa4af" }}
+                  title={
+                    latencyToasts
+                      ? "Latency toasts ON — notified when /api/health or /api/diag cross warn/crit or error"
+                      : "Show toast notifications when /api/health or /api/diag cross warn/crit or error"
+                  }
+                >
+                  {latencyToasts ? "toasts ✓" : "toasts off"}
+                <button
                   onClick={async () => {
                     setProbing(true);
                     try {
