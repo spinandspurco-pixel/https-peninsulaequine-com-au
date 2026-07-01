@@ -799,7 +799,7 @@ export default function Lessons() {
 
   return (
     <Layout>
-      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/book-lesson" />
+      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/lessons/book" />
 
       <PageHeader
         title="Riding Lessons"
