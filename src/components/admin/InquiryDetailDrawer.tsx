@@ -40,6 +40,7 @@ interface FullInquiry {
   budget_range: string | null;
   preferred_start: string | null;
   attachment_urls: string[] | null;
+  attachments: AttachmentMeta[] | null;
   lead_tier: string | null;
   lead_tags: string[] | null;
   status: string;
@@ -47,9 +48,20 @@ interface FullInquiry {
   updated_at: string;
 }
 
+interface AttachmentMeta {
+  path: string;
+  name?: string | null;
+  size?: number | null;
+  mime?: string | null;
+  uploaded_at?: string | null;
+}
+
 interface Attachment {
   raw: string;
   name: string;
+  size: number | null;
+  mime: string | null;
+  uploaded_at: string | null;
   url: string | null;
 }
 
