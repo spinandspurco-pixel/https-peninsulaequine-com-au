@@ -125,9 +125,32 @@ export default function Contact() {
     timeline: "",
     budget: "",
   });
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const MAX_FILES = 5;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB per file
+  const ALLOWED = /\.(pdf|jpe?g|png|webp|heic|dwg|dxf|doc|docx|xls|xlsx)$/i;
+
+  const addFiles = (incoming: FileList | null) => {
+    if (!incoming) return;
+    setFileError(null);
+    const next = [...files];
+    for (const f of Array.from(incoming)) {
+      if (next.length >= MAX_FILES) { setFileError(`Maximum ${MAX_FILES} files.`); break; }
+      if (f.size > MAX_SIZE) { setFileError(`${f.name} exceeds 10MB.`); continue; }
+      if (!ALLOWED.test(f.name)) { setFileError(`${f.name}: file type not supported.`); continue; }
+      if (next.some((x) => x.name === f.name && x.size === f.size)) continue;
+      next.push(f);
+    }
+    setFiles(next);
+  };
+
+  const removeFile = (idx: number) =>
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
 
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
