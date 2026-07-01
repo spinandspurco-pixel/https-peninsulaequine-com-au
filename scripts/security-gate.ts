@@ -39,9 +39,13 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { assertMgmtToken } from "./ci/assertMgmtToken";
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "aizkqajrzkvwuobisnzr";
+// Prefer the standard SB_MGMT_ACCESS_TOKEN. Legacy fallback stays for one release
+// so CI on branches without the renamed secret keeps working.
 const TOKEN = process.env.SB_MGMT_ACCESS_TOKEN ?? process.env.SUPABASE_ACCESS_TOKEN ?? "";
+
 const BASELINE_PATH = resolve(process.cwd(), ".security/baseline.json");
 const REPORT_PATH = resolve(process.cwd(), "security-report.json");
 const ADDED_PATH = resolve(process.cwd(), "security-added.json");
