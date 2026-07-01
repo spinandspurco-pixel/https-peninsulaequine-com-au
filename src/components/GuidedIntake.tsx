@@ -1,12 +1,22 @@
-import { useState, useEffect, useCallback, useId } from "react";
-import { X } from "lucide-react";
+import { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
+import { X, Paperclip, Trash2 } from "lucide-react";
 import { useIntake } from "@/hooks/useIntake";
 import { supabase } from "@/integrations/supabase/client";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useSiteChrome } from "@/hooks/useSiteChrome";
+import {
+  uploadInquiryAttachments,
+  linkAttachmentsToInquiry,
+  UploadValidationError,
+  type AttachmentRecord,
+} from "@/lib/uploadInquiryAttachment";
 import { z } from "zod";
+
+const MAX_FILES = 5;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+
 
 /* ── Step data ── */
 const INTENT_OPTIONS = [
@@ -114,9 +124,12 @@ export function GuidedIntake() {
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const attachmentFolder = useMemo(() => crypto.randomUUID(), [isOpen]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* Reset on close */
   useEffect(() => {
@@ -133,6 +146,7 @@ export function GuidedIntake() {
         setPhone("");
         setLocation("");
         setNotes("");
+        setFiles([]);
         setErrors({});
         setSubmitted(false);
       }, 500);
@@ -144,12 +158,13 @@ export function GuidedIntake() {
     }
   }, [isOpen]);
 
+
   const advance = useCallback((selection: string, setter: (v: string) => void) => {
     setter(selection);
     setTimeout(() => setStep((s) => s + 1), 300);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleDetailsContinue = () => {
     const result = detailsSchema.safeParse({ name, email, phone, location, notes });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -157,6 +172,49 @@ export function GuidedIntake() {
         if (e.path[0]) fieldErrors[e.path[0] as string] = e.message;
       });
       setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    setStep(5);
+  };
+
+  const addFiles = (incoming: FileList | File[] | null) => {
+    if (!incoming) return;
+    const arr = Array.from(incoming);
+    const next: File[] = [...files];
+    const nextErrors: string[] = [];
+    for (const f of arr) {
+      if (next.length >= MAX_FILES) {
+        nextErrors.push(`Only ${MAX_FILES} files allowed.`);
+        break;
+      }
+      if (f.size === 0) {
+        nextErrors.push(`"${f.name}" is empty.`);
+        continue;
+      }
+      if (f.size > MAX_FILE_BYTES) {
+        nextErrors.push(`"${f.name}" exceeds 10 MB.`);
+        continue;
+      }
+      if (next.some((x) => x.name === f.name && x.size === f.size)) continue;
+      next.push(f);
+    }
+    setFiles(next);
+    setErrors((prev) => ({
+      ...prev,
+      files: nextErrors.join(" ") || "",
+    }));
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = async () => {
+    // Re-validate details defensively in case the user navigated back.
+    const result = detailsSchema.safeParse({ name, email, phone, location, notes });
+    if (!result.success) {
+      setStep(4);
       return;
     }
     setErrors({});
@@ -169,29 +227,52 @@ export function GuidedIntake() {
       else if (intent === "estate") services.push("full-facility");
       else services.push("infrastructure");
 
-      const { error: insertError } = await supabase.from("inquiries").insert({
-        name: result.data.name,
-        email: result.data.email,
-        phone: result.data.phone || null,
-        services,
-        project_details: [
-          `Intent: ${intent}`,
-          `Land: ${land}`,
-          `Stage: ${stage}`,
-          `Values: ${values}`,
-          location ? `Location: ${location}` : null,
-          notes ? `Notes: ${notes}` : null,
-        ].filter(Boolean).join(" | "),
-        status: "new",
-      });
-
-      if (insertError) {
-        console.error("[GuidedIntake] insert failed", insertError);
-        throw insertError;
+      // 1. Upload attachments first (server-side validated). If any file
+      // fails, surface the friendly error and keep the user on step 5.
+      let attachmentRecords: AttachmentRecord[] = [];
+      let attachmentIds: string[] = [];
+      let attachmentPaths: string[] = [];
+      if (files.length) {
+        const uploaded = await uploadInquiryAttachments(files, attachmentFolder);
+        attachmentRecords = uploaded.records;
+        attachmentIds = uploaded.ids;
+        attachmentPaths = uploaded.paths;
       }
 
-      // Fire admin notification email. Non-blocking: submission is already
-      // persisted, so a delivery failure must not surface to the applicant.
+      // 2. Persist the inquiry row (returning id so we can link attachments).
+      const { data: inserted, error: insertError } = await supabase
+        .from("inquiries")
+        .insert({
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone || null,
+          services,
+          project_details: [
+            `Intent: ${intent}`,
+            `Land: ${land}`,
+            `Stage: ${stage}`,
+            `Values: ${values}`,
+            location ? `Location: ${location}` : null,
+            notes ? `Notes: ${notes}` : null,
+          ].filter(Boolean).join(" | "),
+          status: "new",
+          attachment_urls: attachmentPaths,
+          attachments: attachmentRecords as unknown as never,
+        })
+        .select("id")
+        .single();
+
+      if (insertError || !inserted) {
+        console.error("[GuidedIntake] insert failed", insertError);
+        throw insertError ?? new Error("insert failed");
+      }
+
+      // 3. Link uploaded attachment rows to the new inquiry.
+      if (attachmentIds.length) {
+        await linkAttachmentsToInquiry(attachmentIds, inserted.id).catch(() => {});
+      }
+
+      // Fire admin notification email. Non-blocking.
       supabase.functions
         .invoke("send-inquiry-notification", {
           body: {
@@ -206,16 +287,27 @@ export function GuidedIntake() {
               `Values: ${values}`,
               location ? `Location: ${location}` : null,
               notes ? `Notes: ${notes}` : null,
+              attachmentPaths.length ? `Attachments: ${attachmentPaths.length}` : null,
             ].filter(Boolean).join(" | "),
           },
         })
         .catch((e) => console.warn("[GuidedIntake] notification invoke failed", e));
 
       trackCtaClick("guided_intake_submit", { intent, land, stage, values });
-      trackConversion("guided_intake", { intent, land, stage, values });
+      trackConversion("guided_intake", {
+        intent,
+        land,
+        stage,
+        values,
+        attachmentCount: attachmentPaths.length,
+      });
       setSubmitted(true);
-      setStep(5);
+      setStep(6);
     } catch (err) {
+      if (err instanceof UploadValidationError) {
+        setErrors({ files: err.message });
+        return;
+      }
       const message =
         err instanceof Error && err.message
           ? `We couldn't lodge your application — ${err.message}. Please try again or email info@peninsulaequine.systems.`
@@ -225,6 +317,7 @@ export function GuidedIntake() {
       setSubmitting(false);
     }
   };
+
 
   if (!showGuidedIntake) return null;
 
@@ -389,22 +482,121 @@ export function GuidedIntake() {
               We take on a limited number of projects each season.
             </p>
             <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className={cn(
-                "w-full py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500 mt-4",
-                submitting
-                  ? "bg-accent/20 text-accent-foreground/30 cursor-wait"
-                  : "bg-accent text-accent-foreground hover:bg-accent/90"
-              )}
+              onClick={handleDetailsContinue}
+              className="w-full py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500 mt-4 bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              {submitting ? "Submitting…" : "Apply for Consideration"}
+              Continue
             </button>
           </div>
         </StepWrapper>
 
-        {/* Step 5 — Confirmation */}
+        {/* Step 5 — Attachments (optional) */}
         <StepWrapper visible={step === 5}>
+          <div className="w-full space-y-6 max-w-md">
+            <div className="space-y-2">
+              <p className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
+                Attach anything relevant.
+              </p>
+              <p className="font-serif text-[12px] text-foreground/35 italic leading-relaxed">
+                Site photos, sketches, surveys, or briefs. Optional — up to {MAX_FILES} files, 10 MB each.
+              </p>
+            </div>
+
+            <label
+              htmlFor="guided-intake-files"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                addFiles(e.dataTransfer?.files ?? null);
+              }}
+              className="block cursor-pointer border border-dashed border-border/30 hover:border-accent/40 transition-colors duration-500 px-6 py-8 text-center"
+            >
+              <Paperclip className="mx-auto w-4 h-4 text-foreground/30 mb-3" />
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/50">
+                Drop files or click to browse
+              </p>
+              <p className="font-serif text-[11px] text-foreground/25 italic mt-2">
+                PDF, images, or common office formats
+              </p>
+              <input
+                ref={fileInputRef}
+                id="guided-intake-files"
+                type="file"
+                multiple
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                className="sr-only"
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }}
+              />
+            </label>
+
+            {files.length > 0 && (
+              <ul className="space-y-2">
+                {files.map((f, i) => (
+                  <li
+                    key={`${f.name}-${i}`}
+                    className="flex items-center justify-between border border-border/15 px-3 py-2 text-xs text-foreground/60"
+                  >
+                    <span className="truncate mr-3">
+                      {f.name}
+                      <span className="text-foreground/25 ml-2">
+                        {(f.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(i)}
+                      className="text-foreground/30 hover:text-destructive/80 transition-colors"
+                      aria-label={`Remove ${f.name}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {errors.files && (
+              <p className="text-xs text-destructive/70">{errors.files}</p>
+            )}
+            {errors.form && (
+              <p className="text-xs text-destructive/70">{errors.form}</p>
+            )}
+
+            <div className="flex items-center gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setStep(4)}
+                disabled={submitting}
+                className="flex-1 py-4 text-xs uppercase tracking-[0.2em] font-medium border border-border/25 text-foreground/60 hover:text-foreground/90 transition-colors duration-500"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={cn(
+                  "flex-[2] py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500",
+                  submitting
+                    ? "bg-accent/20 text-accent-foreground/30 cursor-wait"
+                    : "bg-accent text-accent-foreground hover:bg-accent/90"
+                )}
+              >
+                {submitting
+                  ? files.length
+                    ? "Uploading…"
+                    : "Submitting…"
+                  : "Apply for Consideration"}
+              </button>
+            </div>
+          </div>
+        </StepWrapper>
+
+        {/* Step 6 — Confirmation */}
+        <StepWrapper visible={step === 6}>
+
           <div className="w-full text-center space-y-6 max-w-md">
             <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight">
               Application received.
