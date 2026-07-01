@@ -5,8 +5,46 @@ import { HqNav } from "@/components/hq/HqNav";
 import { supabase } from "@/integrations/supabase/client";
 import { format, formatDistanceToNow } from "date-fns";
 import { Search, RefreshCw, Inbox } from "lucide-react";
+import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+type BulkAction = "approve" | "complete" | "delete";
+
+const BULK_COPY: Record<BulkAction, { verb: string; title: string; body: (n: number) => string; confirm: string; destructive?: boolean }> = {
+  approve: {
+    verb: "Approve",
+    title: "Approve selected inquiries?",
+    body: (n) => `${n} ${n === 1 ? "inquiry" : "inquiries"} will move to In Progress.`,
+    confirm: "Approve",
+  },
+  complete: {
+    verb: "Mark complete",
+    title: "Mark selected inquiries complete?",
+    body: (n) => `${n} ${n === 1 ? "inquiry" : "inquiries"} will move to Closed.`,
+    confirm: "Mark complete",
+  },
+  delete: {
+    verb: "Delete",
+    title: "Delete selected inquiries?",
+    body: (n) =>
+      `${n} ${n === 1 ? "inquiry" : "inquiries"} and any linked notes will be permanently removed. This cannot be undone.`,
+    confirm: "Delete permanently",
+    destructive: true,
+  },
+};
+
 
 type SortKey = "newest" | "oldest" | "updated";
 
