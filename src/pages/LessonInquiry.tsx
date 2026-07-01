@@ -102,7 +102,40 @@ export default function LessonInquiry({
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
 
+  const MAX_FILES = 5;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10 MB per file
+  const ALLOWED = /\.(jpe?g|png|webp|heic|pdf|doc|docx)$/i;
+
+  const addFiles = (incoming: FileList | File[]) => {
+    setFileError(null);
+    const list = Array.from(incoming);
+    const merged = [...files];
+    for (const f of list) {
+      if (merged.length >= MAX_FILES) {
+        setFileError(`Up to ${MAX_FILES} files.`);
+        break;
+      }
+      if (!ALLOWED.test(f.name)) {
+        setFileError(`${f.name}: unsupported file type.`);
+        continue;
+      }
+      if (f.size > MAX_SIZE) {
+        setFileError(`${f.name}: exceeds 10 MB.`);
+        continue;
+      }
+      if (f.size === 0) {
+        setFileError(`${f.name}: empty file.`);
+        continue;
+      }
+      if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
+    }
+    setFiles(merged);
+  };
+
+  const removeFile = (i: number) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
@@ -142,6 +175,27 @@ export default function LessonInquiry({
     }
     setSubmitting(true);
     try {
+      // Upload attachments first so the paths can be stored on the inquiry row.
+      let attachment_urls: string[] = [];
+      if (files.length > 0) {
+        const folder = crypto.randomUUID();
+        attachment_urls = await Promise.all(
+          files.map(async (file) => {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
+            const path = `${folder}/${Date.now()}-${safeName}`;
+            const { error: upErr } = await supabase.storage
+              .from("inquiry-attachments")
+              .upload(path, file, {
+                cacheControl: "3600",
+                upsert: false,
+                contentType: file.type || undefined,
+              });
+            if (upErr) throw upErr;
+            return path;
+          }),
+        );
+      }
+
       const services: string[] =
         parsed.data.inquiry_type === "lesson" ? ["riding-lessons"] : ["consultation"];
       const { data: inserted, error } = await supabase
@@ -159,6 +213,7 @@ export default function LessonInquiry({
           project_vision: parsed.data.goals,
           project_details: parsed.data.notes || null,
           preferred_start: parsed.data.timing,
+          attachment_urls,
           status: "new",
         })
         .select("id")
@@ -168,7 +223,9 @@ export default function LessonInquiry({
       setConfirmation({ id: inserted.id });
       // fire-and-forget notification
       supabase.functions
-        .invoke("send-inquiry-notification", { body: { inquiry_id: inserted.id } })
+        .invoke("send-inquiry-notification", {
+          body: { inquiry_id: inserted.id, attachmentCount: attachment_urls.length },
+        })
         .catch(() => {});
     } catch (err) {
       console.error(err);
@@ -238,7 +295,18 @@ export default function LessonInquiry({
 
           {step === 1 && <StepContact data={data} set={set} errors={errors} />}
           {step === 2 && <StepGoals data={data} set={set} errors={errors} />}
-          {step === 3 && <StepTiming data={data} set={set} errors={errors} />}
+          {step === 3 && (
+            <StepTiming
+              data={data}
+              set={set}
+              errors={errors}
+              files={files}
+              fileError={fileError}
+              onAddFiles={addFiles}
+              onRemoveFile={removeFile}
+              maxFiles={MAX_FILES}
+            />
+          )}
 
           <div className="flex items-center justify-between pt-6 border-t border-foreground/10">
             <button
@@ -450,7 +518,15 @@ function StepGoals({ data, set, errors }: StepProps) {
   );
 }
 
-function StepTiming({ data, set, errors }: StepProps) {
+type TimingProps = StepProps & {
+  files: File[];
+  fileError: string | null;
+  onAddFiles: (list: FileList | File[]) => void;
+  onRemoveFile: (i: number) => void;
+  maxFiles: number;
+};
+
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
@@ -501,6 +577,57 @@ function StepTiming({ data, set, errors }: StepProps) {
         />
         <FieldError msg={errors.notes} />
       </div>
+
+      <div>
+        <Label htmlFor="attachments" className="text-xs uppercase tracking-[0.3em] text-foreground/60">
+          Attachments <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+        </Label>
+        <label
+          htmlFor="attachments"
+          className="mt-2 flex cursor-pointer flex-col items-center justify-center border border-dashed border-foreground/20 px-4 py-6 text-center transition-colors hover:border-foreground/40"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files?.length) onAddFiles(e.dataTransfer.files);
+          }}
+        >
+          <p className="text-sm text-foreground/70">Drop files or click to upload</p>
+          <p className="mt-1 text-xs text-foreground/40">
+            Up to {maxFiles} · 10 MB each · JPG, PNG, WEBP, HEIC, PDF, DOC
+          </p>
+          <input
+            id="attachments"
+            type="file"
+            multiple
+            className="sr-only"
+            accept=".jpg,.jpeg,.png,.webp,.heic,.pdf,.doc,.docx"
+            onChange={(e) => {
+              if (e.target.files?.length) onAddFiles(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        {fileError && <p className="mt-2 text-xs text-destructive">{fileError}</p>}
+        {files.length > 0 && (
+          <ul className="mt-3 space-y-1 text-xs text-foreground/70">
+            {files.map((f, i) => (
+              <li key={`${f.name}-${i}`} className="flex items-center justify-between border-b border-foreground/10 py-1">
+                <span className="truncate pr-3">
+                  {f.name} <span className="text-foreground/40">· {(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onRemoveFile(i)}
+                  className="text-[10px] uppercase tracking-[0.25em] text-foreground/50 hover:text-destructive"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
 
       <div className="border-t border-foreground/10 pt-6">
         <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/50">Review</p>
