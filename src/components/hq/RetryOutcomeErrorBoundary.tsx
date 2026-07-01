@@ -146,10 +146,30 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={this.copyDebug}
+            aria-label="Copy debug payload"
             className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
           >
             Copy debug payload
           </button>
+          <span
+            role="status"
+            aria-live="polite"
+            data-copy-status={this.state.copyStatus}
+            className={
+              "text-[0.65rem] tracking-[0.3em] uppercase transition-opacity " +
+              (this.state.copyStatus === "idle"
+                ? "opacity-0"
+                : this.state.copyStatus === "copied"
+                  ? "text-emerald-700 opacity-100"
+                  : "text-red-700 opacity-100")
+            }
+          >
+            {this.state.copyStatus === "copied"
+              ? "Copied to clipboard"
+              : this.state.copyStatus === "failed"
+                ? "Copy failed — payload logged to console"
+                : ""}
+          </span>
           <button
             type="button"
             onClick={this.reset}
