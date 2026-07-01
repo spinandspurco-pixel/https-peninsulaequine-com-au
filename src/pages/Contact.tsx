@@ -751,7 +751,13 @@ export default function Contact() {
                         />
                       </label>
                       {files.length > 0 && (
-                        <AttachmentPreviewList files={files} onRemove={removeFile} />
+                        <AttachmentPreviewList
+                          files={files}
+                          onRemove={removeFile}
+                          statuses={uploader.statuses}
+                          onRetry={() => uploader.uploadAll(files).catch(() => {})}
+                          busy={uploader.isUploading || submitting}
+                        />
                       )}
                       {fileError && (
                         <p className="text-xs text-destructive">{fileError}</p>
