@@ -226,10 +226,36 @@ export default function LessonInquiry({
         await linkAttachmentsToInquiry(attachment_ids, inserted.id).catch(() => {});
       }
       setConfirmation({ id: inserted.id });
-      // fire-and-forget notification
+      // Fire-and-forget: internal alert to team + client acknowledgement email.
+      // Requires full name/email/services so the notification function can
+      // render both messages (it validates required fields server-side).
+      const inquiryLabel =
+        parsed.data.inquiry_type === "lesson" ? "Lesson request" : "Consult request";
       supabase.functions
         .invoke("send-inquiry-notification", {
-          body: { inquiry_id: inserted.id, attachmentCount: attachment_urls.length },
+          body: {
+            name: parsed.data.name,
+            email: parsed.data.email,
+            phone: parsed.data.phone || undefined,
+            services,
+            experienceLevel: parsed.data.level,
+            horseName: parsed.data.horse_name || undefined,
+            horseBreed: parsed.data.horse_breed || undefined,
+            goals: parsed.data.goals || inquiryLabel,
+            preferredDate: parsed.data.timing || undefined,
+            additionalNotes: parsed.data.notes || undefined,
+            attachmentCount: attachment_urls.length,
+            source: `lesson-inquiry:${parsed.data.inquiry_type}`,
+          },
+        })
+        .catch(() => {});
+      supabase.functions
+        .invoke("send-welcome-series", {
+          body: {
+            email: parsed.data.email,
+            name: parsed.data.name,
+            source: `lesson-inquiry:${parsed.data.inquiry_type}`,
+          },
         })
         .catch(() => {});
     } catch (err) {
