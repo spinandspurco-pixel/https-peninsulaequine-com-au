@@ -3,6 +3,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackConversion } from "@/lib/analytics";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(120),
@@ -14,6 +16,7 @@ const schema = z.object({
 export function WholePropertyInquiryForm() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const spamGuard = useSpamGuard();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,6 +29,12 @@ export function WholePropertyInquiryForm() {
     });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Please check the form.");
+      return;
+    }
+    // Silent spam guard — pretend success on trip so bots don't retry.
+    const guard = spamGuard.check();
+    if (!guard.ok) {
+      setDone(true);
       return;
     }
     setSubmitting(true);
@@ -60,6 +69,7 @@ export function WholePropertyInquiryForm() {
 
   return (
     <form onSubmit={onSubmit} className="mt-12 max-w-2xl grid gap-6 sm:grid-cols-2" noValidate>
+      <HoneypotField guard={spamGuard} />
       <label className="block sm:col-span-1">
         <span className="font-mono uppercase text-[9px] tracking-[0.42em] text-foreground/40">Name</span>
         <input name="name" required maxLength={120} autoComplete="name" className={fieldClass} />

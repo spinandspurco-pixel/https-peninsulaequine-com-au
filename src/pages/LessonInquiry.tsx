@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { usePageMeta } from "@/lib/usePageMeta";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
 
 // ── Schema ────────────────────────────────────────────
 
@@ -104,6 +106,7 @@ export default function LessonInquiry({
   const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
+  const spamGuard = useSpamGuard();
 
   const MAX_FILES = 5;
   const MAX_SIZE = 10 * 1024 * 1024; // 10 MB per file
@@ -181,6 +184,12 @@ export default function LessonInquiry({
       return;
     }
     setFileError(null);
+    // Silent spam short-circuit — mimic success without writing to DB.
+    const guardResult = spamGuard.check();
+    if (!guardResult.ok) {
+      setConfirmation({ id: "spam-suppressed" });
+      return;
+    }
     setSubmitting(true);
     try {
       // Upload attachments via the server-side validated edge function
@@ -327,6 +336,7 @@ export default function LessonInquiry({
             else submit();
           }}
         >
+          <HoneypotField guard={spamGuard} />
           {step === 0 && <StepFocus data={data} set={set} errors={errors} lockedType={lockedType} />}
 
 

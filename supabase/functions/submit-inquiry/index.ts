@@ -90,7 +90,14 @@ const InquirySchema = z.object({
 
   // Optional client hint for source/campaign; never trusted for auth.
   source: z.string().trim().max(80).optional(),
+
+  // Lightweight spam guard. `hp` is a honeypot: real clients always send
+  // an empty string. `elapsed_ms` is how long the form was on-screen —
+  // sub-second submissions are almost always bots.
+  hp: z.string().max(200).optional(),
+  elapsed_ms: z.number().int().nonnegative().max(1000 * 60 * 60 * 24).optional(),
 });
+const MIN_DWELL_MS = 1500;
 export type InquiryPayload = z.infer<typeof InquirySchema>;
 
 /* ── Handler ───────────────────────────────────────────── */
@@ -128,6 +135,29 @@ export async function handler(req: Request): Promise<Response> {
     );
   }
   const p = parsed.data;
+
+  // Silent spam rejection: mimic a successful response so bots don't
+  // learn to bypass the trap. Nothing is written to the database.
+  const hpTripped = typeof p.hp === "string" && p.hp.trim().length > 0;
+  const tooFast = typeof p.elapsed_ms === "number" && p.elapsed_ms < MIN_DWELL_MS;
+  if (hpTripped || tooFast) {
+    console.warn("submit-inquiry: spam guard tripped", {
+      hp: hpTripped,
+      too_fast: tooFast,
+      elapsed_ms: p.elapsed_ms ?? null,
+    });
+    return json(
+      {
+        ok: true,
+        id: null,
+        status: "new",
+        created_at: new Date().toISOString(),
+        received: { name: p.name, email: p.email, services: p.services, attachment_count: 0, source: p.source ?? null },
+        message: "Inquiry received.",
+      },
+      201,
+    );
+  }
 
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE, {
     auth: { persistSession: false, autoRefreshToken: false },

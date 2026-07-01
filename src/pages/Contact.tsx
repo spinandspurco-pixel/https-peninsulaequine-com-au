@@ -12,6 +12,8 @@ import { z } from "zod";
 import { trackConversion, trackFormError } from "@/lib/analytics";
 import { trackContactConversion } from "@/lib/adsConversions";
 import { usePageMeta } from "@/lib/usePageMeta";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
 
 
 
@@ -130,6 +132,7 @@ export default function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const spamGuard = useSpamGuard();
 
   const MAX_FILES = 5;
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB per file
@@ -167,6 +170,12 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Silent spam short-circuit: pretend success so bots don't retry.
+    const guard = spamGuard.check();
+    if (!guard.ok) {
+      setSubmitted(true);
+      return;
+    }
     const result = formSchema.safeParse({
       name: form.name,
       email: form.email,
@@ -229,6 +238,8 @@ export default function Contact() {
               .filter(Boolean)
               .join(" | "),
             source: "contact-assessment",
+            hp: spamGuard.honeypotProps.value,
+            elapsed_ms: spamGuard.elapsedMs(),
           },
         },
       );
@@ -446,6 +457,7 @@ export default function Contact() {
               </RevealOnScroll>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-16">
+                <HoneypotField guard={spamGuard} />
                 {/* Section 1 — Contact Details */}
                 <RevealOnScroll direction="up">
                   <div className="space-y-6">
