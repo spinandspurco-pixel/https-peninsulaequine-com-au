@@ -355,6 +355,7 @@ export default function LessonInquiry({
               onAddFiles={addFiles}
               onRemoveFile={removeFile}
               maxFiles={MAX_FILES}
+              requireAttachments={requireAttachments}
             />
           )}
 
