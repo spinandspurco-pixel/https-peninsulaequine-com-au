@@ -1,48 +1,14 @@
 import LessonInquiry from "./LessonInquiry";
-import { siteConfig } from "@/data/content";
+import {
+  SITE_BASE as BASE,
+  localBusinessNode,
+  reserveEntryPoint,
+} from "@/lib/seo/localBusinessJsonLd";
 
-const BASE = "https://peninsulaequine.systems";
 const PATH = "/lessons/book";
 
 const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${BASE}/#localbusiness`,
-    name: siteConfig.name,
-    description: siteConfig.description,
-    url: BASE,
-    telephone: siteConfig.phone,
-    email: siteConfig.email,
-    image: `${BASE}/og-image.jpg`,
-    priceRange: "$$",
-    areaServed: [
-      { "@type": "Place", name: "Mornington Peninsula" },
-      { "@type": "State", name: "Victoria, Australia" },
-    ],
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: siteConfig.address.street,
-      addressLocality: siteConfig.address.city,
-      addressRegion: siteConfig.address.state,
-      postalCode: siteConfig.address.zip,
-      addressCountry: "AU",
-    },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "06:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Saturday"],
-        description: "By appointment only",
-      },
-    ],
-    sameAs: [siteConfig.social.instagram, siteConfig.social.facebook],
-  },
+  localBusinessNode,
   {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -54,11 +20,7 @@ const jsonLd = [
     provider: { "@id": `${BASE}/#localbusiness` },
     areaServed: { "@type": "Place", name: "Mornington Peninsula, Victoria" },
     url: `${BASE}${PATH}`,
-    potentialAction: {
-      "@type": "ReserveAction",
-      target: `${BASE}${PATH}`,
-      name: "Book a lesson",
-    },
+    potentialAction: reserveEntryPoint(`${BASE}${PATH}`, "Book a lesson"),
   },
   {
     "@context": "https://schema.org",
