@@ -118,7 +118,7 @@ serve(async (req) => {
           </div>
           <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;" />
           <div style="text-align: center; margin: 16px 0;">
-            <a href="https://peninsulaequine.lovable.app/admin/documents" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">Review in Document Portal</a>
+            <a href="https://peninsulaequine.systems/hq/documents" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">Review in Document Portal</a>
           </div>
           <p style="font-size: 12px; color: #888; text-align: center;">
             Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926
@@ -164,7 +164,7 @@ serve(async (req) => {
               <p style="margin: 0; font-size: 13px; color: #166534;"><strong>Status:</strong> Submitted — Pending Review</p>
             </div>
             <div style="text-align: center; margin: 16px 0;">
-              <a href="https://peninsulaequine.lovable.app/documents" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">View Your Documents</a>
+              <a href="https://peninsulaequine.systems/client-portal" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">View Your Documents</a>
             </div>
             <p style="font-size: 12px; color: #888; text-align: center;">
               Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926

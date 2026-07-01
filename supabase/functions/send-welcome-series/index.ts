@@ -18,7 +18,7 @@ interface WelcomeRequest {
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
 const WELCOME_REPLY_TO = "info@peninsulaequine.systems";
-const SITE_URL = "https://peninsulaequine.lovable.app";
+const SITE_URL = "https://peninsulaequine.systems";
 
 function assertSender(): Response | null {
   if (!FROM_EMAIL || /resend\.dev/i.test(FROM_EMAIL)) {

@@ -142,7 +142,7 @@ serve(async (req) => {
     // Stripe IS configured — create Checkout Session
     const stripe = (await import("https://esm.sh/stripe@14.21.0")).default(stripeKey);
 
-    const origin = req.headers.get("origin") || "https://peninsulaequine.lovable.app";
+    const origin = req.headers.get("origin") || "https://peninsulaequine.systems";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

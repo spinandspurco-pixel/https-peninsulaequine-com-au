@@ -7,7 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const DOMAIN = "peninsulaequine.systems";
+const DOMAIN = "notify.peninsulaequine.systems";
 
 interface ResendRecord {
   record: string;
