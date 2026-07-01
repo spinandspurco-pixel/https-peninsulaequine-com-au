@@ -82,6 +82,56 @@ describe("RetryOutcomeErrorBoundary", () => {
     expect(status).toHaveAttribute("data-copy-status", "copied");
   });
 
+  it("copies retryContext (loop inputs, IDs, log trail) alongside the outcome", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    const debugPayload = { status: "no_change", attempts: 4 };
+    const debugContext = {
+      projectId: "proj-123",
+      actorEmail: "ops@example.com",
+      lastCheckedAt: "2026-07-01T00:00:00.000Z",
+      retryProgress: { attempt: 3, max: 4 },
+      lastRetryError: null,
+      config: {
+        targets: [{ label: "Custom domain", url: "https://example.systems" }],
+        maxAttempts: 4,
+        backoffScheduleMs: [1500, 3000, 4500, 6000],
+        logTrailLimit: 8,
+      },
+      recentLogEvents: [
+        {
+          command: "runRetryPromotion",
+          phase: "attempt",
+          attempt: 1,
+          maxAttempts: 4,
+          durationMs: 812,
+          classification: { stillStuck: true, changed: false, willRetry: true },
+        },
+      ],
+    };
+
+    render(
+      <RetryOutcomeErrorBoundary
+        debugPayload={debugPayload}
+        debugContext={debugContext}
+      >
+        <Bomb message="ctx-me" />
+      </RetryOutcomeErrorBoundary>,
+    );
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Copy debug payload/i }));
+    });
+
+    const payload = JSON.parse(writeText.mock.calls[0][0] as string);
+    expect(payload.retryOutcome).toEqual(debugPayload);
+    expect(payload.retryContext).toEqual(debugContext);
+    expect(payload.retryContext.config.backoffScheduleMs).toEqual([1500, 3000, 4500, 6000]);
+    expect(payload.retryContext.config.targets[0].url).toBe("https://example.systems");
+    expect(payload.retryContext.recentLogEvents[0].classification.willRetry).toBe(true);
+  });
+
   it("auto-clears the copied confirmation after the display window", async () => {
     vi.useFakeTimers();
     const writeText = vi.fn().mockResolvedValue(undefined);

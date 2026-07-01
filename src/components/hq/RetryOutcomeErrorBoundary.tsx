@@ -2,8 +2,15 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
-  /** Optional serialisable snapshot of the retry outcome for debugging copy. */
+  /** Snapshot of the retry outcome (RetryOutcome) at the time of failure. */
   debugPayload?: unknown;
+  /**
+   * Additional structured context — retry-loop inputs (targets, maxAttempts,
+   * backoff schedule), in-flight progress, and the recent RetryLogEvent trail.
+   * Included in the copied JSON so support can reason about the failure
+   * without reproducing it.
+   */
+  debugContext?: unknown;
   /** Called when the user clicks "Reset". Typically clears retryOutcome state. */
   onReset?: () => void;
 }
@@ -60,6 +67,7 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
         : null,
       componentStack: info?.componentStack ?? null,
       retryOutcome: this.props.debugPayload ?? null,
+      retryContext: this.props.debugContext ?? null,
     };
   }
 

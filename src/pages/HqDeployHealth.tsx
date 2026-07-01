@@ -49,6 +49,14 @@ const LEGACY_MARKER = "eyJhbGci";
 const MODERN_MARKER = "sb_publishable_";
 const BUNDLE_RE = /\/assets\/(index-[A-Za-z0-9_-]+\.js)/;
 
+const RETRY_MAX_ATTEMPTS = 4;
+const RETRY_BACKOFF_MS = (i: number) => 1500 * (i + 1);
+const RETRY_BACKOFF_SCHEDULE_MS = Array.from(
+  { length: RETRY_MAX_ATTEMPTS },
+  (_, i) => RETRY_BACKOFF_MS(i),
+);
+const RETRY_LOG_TRAIL_LIMIT = 8;
+
 type ProbeResult = {
   label: string;
   url: string;
@@ -147,6 +155,8 @@ export default function HqDeployHealth() {
   const [retrying, setRetrying] = useState(false);
   const [retryProgress, setRetryProgress] = useState<{ attempt: number; max: number } | null>(null);
   const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
+  const [retryLogTrail, setRetryLogTrail] = useState<Array<Record<string, unknown>>>([]);
+  const [lastRetryError, setLastRetryError] = useState<{ name: string; message: string } | null>(null);
   const [audit, setAudit] = useState<AuditRow[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
   const [auditError, setAuditError] = useState<string | null>(null);
@@ -228,21 +238,31 @@ export default function HqDeployHealth() {
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
-    setRetryProgress({ attempt: 0, max: 4 });
+    setRetryProgress({ attempt: 0, max: RETRY_MAX_ATTEMPTS });
+    setRetryLogTrail([]);
+    setLastRetryError(null);
     try {
       const { outcome, finalProbes } = await runRetryPromotion<ProbeResult>({
         targets: TARGETS,
         probe,
         sleep: (ms) => new Promise((res) => setTimeout(res, ms)),
         now: () => new Date().toISOString(),
-        maxAttempts: 4,
+        maxAttempts: RETRY_MAX_ATTEMPTS,
         // Preserve the original per-attempt backoff (1500ms, 3000ms, …).
-        backoffMs: (i) => 1500 * (i + 1),
+        backoffMs: RETRY_BACKOFF_MS,
         // Re-use the currently-visible probes as the "before" snapshot when
         // available so the retry doesn't double-fetch on the first pass.
         initialBefore: results.length ? results : null,
         onAttempt: (attempt, max) => setRetryProgress({ attempt, max }),
         onLog: (event) => {
+          // Retain a bounded ring buffer of recent events so the error
+          // boundary can copy the trail alongside the outcome.
+          setRetryLogTrail((prev) => {
+            const next = [...prev, event as unknown as Record<string, unknown>];
+            return next.length > RETRY_LOG_TRAIL_LIMIT
+              ? next.slice(-RETRY_LOG_TRAIL_LIMIT)
+              : next;
+          });
           // Structured, single-line JSON so support can grep the console
           // and correlate with latency history (matching ISO timestamps).
           try {
@@ -300,6 +320,12 @@ export default function HqDeployHealth() {
           },
         );
       }
+    } catch (err) {
+      setLastRetryError({
+        name: err instanceof Error ? err.name : "UnknownError",
+        message: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
     } finally {
       setRetrying(false);
       setRetryProgress(null);
@@ -828,7 +854,36 @@ export default function HqDeployHealth() {
 
         <RetryOutcomeErrorBoundary
           debugPayload={retryOutcome}
-          onReset={() => setRetryOutcome(null)}
+          debugContext={{
+            projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+            actorEmail: user?.email ?? null,
+            pageBundle: pageBundle ?? null,
+            lastCheckedAt,
+            retrying,
+            retryProgress,
+            lastRetryError,
+            config: {
+              targets: TARGETS,
+              maxAttempts: RETRY_MAX_ATTEMPTS,
+              backoffScheduleMs: RETRY_BACKOFF_SCHEDULE_MS,
+              logTrailLimit: RETRY_LOG_TRAIL_LIMIT,
+            },
+            recentLogEvents: retryLogTrail,
+            currentResults: results.map((r) => ({
+              label: r.label,
+              url: r.url,
+              ok: r.ok,
+              bundleFile: r.bundleFile,
+              stuck: isStuck(r),
+              hasLegacyKey: r.hasLegacyKey,
+              hasModernKey: r.hasModernKey,
+            })),
+          }}
+          onReset={() => {
+            setRetryOutcome(null);
+            setRetryLogTrail([]);
+            setLastRetryError(null);
+          }}
         >
         {retryOutcome && (
           <section
