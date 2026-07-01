@@ -3,7 +3,7 @@ import {
   assertMgmtCall,
   MgmtApiGuardError,
   normaliseMgmtPath,
-} from "../ci/mgmtApiGuard";
+} from "../../scripts/ci/mgmtApiGuard";
 
 const ALLOWED = "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints";
 
