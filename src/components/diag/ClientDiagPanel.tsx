@@ -1257,6 +1257,86 @@ export function ClientDiagPanel() {
               >
                 clear history
               </button>
+              <button
+                onClick={() => {
+                  const payload = {
+                    exportedAt: new Date().toISOString(),
+                    origin: typeof window !== "undefined" ? window.location.origin : null,
+                    unit: "ms",
+                    max: HISTORY_MAX,
+                    endpoints: {
+                      buildInfo: {
+                        thresholds: pairFor("buildInfo"),
+                        samples: buildHistory,
+                      },
+                      health: { thresholds: pairFor("health"), samples: healthHistory },
+                      diag: { thresholds: pairFor("diag"), samples: diagHistory },
+                    },
+                  };
+                  try {
+                    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                      type: "application/json",
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `pe-diag-latency-${new Date()
+                      .toISOString()
+                      .replace(/[:.]/g, "-")}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Download the last ≤10 latency measurements per endpoint as JSON"
+              >
+                export JSON
+              </button>
+              <button
+                onClick={() => {
+                  const rows: string[] = ["endpoint,index,latency_ms,warn_ms,crit_ms"];
+                  const push = (name: string, samples: number[], endpoint: EndpointKey) => {
+                    const p = pairFor(endpoint);
+                    samples.forEach((v, i) => rows.push(`${name},${i + 1},${v},${p.warn},${p.crit}`));
+                  };
+                  push("/api/build-info", buildHistory, "buildInfo");
+                  push("/api/health", healthHistory, "health");
+                  push("/api/diag", diagHistory, "diag");
+                  try {
+                    const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `pe-diag-latency-${new Date()
+                      .toISOString()
+                      .replace(/[:.]/g, "-")}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Download the last ≤10 latency measurements per endpoint as CSV"
+              >
+                export CSV
+              </button>
             </div>
             {(() => {
               type Row = { key: EndpointKey | "default"; label: string };
