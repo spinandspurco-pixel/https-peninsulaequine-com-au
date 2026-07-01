@@ -15,6 +15,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // Approved cinematic event imagery only — legacy covered-arena-finished-lit
 // and main-ridge-finished-interior phone shots removed.
