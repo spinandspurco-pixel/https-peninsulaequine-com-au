@@ -654,6 +654,65 @@ export function ClientDiagPanel() {
     diag?.error,
   ]);
 
+  // Optional latency-threshold toast notifications for /api/health and /api/diag.
+  // Fires when the tier transitions upward (ok→warn, ok→crit, warn→crit) or on
+  // a new error. Also fires a "recovered" toast when the endpoint returns to ok.
+  const [latencyToasts, setLatencyToasts] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("pe.diag.latencyToasts") === "1";
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.latencyToasts", latencyToasts ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }, [latencyToasts]);
+  const lastToastTierRef = useRef<Record<EndpointKey, "ok" | "warn" | "crit" | "error" | "none">>({
+    buildInfo: "none",
+    health: "none",
+    diag: "none",
+  });
+  useEffect(() => {
+    if (!latencyToasts) return;
+    const evaluate = (
+      endpoint: EndpointKey,
+      label: string,
+      ms?: number | null,
+      err?: string | null,
+    ) => {
+      const pair = pairFor(endpoint);
+      const prev = lastToastTierRef.current[endpoint];
+      let next: "ok" | "warn" | "crit" | "error" | "none" = "none";
+      if (err) next = "error";
+      else if (typeof ms === "number" && isFinite(ms)) {
+        next = ms >= pair.crit ? "crit" : ms >= pair.warn ? "warn" : "ok";
+      } else return;
+      if (next === prev) return;
+      lastToastTierRef.current[endpoint] = next;
+      if (prev === "none") return; // seed only on first sample; no toast
+      const msg = err
+        ? `${label} error: ${err.length > 80 ? err.slice(0, 80) + "…" : err}`
+        : `${label} ${ms}ms (warn ≥ ${pair.warn}ms · crit ≥ ${pair.crit}ms)`;
+      if (next === "crit" || next === "error") toast.error(msg);
+      else if (next === "warn") toast.warning(msg);
+      else if (next === "ok" && (prev === "warn" || prev === "crit" || prev === "error"))
+        toast.success(`${label} recovered · ${ms}ms`);
+    };
+    evaluate("health", "/api/health", health?.latencyMs, health?.error);
+    evaluate("diag", "/api/diag", diag?.latencyMs, diag?.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    latencyToasts,
+    health?.latencyMs,
+    health?.fetchedAt,
+    health?.error,
+    diag?.latencyMs,
+    diag?.fetchedAt,
+    diag?.error,
+  ]);
+
+
   const sparkline = (points: number[]) => {
     if (!points || points.length < 2) return null;
     const w = 60;
