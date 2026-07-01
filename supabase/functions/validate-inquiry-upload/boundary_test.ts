@@ -118,7 +118,7 @@ const ALLOWED_FIXTURES: Fixture[] = [
 
 for (const fx of ALLOWED_FIXTURES) {
   Deno.test(`allowed ${fx.label} passes validation layer`, async () => {
-    const { status, body } = await post(new File([fx.sig], fx.filename, { type: fx.mime }));
+    const { status, body } = await post(new File([fx.sig as BlobPart], fx.filename, { type: fx.mime }));
     // Success (2xx) OR a downstream storage/persist error is fine — anything
     // in VALIDATION_CODES would mean the allow-list rejected a supported type.
     if (body.code) {
@@ -134,13 +134,13 @@ for (const fx of ALLOWED_FIXTURES) {
 
 Deno.test("size boundary: exactly 10 MB → not file_too_large", async () => {
   const bytes = padTo(PNG_SIG, MAX);
-  const { status, body } = await post(new File([bytes], "big.png", { type: "image/png" }));
+  const { status, body } = await post(new File([bytes as BlobPart], "big.png", { type: "image/png" }));
   assertNotEquals(body.code, "file_too_large", `10 MB should be accepted (status=${status})`);
 });
 
 Deno.test("size boundary: 10 MB + 1 byte → 413 file_too_large", async () => {
   const bytes = padTo(PNG_SIG, MAX + 1);
-  const { status, body } = await post(new File([bytes], "toobig.png", { type: "image/png" }));
+  const { status, body } = await post(new File([bytes as BlobPart], "toobig.png", { type: "image/png" }));
   assertEquals(status, 413);
   assertEquals(body.code, "file_too_large");
   assertEquals((body.details as Record<string, unknown>).max, MAX);
