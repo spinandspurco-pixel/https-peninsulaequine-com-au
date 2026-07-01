@@ -84,6 +84,7 @@ const BUILTIN_PRESETS: FilterPreset[] = [
 
 const PRESETS_STORAGE_KEY = "hq.inquiries.presets.v1";
 const ACTIVE_PRESET_STORAGE_KEY = "hq.inquiries.activePreset.v1";
+const ATTACHMENTS_ONLY_STORAGE_KEY = "hq.inquiries.attachmentsOnly.v1";
 
 function loadCustomPresets(): FilterPreset[] {
   if (typeof window === "undefined") return [];
