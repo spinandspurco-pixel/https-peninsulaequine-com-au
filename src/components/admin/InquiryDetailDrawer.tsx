@@ -375,13 +375,17 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
 
               {/* Attachments */}
               <Section label="Files" index="05">
-                {!inquiry.attachment_urls || inquiry.attachment_urls.length === 0 ? (
+                {attachments.length === 0 ? (
                   <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/30 pl-1">
                     No files attached
                   </p>
                 ) : (
                   <ul className="space-y-2">
-                    {attachments.map((att) => (
+                    {attachments.map((att) => {
+                      const sizeLabel = att.size != null ? formatBytes(att.size) : null;
+                      const mimeLabel = att.mime ? shortMime(att.mime) : null;
+                      const meta = [mimeLabel, sizeLabel].filter(Boolean).join(" · ");
+                      return (
                       <li key={att.raw}>
                         {att.url ? (
                           <a
@@ -391,24 +395,35 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
                             className="group flex items-center gap-3 py-2 border-t border-border/[0.08] hover:border-accent/40 transition-colors"
                           >
                             <Paperclip className="h-3 w-3 text-muted-foreground/40 group-hover:text-accent/70 transition-colors" />
-                            <span className="flex-1 text-[12px] font-light text-foreground/70 group-hover:text-foreground/95 transition-colors truncate">
+                            <span className="flex-1 min-w-0 text-[12px] font-light text-foreground/70 group-hover:text-foreground/95 transition-colors truncate">
                               {att.name}
                             </span>
+                            {meta && (
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40 whitespace-nowrap">
+                                {meta}
+                              </span>
+                            )}
                             <ExternalLink className="h-3 w-3 text-muted-foreground/30 group-hover:text-accent/70 transition-colors" />
                           </a>
                         ) : (
                           <div className="flex items-center gap-3 py-2 border-t border-border/[0.08]">
                             <Paperclip className="h-3 w-3 text-muted-foreground/30" />
-                            <span className="flex-1 text-[12px] font-light text-muted-foreground/40 truncate">
+                            <span className="flex-1 min-w-0 text-[12px] font-light text-muted-foreground/40 truncate">
                               {att.name}
                             </span>
+                            {meta && (
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 whitespace-nowrap">
+                                {meta}
+                              </span>
+                            )}
                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30">
                               Unavailable
                             </span>
                           </div>
                         )}
                       </li>
-                    ))}
+                      );
+                    })}
                   </ul>
                 )}
               </Section>
