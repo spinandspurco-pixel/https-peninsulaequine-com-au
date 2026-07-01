@@ -1,12 +1,32 @@
 # Peninsula Equine
 
-[![Security gate](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml)
-
-
-
 Production codebase for **peninsulaequine.systems** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
 
 > Single-bundle React SPA. Backend on Lovable Cloud (Supabase). Edited via Lovable, synced to GitHub, deployable to Lovable hosting or Vercel.
+
+---
+
+## Build & Security Status
+
+> Replace `OWNER/REPO` below with this repository's GitHub `owner/repo` slug. All badges reflect the `main` branch.
+
+| Workflow | Status |
+|---|---|
+| Security gate (blocking, per-PR) | [![Security gate](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/security-gate.yml) |
+| Nightly security scan | [![Nightly security scan](https://github.com/OWNER/REPO/actions/workflows/nightly-security-scan.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/nightly-security-scan.yml) |
+| Strict build (typecheck + lint + vitest) | [![Strict Build](https://github.com/OWNER/REPO/actions/workflows/strict-build.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/strict-build.yml) |
+| Node.js CI | [![Node.js CI](https://github.com/OWNER/REPO/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/node.js.yml) |
+| Prerender unit tests | [![Prerender unit tests](https://github.com/OWNER/REPO/actions/workflows/prerender-unit-tests.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/prerender-unit-tests.yml) |
+| Verify prerendered head tags | [![Verify prerendered head tags](https://github.com/OWNER/REPO/actions/workflows/verify-prerender.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/verify-prerender.yml) |
+| Verify accessibility (axe) | [![Verify accessibility](https://github.com/OWNER/REPO/actions/workflows/verify-accessibility.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/verify-accessibility.yml) |
+| Verify asset pointers | [![Verify asset pointers](https://github.com/OWNER/REPO/actions/workflows/verify-assets.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/verify-assets.yml) |
+| Verify internal links | [![Verify internal links](https://github.com/OWNER/REPO/actions/workflows/verify-internal-links.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/verify-internal-links.yml) |
+| Publish smoke test (post-deploy) | [![Publish Smoke Test](https://github.com/OWNER/REPO/actions/workflows/publish-smoke-test.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/publish-smoke-test.yml) |
+| Preview mint gate | [![Preview Mint Gate](https://github.com/OWNER/REPO/actions/workflows/preview-mint-check.yml/badge.svg?branch=main)](https://github.com/OWNER/REPO/actions/workflows/preview-mint-check.yml) |
+
+---
+
+
 
 ---
 
