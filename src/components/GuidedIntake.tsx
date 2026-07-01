@@ -164,7 +164,7 @@ export function GuidedIntake() {
     setTimeout(() => setStep((s) => s + 1), 300);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleDetailsContinue = () => {
     const result = detailsSchema.safeParse({ name, email, phone, location, notes });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -172,6 +172,49 @@ export function GuidedIntake() {
         if (e.path[0]) fieldErrors[e.path[0] as string] = e.message;
       });
       setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    setStep(5);
+  };
+
+  const addFiles = (incoming: FileList | File[] | null) => {
+    if (!incoming) return;
+    const arr = Array.from(incoming);
+    const next: File[] = [...files];
+    const nextErrors: string[] = [];
+    for (const f of arr) {
+      if (next.length >= MAX_FILES) {
+        nextErrors.push(`Only ${MAX_FILES} files allowed.`);
+        break;
+      }
+      if (f.size === 0) {
+        nextErrors.push(`"${f.name}" is empty.`);
+        continue;
+      }
+      if (f.size > MAX_FILE_BYTES) {
+        nextErrors.push(`"${f.name}" exceeds 10 MB.`);
+        continue;
+      }
+      if (next.some((x) => x.name === f.name && x.size === f.size)) continue;
+      next.push(f);
+    }
+    setFiles(next);
+    setErrors((prev) => ({
+      ...prev,
+      files: nextErrors.join(" ") || "",
+    }));
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = async () => {
+    // Re-validate details defensively in case the user navigated back.
+    const result = detailsSchema.safeParse({ name, email, phone, location, notes });
+    if (!result.success) {
+      setStep(4);
       return;
     }
     setErrors({});
@@ -184,29 +227,52 @@ export function GuidedIntake() {
       else if (intent === "estate") services.push("full-facility");
       else services.push("infrastructure");
 
-      const { error: insertError } = await supabase.from("inquiries").insert({
-        name: result.data.name,
-        email: result.data.email,
-        phone: result.data.phone || null,
-        services,
-        project_details: [
-          `Intent: ${intent}`,
-          `Land: ${land}`,
-          `Stage: ${stage}`,
-          `Values: ${values}`,
-          location ? `Location: ${location}` : null,
-          notes ? `Notes: ${notes}` : null,
-        ].filter(Boolean).join(" | "),
-        status: "new",
-      });
-
-      if (insertError) {
-        console.error("[GuidedIntake] insert failed", insertError);
-        throw insertError;
+      // 1. Upload attachments first (server-side validated). If any file
+      // fails, surface the friendly error and keep the user on step 5.
+      let attachmentRecords: AttachmentRecord[] = [];
+      let attachmentIds: string[] = [];
+      let attachmentPaths: string[] = [];
+      if (files.length) {
+        const uploaded = await uploadInquiryAttachments(files, attachmentFolder);
+        attachmentRecords = uploaded.records;
+        attachmentIds = uploaded.ids;
+        attachmentPaths = uploaded.paths;
       }
 
-      // Fire admin notification email. Non-blocking: submission is already
-      // persisted, so a delivery failure must not surface to the applicant.
+      // 2. Persist the inquiry row (returning id so we can link attachments).
+      const { data: inserted, error: insertError } = await supabase
+        .from("inquiries")
+        .insert({
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone || null,
+          services,
+          project_details: [
+            `Intent: ${intent}`,
+            `Land: ${land}`,
+            `Stage: ${stage}`,
+            `Values: ${values}`,
+            location ? `Location: ${location}` : null,
+            notes ? `Notes: ${notes}` : null,
+          ].filter(Boolean).join(" | "),
+          status: "new",
+          attachment_urls: attachmentPaths,
+          attachments: attachmentRecords as unknown as never,
+        })
+        .select("id")
+        .single();
+
+      if (insertError || !inserted) {
+        console.error("[GuidedIntake] insert failed", insertError);
+        throw insertError ?? new Error("insert failed");
+      }
+
+      // 3. Link uploaded attachment rows to the new inquiry.
+      if (attachmentIds.length) {
+        await linkAttachmentsToInquiry(attachmentIds, inserted.id).catch(() => {});
+      }
+
+      // Fire admin notification email. Non-blocking.
       supabase.functions
         .invoke("send-inquiry-notification", {
           body: {
@@ -221,16 +287,27 @@ export function GuidedIntake() {
               `Values: ${values}`,
               location ? `Location: ${location}` : null,
               notes ? `Notes: ${notes}` : null,
+              attachmentPaths.length ? `Attachments: ${attachmentPaths.length}` : null,
             ].filter(Boolean).join(" | "),
           },
         })
         .catch((e) => console.warn("[GuidedIntake] notification invoke failed", e));
 
       trackCtaClick("guided_intake_submit", { intent, land, stage, values });
-      trackConversion("guided_intake", { intent, land, stage, values });
+      trackConversion("guided_intake", {
+        intent,
+        land,
+        stage,
+        values,
+        attachmentCount: attachmentPaths.length,
+      });
       setSubmitted(true);
-      setStep(5);
+      setStep(6);
     } catch (err) {
+      if (err instanceof UploadValidationError) {
+        setErrors({ files: err.message });
+        return;
+      }
       const message =
         err instanceof Error && err.message
           ? `We couldn't lodge your application — ${err.message}. Please try again or email info@peninsulaequine.systems.`
@@ -240,6 +317,7 @@ export function GuidedIntake() {
       setSubmitting(false);
     }
   };
+
 
   if (!showGuidedIntake) return null;
 
