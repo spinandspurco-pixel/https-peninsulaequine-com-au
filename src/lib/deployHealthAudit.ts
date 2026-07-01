@@ -4,6 +4,7 @@ export type DeployHealthAuditAction =
   | "view_page"
   | "run_checks"
   | "retry_promotion"
+  | "retry_promotion_attempt"
   | "copy_escalation_text"
   | "copy_escalation_json"
   | "copy_support_email"
