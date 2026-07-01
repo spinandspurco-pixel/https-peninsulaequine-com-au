@@ -288,7 +288,7 @@ export function assertNoAdjacentDuplicates(): void {
       const ua = project.surfaces[a]?.url;
       const ub = project.surfaces[b]?.url;
       if (ua && ub && ua === ub) {
-        // eslint-disable-next-line no-console
+         
         console.warn(
           `[projectImagery] Adjacent duplicate on "${project.slug}": ` +
             `${a} and ${b} both use ${ua}. Pick a distinct approved asset.`,

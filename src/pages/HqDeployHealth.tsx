@@ -268,7 +268,7 @@ export default function HqDeployHealth() {
           // Structured, single-line JSON so support can grep the console
           // and correlate with latency history (matching ISO timestamps).
           try {
-            // eslint-disable-next-line no-console
+             
             console.info("[deploy-health.retry]", JSON.stringify(event));
           } catch {
             /* noop */
@@ -888,7 +888,7 @@ export default function HqDeployHealth() {
           }}
           onCapture={(report) => {
             // Structured log for support correlation (parallels retry attempt logs).
-            // eslint-disable-next-line no-console
+             
             console.error("[analytics] retry_outcome_render_error", report);
             try {
               trackEvent("retry_outcome_render_error", {

@@ -56,7 +56,7 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     this.setState({ info });
-    // eslint-disable-next-line no-console
+     
     console.error("[RetryOutcomeErrorBoundary]", error, info);
     try {
       const report: RetryOutcomeErrorReport = {
@@ -72,7 +72,7 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
       this.props.onCapture?.(report);
     } catch (hookError) {
       // Never let the monitoring hook itself break the fallback UI.
-      // eslint-disable-next-line no-console
+       
       console.error("[RetryOutcomeErrorBoundary] onCapture failed", hookError);
     }
   }
@@ -126,7 +126,7 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
       this.setState({ copyStatus: "copied" });
     } catch {
       // Clipboard blocked — fall back to console so the payload is still recoverable.
-      // eslint-disable-next-line no-console
+       
       console.info("[RetryOutcomeErrorBoundary] debug payload", payload);
       this.setState({ copyStatus: "failed" });
     }

@@ -484,7 +484,6 @@ export function ClientDiagPanel() {
   // Gate: route + opt-in
   const path = location.pathname;
   const onAuthSurface = path === "/login" || path === "/hq" || path.startsWith("/hq/");
-  if (!onAuthSurface) return null;
 
   let enabled = false;
   try {
@@ -496,7 +495,6 @@ export function ClientDiagPanel() {
   } catch {
     enabled = false;
   }
-  if (!enabled) return null;
 
   // Bundle hash — read the main module script src injected by Vite at build time.
   let bundleHash = "(unknown)";
@@ -1142,6 +1140,8 @@ export function ClientDiagPanel() {
     }
     setTimeout(() => setEnvCopied(null), 2500);
   };
+
+  if (!onAuthSurface || !enabled) return null;
 
   const btn: React.CSSProperties = {
     background: "transparent",

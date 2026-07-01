@@ -35,9 +35,9 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          key: ${{ runner.os }}-bun-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-v2-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -75,9 +75,9 @@ jobs:
           path: |
             dist
             node_modules/.vite
-          key: ${{ runner.os }}-dist-${{ github.sha }}
+          key: ${{ runner.os }}-dist-v2-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-dist-
+            ${{ runner.os }}-dist-v2-
 
       # Runs prebuild (verify-assets) → strict build (fails on Tailwind/PostCSS warnings)
       # → postbuild (prerender + verify-prerender + verify-internal-links).
@@ -123,9 +123,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          key: ${{ runner.os }}-playwright-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-playwright-
+            ${{ runner.os }}-playwright-v2-
 
       - name: Install Playwright browser
         run: |

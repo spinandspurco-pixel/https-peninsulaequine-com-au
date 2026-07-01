@@ -42,7 +42,7 @@ export function validateSupabaseEnv(): EnvProblem | null {
   if (key.startsWith(LEGACY_JWT_PREFIX)) {
     // Legacy JWT anon keys remain VALID for un-migrated Lovable Cloud projects.
     // Surface a console warning but do NOT block boot.
-    // eslint-disable-next-line no-console
+     
     console.warn(
       "[Peninsula Equine] Legacy JWT-format Supabase key in use. This is valid for unmigrated projects; migrate via Rotate API keys when ready.",
     );
@@ -61,7 +61,7 @@ export function validateSupabaseEnv(): EnvProblem | null {
 }
 
 export function renderEnvError(problem: EnvProblem): void {
-  // eslint-disable-next-line no-console
+   
   console.error(
     `[Peninsula Equine] Frontend boot blocked: ${problem.title}\n${problem.detail}\nFix: ${problem.fix}`,
   );
