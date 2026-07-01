@@ -83,6 +83,7 @@ export type InquiryPageProps = {
   headerTitle?: string;
   headerSubtitle?: string;
   backLink?: { to: string; label: string };
+  requireAttachments?: boolean;
 };
 
 export default function LessonInquiry({
@@ -93,6 +94,7 @@ export default function LessonInquiry({
   headerTitle = "Request a lesson or consult",
   headerSubtitle = "A short guided intake. Under two minutes.",
   backLink = { to: "/lessons", label: "Back to lessons" },
+  requireAttachments = false,
 }: InquiryPageProps = {}) {
   usePageMeta({ title: metaTitle, description: metaDescription });
 
@@ -118,19 +120,20 @@ export default function LessonInquiry({
     const merged = [...files];
     for (const f of list) {
       if (merged.length >= MAX_FILES) {
-        setFileError(`Up to ${MAX_FILES} files.`);
+        setFileError(`You can attach up to ${MAX_FILES} files. "${f.name}" wasn't added.`);
         break;
       }
       if (!ALLOWED.test(f.name)) {
-        setFileError(`${f.name}: unsupported file type.`);
+        setFileError(`"${f.name}" isn't a supported file type. Use JPG, PNG, WEBP, HEIC, PDF, or DOC.`);
         continue;
       }
       if (f.size > MAX_SIZE) {
-        setFileError(`${f.name}: exceeds 10 MB.`);
+        const mb = (f.size / 1024 / 1024).toFixed(1);
+        setFileError(`"${f.name}" is ${mb} MB — the limit is 10 MB per file.`);
         continue;
       }
       if (f.size === 0) {
-        setFileError(`${f.name}: empty file.`);
+        setFileError(`"${f.name}" is empty. Choose a different file.`);
         continue;
       }
       if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
@@ -176,11 +179,11 @@ export default function LessonInquiry({
       toast.error("Please review the form for errors");
       return;
     }
-    // Flip to true (or pass via props) when attachments must be included.
-    const REQUIRE_ATTACHMENTS = false;
-    if (REQUIRE_ATTACHMENTS && files.length === 0) {
-      setFileError("Please attach at least one file before submitting.");
-      toast.error("Please attach at least one file before submitting.");
+    if (requireAttachments && files.length === 0) {
+      const msg = "Please attach at least one file (photo, PDF, or doc) before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
       return;
     }
     setFileError(null);
@@ -352,6 +355,7 @@ export default function LessonInquiry({
               onAddFiles={addFiles}
               onRemoveFile={removeFile}
               maxFiles={MAX_FILES}
+              requireAttachments={requireAttachments}
             />
           )}
 
@@ -571,9 +575,10 @@ type TimingProps = StepProps & {
   onAddFiles: (list: FileList | File[]) => void;
   onRemoveFile: (i: number) => void;
   maxFiles: number;
+  requireAttachments?: boolean;
 };
 
-function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles }: TimingProps) {
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
@@ -627,7 +632,12 @@ function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveF
 
       <div>
         <Label htmlFor="attachments" className="text-xs uppercase tracking-[0.3em] text-foreground/60">
-          Attachments <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+          Attachments{" "}
+          {requireAttachments ? (
+            <span className="text-destructive normal-case tracking-normal">(required)</span>
+          ) : (
+            <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+          )}
         </Label>
         <label
           htmlFor="attachments"
