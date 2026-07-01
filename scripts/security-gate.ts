@@ -41,7 +41,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "aizkqajrzkvwuobisnzr";
-const TOKEN = process.env.SUPABASE_ACCESS_TOKEN ?? "";
+const TOKEN = process.env.SB_MGMT_ACCESS_TOKEN ?? process.env.SUPABASE_ACCESS_TOKEN ?? "";
 const BASELINE_PATH = resolve(process.cwd(), ".security/baseline.json");
 const REPORT_PATH = resolve(process.cwd(), "security-report.json");
 const ADDED_PATH = resolve(process.cwd(), "security-added.json");
