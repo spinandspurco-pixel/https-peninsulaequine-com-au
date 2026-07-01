@@ -508,6 +508,12 @@ export function ClientDiagPanel() {
       url: window.location.href,
       host,
       environment,
+      latencyHistory: {
+        buildInfo: buildHistory,
+        health: healthHistory,
+        diag: diagHistory,
+        max: HISTORY_MAX,
+      },
       client: {
         capturedAt,
         bundleHash: bundleHash,
