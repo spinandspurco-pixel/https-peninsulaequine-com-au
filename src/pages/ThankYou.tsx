@@ -1,10 +1,31 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle, ArrowRight, CalendarIcon, Phone, Star } from "lucide-react";
+import { CheckCircle, ArrowRight, ArrowLeft, CalendarIcon, Phone, Star, Copy, Hash, Layers } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { siteConfig, testimonials, services } from "@/data/content";
 import type { CalendarEvent } from "@/lib/calendarSync";
+
+// Whitelist of allowed originating form paths — prevents open-redirect via ?from=
+const ALLOWED_ORIGIN_PATHS: Record<string, string> = {
+  "/contact": "Contact form",
+  "/consult": "Consult request",
+  "/consult/request": "Consult request",
+  "/lessons/book": "Lesson booking",
+  "/lessons/inquiry": "Lesson inquiry",
+  "/book-lesson": "Lesson booking",
+  "/site-assessment": "Site assessment",
+  "/schedule": "Schedule a call",
+  "/quote": "Quote builder",
+};
+
+function shortRef(id: string): string {
+  // Reference IDs are typically UUIDs — surface the first 8 chars uppercased for humans.
+  const trimmed = id.trim();
+  if (trimmed.length <= 8) return trimmed.toUpperCase();
+  return trimmed.slice(0, 8).toUpperCase();
+}
 
 const steps = [
   { title: "Inquiry Received", description: "We've logged your details and project requirements." },
