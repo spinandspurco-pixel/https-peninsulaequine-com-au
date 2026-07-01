@@ -61,6 +61,56 @@ export function ClientDiagPanel() {
   const [buildHistory, setBuildHistory] = useState<number[]>([]);
   const HISTORY_MAX = 10;
 
+  // Unified probe history — last N entries across all endpoints, so users
+  // can compare latency and payload hash over time.
+  type ProbeEntry = {
+    id: string;
+    endpoint: "build-info" | "health" | "diag";
+    fetchedAt: string;
+    latencyMs: number;
+    ok: boolean;
+    httpStatus?: number;
+    error?: string;
+    payloadHash?: string;
+    bytes?: number;
+  };
+  const PROBE_HISTORY_MAX = 20;
+  const [probeHistory, setProbeHistory] = useState<ProbeEntry[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem("pe.diag.probeHistory");
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.slice(-PROBE_HISTORY_MAX) : [];
+    } catch {
+      return [];
+    }
+  });
+  const pushProbe = useCallback((entry: Omit<ProbeEntry, "id">) => {
+    setProbeHistory((prev) => {
+      const next = [
+        ...prev,
+        { ...entry, id: `${entry.fetchedAt}-${entry.endpoint}-${Math.random().toString(36).slice(2, 7)}` },
+      ].slice(-PROBE_HISTORY_MAX);
+      try {
+        window.localStorage.setItem("pe.diag.probeHistory", JSON.stringify(next));
+      } catch {
+        /* ignore quota */
+      }
+      return next;
+    });
+  }, []);
+
+  // Short deterministic hash of a payload string (FNV-1a 32-bit, hex).
+  const hashPayload = (text: string): string => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+    }
+    return h.toString(16).padStart(8, "0");
+  };
+
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
 
