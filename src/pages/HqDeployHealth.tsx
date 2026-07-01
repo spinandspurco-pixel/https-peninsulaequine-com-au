@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
+import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
@@ -883,6 +884,34 @@ export default function HqDeployHealth() {
             setRetryOutcome(null);
             setRetryLogTrail([]);
             setLastRetryError(null);
+          }}
+          onCapture={(report) => {
+            // Structured log for support correlation (parallels retry attempt logs).
+            // eslint-disable-next-line no-console
+            console.error("[analytics] retry_outcome_render_error", report);
+            try {
+              trackEvent("retry_outcome_render_error", {
+                surface: report.surface,
+                error_name: report.error.name,
+                error_message: report.error.message,
+                has_component_stack: report.componentStack !== null,
+                has_debug_payload: report.hasDebugPayload,
+                has_debug_context: report.hasDebugContext,
+                page_bundle: pageBundle ?? null,
+              });
+            } catch {
+              // trackEvent swallows on its own; extra guard just in case.
+            }
+            void logDeployHealthAudit("retry_promotion_attempt", "failure", {
+              kind: "render_error",
+              error_name: report.error.name,
+              error_message: report.error.message,
+              component_stack: report.componentStack,
+              href: report.href,
+              timestamp: report.timestamp,
+            }).catch(() => {
+              /* audit failures are non-fatal */
+            });
           }}
         >
         {retryOutcome && (
