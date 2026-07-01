@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 import heroAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import muddySiteAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
 const heroImg = heroAsset.url;
@@ -16,6 +17,11 @@ const items = [
 ];
 
 export default function InfrastructurePage() {
+  usePageMeta({
+    title: "Infrastructure & Site Works — Peninsula Equine",
+    description: "Site works, drainage, round pens, fencing, driveways and wash bays. Engineered infrastructure across the Mornington Peninsula.",
+    path: "/infrastructure",
+  });
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">

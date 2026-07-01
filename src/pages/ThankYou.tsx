@@ -6,6 +6,7 @@ import { Layout } from "@/components/layout/Layout";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { siteConfig, testimonials, services } from "@/data/content";
 import type { CalendarEvent } from "@/lib/calendarSync";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // Whitelist of allowed originating form paths — prevents open-redirect via ?from=
 const ALLOWED_ORIGIN_PATHS: Record<string, string> = {
@@ -56,6 +57,11 @@ function getConsultationDate(daysOut: number): string {
 const featured = testimonials[0];
 
 export default function ThankYou() {
+  usePageMeta({
+    title: "Inquiry Received — Peninsula Equine",
+    description: "Thank you — your inquiry has been received. We'll follow up within one business day.",
+    path: "/thank-you",
+  });
   const [searchParams] = useSearchParams();
   const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
   const clientName = searchParams.get("name") || "";

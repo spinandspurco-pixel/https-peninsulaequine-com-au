@@ -15,6 +15,7 @@ import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // ── Approved cinematic asset library ────────────────────────────────────
 // All legacy bright-daytime phone photos (covered-arena-finished-lit,
@@ -425,6 +426,14 @@ export default function ServiceDetail() {
   const faqs = serviceFaqs[service.id] || [];
   const galleryImages = serviceGalleryImages[service.id] || [];
   const heroImage = serviceImages[service.id] || peArenaGrading;
+
+  usePageMeta({
+    title: `${service.title} — Peninsula Equine`,
+    description: service.shortDescription || service.description?.slice(0, 155) || "Peninsula Equine service.",
+    path: `/services/${service.id}`,
+    image: heroImage,
+  });
+
 
   // Find adjacent services for navigation
   const currentIndex = services.findIndex((s) => s.id === slug);
