@@ -102,6 +102,15 @@ export default function AdminEvents() {
     setItems((prev) => prev.map((x) => (x.id === ev.id ? { ...x, active: next } : x)));
   };
 
+  const toggleFeatured = async (ev: ManagedEvent) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !(ev as any).featured;
+    const { error } = await supabase.from("managed_events").update({ featured: next }).eq("id", ev.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Featured on homepage" : "Removed from homepage");
+    setItems((prev) => prev.map((x) => (x.id === ev.id ? ({ ...x, featured: next } as ManagedEvent) : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
