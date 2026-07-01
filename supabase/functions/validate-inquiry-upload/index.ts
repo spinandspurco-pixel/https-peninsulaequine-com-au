@@ -185,8 +185,23 @@ export async function handler(req: Request): Promise<Response> {
     return errorResponse(405, "method_not_allowed", "Use POST.", { method: req.method });
   }
 
+  // Resolve limits from env each request so operators can adjust without redeploy.
+  const { config, errors: configErrors } = loadUploadConfig();
+  if (configErrors.length > 0) {
+    console.error("validate-inquiry-upload: invalid config", configErrors);
+    return errorResponse(500, "server_misconfigured", "Upload limits are misconfigured.");
+  }
+  const { maxBytes, allowed: ALLOWED } = config;
+
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().includes("multipart/form-data")) {
+    return errorResponse(
+      400,
+      "invalid_multipart",
+      "Request body must be multipart/form-data.",
+      { received_content_type: contentType || null },
+    );
+  }
     return errorResponse(
       400,
       "invalid_multipart",
