@@ -174,7 +174,7 @@ Deno.test("handler: 401 unauthenticated when Authorization header missing", asyn
 // 4. handler(): non-admin → 403
 // ─────────────────────────────────────────────────────────────────────────────
 
-Deno.test("handler: 403 forbidden for authenticated non-admin", async () => {
+Deno.test({ name: "handler: 403 forbidden for authenticated non-admin", sanitizeOps: false, sanitizeResources: false, fn: async () => {
   setToken(SECRET_TOKEN);
   const stub = stubFetch((url) => {
     // GoTrue user lookup succeeds
@@ -218,7 +218,7 @@ Deno.test("handler: 403 forbidden for authenticated non-admin", async () => {
 // 5. handler(): upstream error responses and logs never contain the token
 // ─────────────────────────────────────────────────────────────────────────────
 
-Deno.test("handler: token never leaks in mgmt_api_error body or logs", async () => {
+Deno.test({ name: "handler: token never leaks in mgmt_api_error body or logs", sanitizeOps: false, sanitizeResources: false, fn: async () => {
   setToken(SECRET_TOKEN);
   const capture = captureConsoleError();
   // Simulate an upstream that echoes the Authorization header back — a
