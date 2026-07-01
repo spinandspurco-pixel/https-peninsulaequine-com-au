@@ -1,5 +1,16 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
+export interface RetryOutcomeErrorReport {
+  surface: "retry-outcome";
+  timestamp: string;
+  href: string;
+  userAgent: string;
+  error: { name: string; message: string; stack?: string };
+  componentStack: string | null;
+  hasDebugPayload: boolean;
+  hasDebugContext: boolean;
+}
+
 interface Props {
   children: ReactNode;
   /** Snapshot of the retry outcome (RetryOutcome) at the time of failure. */
@@ -13,6 +24,14 @@ interface Props {
   debugContext?: unknown;
   /** Called when the user clicks "Reset". Typically clears retryOutcome state. */
   onReset?: () => void;
+  /**
+   * Analytics/monitoring hook. Fired once per captured error inside
+   * componentDidCatch with a compact, PII-free report (error name/message,
+   * component stack, surface metadata). Wire this to trackEvent / Sentry /
+   * whichever monitoring surface is active — defaults to a no-op so tests
+   * and standalone renders stay quiet.
+   */
+  onCapture?: (report: RetryOutcomeErrorReport) => void;
 }
 
 interface State {
