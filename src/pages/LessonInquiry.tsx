@@ -518,7 +518,15 @@ function StepGoals({ data, set, errors }: StepProps) {
   );
 }
 
-function StepTiming({ data, set, errors }: StepProps) {
+type TimingProps = StepProps & {
+  files: File[];
+  fileError: string | null;
+  onAddFiles: (list: FileList | File[]) => void;
+  onRemoveFile: (i: number) => void;
+  maxFiles: number;
+};
+
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
