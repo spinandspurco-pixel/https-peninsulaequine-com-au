@@ -786,7 +786,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -794,7 +794,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null)}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -850,7 +850,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {row("/api/health ms", health?.latencyMs ?? "—")}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null)}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -906,7 +906,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {row("/api/diag ms", diag.latencyMs ?? "—")}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -931,7 +931,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {row("/api/diag ms", diag.latencyMs ?? "—")}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null)}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
