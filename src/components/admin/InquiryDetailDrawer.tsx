@@ -108,7 +108,7 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
       supabase
         .from("inquiries")
         .select(
-          "id,name,email,phone,preferred_contact,services,preferred_service,horse_name,horse_breed,horse_age,experience_level,project_vision,project_details,budget_range,preferred_start,attachment_urls,lead_tier,lead_tags,status,created_at,updated_at"
+          "id,name,email,phone,preferred_contact,services,preferred_service,horse_name,horse_breed,horse_age,experience_level,project_vision,project_details,budget_range,preferred_start,attachment_urls,attachments,lead_tier,lead_tags,status,created_at,updated_at"
         )
         .eq("id", inquiryId)
         .maybeSingle(),
@@ -132,20 +132,34 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
     setNotes((noteRows ?? []) as NoteRow[]);
     setActivity((actRows ?? []) as ActivityRow[]);
 
+    // Prefer rich metadata from `attachments`; fall back to `attachment_urls`.
+    const meta = (Array.isArray(inq.attachments) ? inq.attachments : []) as AttachmentMeta[];
     const urls = (inq.attachment_urls ?? []) as string[];
-    if (urls.length === 0) {
+    const merged: AttachmentMeta[] = meta.length > 0
+      ? meta
+      : urls.map((p) => ({ path: p, name: p.split("/").pop() ?? p }));
+
+    if (merged.length === 0) {
       setAttachments([]);
       return;
     }
     const resolved = await Promise.all(
-      urls.map(async (raw): Promise<Attachment> => {
-        const name = raw.split("/").pop() ?? raw;
-        if (/^https?:\/\//i.test(raw)) return { raw, name, url: raw };
+      merged.map(async (m): Promise<Attachment> => {
+        const raw = m.path;
+        const name = m.name ?? raw.split("/").pop() ?? raw;
+        const base = {
+          raw,
+          name,
+          size: m.size ?? null,
+          mime: m.mime ?? null,
+          uploaded_at: m.uploaded_at ?? null,
+        };
+        if (/^https?:\/\//i.test(raw)) return { ...base, url: raw };
         const path = raw.replace(/^inquiry-attachments\//, "");
         const { data: signed } = await supabase.storage
           .from("inquiry-attachments")
           .createSignedUrl(path, 60 * 60);
-        return { raw, name, url: signed?.signedUrl ?? null };
+        return { ...base, url: signed?.signedUrl ?? null };
       })
     );
     setAttachments(resolved);
