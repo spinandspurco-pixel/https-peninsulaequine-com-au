@@ -11,6 +11,7 @@ import { LessonPricingCalculator } from "@/components/LessonPricingCalculator";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/data/content";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // ── Package Data ─────────────────────────────────────
 
