@@ -196,11 +196,13 @@ export default function Contact() {
       // 1. Upload attachments (if any) via the server-side validated edge
       // function BEFORE creating the inquiry row.
       let attachment_urls: string[] = [];
+      let attachment_ids: string[] = [];
       let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
         const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
         const result = await uploadInquiryAttachments(files);
         attachment_urls = result.paths;
+        attachment_ids = result.ids;
         attachments = result.records;
       }
 
@@ -216,6 +218,7 @@ export default function Contact() {
             preferred_start: form.timeline || null,
             project_details: form.details.trim().slice(0, 2000) || null,
             attachment_urls,
+            attachment_ids,
             attachments,
             notes: [
               form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
@@ -230,6 +233,11 @@ export default function Contact() {
         },
       );
       if (error || !submitResp?.ok) throw error ?? new Error(submitResp?.code ?? "persist_failed");
+
+      if (attachment_ids.length && submitResp?.id) {
+        const { linkAttachmentsToInquiry } = await import("@/lib/uploadInquiryAttachment");
+        await linkAttachmentsToInquiry(attachment_ids, submitResp.id).catch(() => {});
+      }
 
       supabase.functions
         .invoke("send-inquiry-notification", {
