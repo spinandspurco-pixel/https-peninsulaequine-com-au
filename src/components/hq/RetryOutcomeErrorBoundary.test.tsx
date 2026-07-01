@@ -75,9 +75,37 @@ describe("RetryOutcomeErrorBoundary", () => {
     expect(payload.componentStack).toEqual(expect.any(String));
     expect(payload.retryOutcome).toEqual(debugPayload);
     expect(payload.timestamp).toEqual(expect.any(String));
+
+    // UX confirmation must be surfaced via an aria-live status region.
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent(/Copied to clipboard/i);
+    expect(status).toHaveAttribute("data-copy-status", "copied");
   });
 
-  it("falls back to console.info when the clipboard write throws", async () => {
+  it("auto-clears the copied confirmation after the display window", async () => {
+    vi.useFakeTimers();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    render(
+      <RetryOutcomeErrorBoundary>
+        <Bomb />
+      </RetryOutcomeErrorBoundary>,
+    );
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Copy debug payload/i }));
+    });
+    expect(screen.getByRole("status")).toHaveAttribute("data-copy-status", "copied");
+
+    await act(async () => {
+      vi.advanceTimersByTime(2600);
+    });
+    expect(screen.getByRole("status")).toHaveAttribute("data-copy-status", "idle");
+    vi.useRealTimers();
+  });
+
+  it("falls back to console.info and shows a failure confirmation when clipboard throws", async () => {
     const writeText = vi.fn().mockRejectedValue(new Error("denied"));
     Object.assign(navigator, { clipboard: { writeText } });
     const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
@@ -99,6 +127,28 @@ describe("RetryOutcomeErrorBoundary", () => {
         retryOutcome: { x: 1 },
       }),
     );
+
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent(/Copy failed/i);
+    expect(status).toHaveAttribute("data-copy-status", "failed");
+  });
+
+  it("shows the failure confirmation when the clipboard API is unavailable", async () => {
+    Object.assign(navigator, { clipboard: undefined });
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+
+    render(
+      <RetryOutcomeErrorBoundary>
+        <Bomb />
+      </RetryOutcomeErrorBoundary>,
+    );
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Copy debug payload/i }));
+    });
+
+    expect(infoSpy).toHaveBeenCalled();
+    expect(screen.getByRole("status")).toHaveAttribute("data-copy-status", "failed");
   });
 
   it("resets state and invokes onReset when the reset button is clicked", () => {

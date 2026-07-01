@@ -11,6 +11,7 @@ interface Props {
 interface State {
   error: Error | null;
   info: ErrorInfo | null;
+  copyStatus: "idle" | "copied" | "failed";
 }
 
 /**
@@ -20,7 +21,8 @@ interface State {
  * copyable debug info — not white-screen the whole page.
  */
 export class RetryOutcomeErrorBoundary extends Component<Props, State> {
-  state: State = { error: null, info: null };
+  state: State = { error: null, info: null, copyStatus: "idle" };
+  private copyResetTimer: ReturnType<typeof setTimeout> | null = null;
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return { error };
@@ -32,14 +34,23 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
     console.error("[RetryOutcomeErrorBoundary]", error, info);
   }
 
+  componentWillUnmount() {
+    if (this.copyResetTimer) clearTimeout(this.copyResetTimer);
+  }
+
   private reset = () => {
-    this.setState({ error: null, info: null });
+    if (this.copyResetTimer) {
+      clearTimeout(this.copyResetTimer);
+      this.copyResetTimer = null;
+    }
+    this.setState({ error: null, info: null, copyStatus: "idle" });
     this.props.onReset?.();
   };
 
-  private copyDebug = async () => {
+  /** Exposed for tests — builds the exact JSON payload written to the clipboard. */
+  buildDebugPayload() {
     const { error, info } = this.state;
-    const payload = {
+    return {
       surface: "hq/deploy-health/retry-outcome",
       timestamp: new Date().toISOString(),
       href: typeof window !== "undefined" ? window.location.href : null,
@@ -50,13 +61,32 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
       componentStack: info?.componentStack ?? null,
       retryOutcome: this.props.debugPayload ?? null,
     };
+  }
+
+  private scheduleCopyStatusReset() {
+    if (this.copyResetTimer) clearTimeout(this.copyResetTimer);
+    this.copyResetTimer = setTimeout(() => {
+      this.setState({ copyStatus: "idle" });
+      this.copyResetTimer = null;
+    }, 2500);
+  }
+
+  private copyDebug = async () => {
+    const payload = this.buildDebugPayload();
+    const serialised = JSON.stringify(payload, null, 2);
     try {
-      await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+      if (!navigator?.clipboard?.writeText) {
+        throw new Error("Clipboard API unavailable");
+      }
+      await navigator.clipboard.writeText(serialised);
+      this.setState({ copyStatus: "copied" });
     } catch {
       // Clipboard blocked — fall back to console so the payload is still recoverable.
       // eslint-disable-next-line no-console
       console.info("[RetryOutcomeErrorBoundary] debug payload", payload);
+      this.setState({ copyStatus: "failed" });
     }
+    this.scheduleCopyStatusReset();
   };
 
   render() {
@@ -116,10 +146,30 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={this.copyDebug}
+            aria-label="Copy debug payload"
             className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
           >
             Copy debug payload
           </button>
+          <span
+            role="status"
+            aria-live="polite"
+            data-copy-status={this.state.copyStatus}
+            className={
+              "text-[0.65rem] tracking-[0.3em] uppercase transition-opacity " +
+              (this.state.copyStatus === "idle"
+                ? "opacity-0"
+                : this.state.copyStatus === "copied"
+                  ? "text-emerald-700 opacity-100"
+                  : "text-red-700 opacity-100")
+            }
+          >
+            {this.state.copyStatus === "copied"
+              ? "Copied to clipboard"
+              : this.state.copyStatus === "failed"
+                ? "Copy failed — payload logged to console"
+                : ""}
+          </span>
           <button
             type="button"
             onClick={this.reset}
