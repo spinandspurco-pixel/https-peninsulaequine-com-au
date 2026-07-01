@@ -135,6 +135,7 @@ export function GuidedIntake() {
   const spamGuard = useSpamGuard();
   const attachmentFolder = useMemo(() => crypto.randomUUID(), [isOpen]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploader = useAttachmentUpload();
 
   /* Reset on close */
   useEffect(() => {
