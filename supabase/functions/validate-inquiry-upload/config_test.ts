@@ -42,7 +42,7 @@ Deno.test("INQUIRY_UPLOAD_MAX_BYTES rejects non-numeric", () => {
   const { errors, config } = loadUploadConfig(
     envFrom({ INQUIRY_UPLOAD_MAX_BYTES: "big" }),
   );
-  assert(errors.some((e) => e.includes("MAX_BYTES")));
+  assert(errors.some((e: string) => e.includes("MAX_BYTES")));
   assertEquals(config.maxBytes, 10 * 1024 * 1024); // falls back to default
 });
 
@@ -57,7 +57,7 @@ Deno.test("INQUIRY_UPLOAD_MAX_BYTES rejects values above hard cap", () => {
   const { errors } = loadUploadConfig(
     envFrom({ INQUIRY_UPLOAD_MAX_BYTES: String(100 * 1024 * 1024) }),
   );
-  assert(errors.some((e) => e.includes("hard cap")));
+  assert(errors.some((e: string) => e.includes("hard cap")));
 });
 
 // ---------- INQUIRY_UPLOAD_ALLOWED_TYPES (JSON) ----------
@@ -80,7 +80,7 @@ Deno.test("INQUIRY_UPLOAD_ALLOWED_TYPES rejects invalid JSON", () => {
   const { errors } = loadUploadConfig(
     envFrom({ INQUIRY_UPLOAD_ALLOWED_TYPES: "{not json" }),
   );
-  assert(errors.some((e) => e.includes("ALLOWED_TYPES")));
+  assert(errors.some((e: string) => e.includes("ALLOWED_TYPES")));
 });
 
 Deno.test("INQUIRY_UPLOAD_ALLOWED_TYPES rejects non-object / empty / bad shape", () => {
