@@ -297,6 +297,8 @@ export function GuidedIntake() {
             email: result.data.email,
             phone: result.data.phone || undefined,
             services,
+            inquiryId: inserted.id,
+            attachmentIds,
             additionalNotes: [
               `Intent: ${intent}`,
               `Land: ${land}`,
