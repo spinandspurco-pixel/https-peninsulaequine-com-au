@@ -341,6 +341,7 @@ export function GuidedIntake() {
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-background/98" />
+      <HoneypotField guard={spamGuard} />
 
       {/* Close */}
       <button
