@@ -712,7 +712,7 @@ export default function AdminInquiries() {
               return (
                 <li
                   key={r.id}
-                  className={`grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
+                  className={`relative grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
                     isChecked ? "bg-accent/[0.04]" : "hover:bg-foreground/[0.015]"
                   }`}
                 >
