@@ -17,6 +17,11 @@ const items = [
 ];
 
 export default function InfrastructurePage() {
+  usePageMeta({
+    title: "Infrastructure & Site Works — Peninsula Equine",
+    description: "Site works, drainage, round pens, fencing, driveways and wash bays. Engineered infrastructure across the Mornington Peninsula.",
+    path: "/infrastructure",
+  });
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
