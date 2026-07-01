@@ -1181,6 +1181,22 @@ export function ClientDiagPanel() {
               >
                 reset defaults
               </button>
+              <button
+                onClick={() => {
+                  setHealthHistory([]);
+                  setDiagHistory([]);
+                  setBuildHistory([]);
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Clear stored latency trend samples for /api/build-info, /api/health, and /api/diag (sparklines reset)"
+              >
+                clear history
+              </button>
             </div>
             {(() => {
               type Row = { key: EndpointKey | "default"; label: string };
