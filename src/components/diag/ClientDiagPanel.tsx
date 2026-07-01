@@ -174,6 +174,27 @@ export function ClientDiagPanel() {
     }
   }, [lastDiagStamp, diag?.latencyMs]);
 
+  // Track the most recent error cause per endpoint so we can surface it
+  // next to the latency row even after a subsequent probe recovers.
+  type LastErr = { message: string; httpStatus?: number; at: string } | null;
+  const [buildLastErr, setBuildLastErr] = useState<LastErr>(null);
+  const [healthLastErr, setHealthLastErr] = useState<LastErr>(null);
+  const [diagLastErr, setDiagLastErr] = useState<LastErr>(null);
+  useEffect(() => {
+    if (serverBuild?.error && serverBuild.fetchedAt) {
+      setBuildLastErr({ message: serverBuild.error, httpStatus: serverBuild.status, at: serverBuild.fetchedAt });
+    }
+  }, [serverBuild?.error, serverBuild?.status, serverBuild?.fetchedAt]);
+  useEffect(() => {
+    if (health?.error && health.fetchedAt) {
+      setHealthLastErr({ message: health.error, httpStatus: health.httpStatus, at: health.fetchedAt });
+    }
+  }, [health?.error, health?.httpStatus, health?.fetchedAt]);
+  useEffect(() => {
+    if (diag?.error && diag.fetchedAt) {
+      setDiagLastErr({ message: diag.error, httpStatus: diag.httpStatus, at: diag.fetchedAt });
+    }
+  }, [diag?.error, diag?.httpStatus, diag?.fetchedAt]);
 
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
