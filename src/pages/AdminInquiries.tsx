@@ -7,6 +7,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { Search, RefreshCw, Inbox, Download, Bookmark, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
+import { InquiryAttachmentsQuickView } from "@/components/admin/InquiryAttachmentsQuickView";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
