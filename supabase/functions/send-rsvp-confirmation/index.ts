@@ -307,7 +307,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
         subject: `New RSVP: ${data.name} → ${data.eventTitle} (${data.status})`,
-        html: `<p><strong>${data.name}</strong> (${data.email}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${data.eventTitle}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,
+        html: `<p><strong>${esc(data.name)}</strong> (${esc(data.email)}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${esc(data.eventTitle)}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,
         reply_to: data.email,
       }),
     ]);
