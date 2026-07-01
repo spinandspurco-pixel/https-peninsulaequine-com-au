@@ -173,6 +173,10 @@ export async function uploadInquiryAttachment(
         }
       }
       if (status === 0) code = "network_error";
+      else if (status === 401) code = payload?.code ? code : "unauthorized";
+      else if (status === 403) code = payload?.code ? code : "forbidden";
+      else if (status === 429) code = payload?.code ? code : "rate_limit";
+      else if (status >= 500 && !payload?.code) code = "upload_failed";
       reject(
         new UploadValidationError({
           message: friendlyUploadMessage(code, details, file.name),
