@@ -1,10 +1,10 @@
 name: Verify no SB_MGMT_ACCESS_TOKEN leak
 
-# Builds the client bundle with sourcemaps enabled and greps every built
-# artifact for the literal string `SB_MGMT_ACCESS_TOKEN`. This token name
-# should only ever appear in server-side code (edge functions, CI scripts).
-# If it lands in the client bundle or a sourcemap, the job fails so we
-# catch accidental imports before they ship to production.
+# Builds the client bundle with sourcemaps enabled and runs
+# scripts/verify-no-mgmt-token.ts against every emitted artifact.
+# The script writes a JSON report and a markdown summary into dist/,
+# which we surface in the GitHub step summary and upload as an artifact
+# so failures show exactly which dist file (and line) triggered the guard.
 
 on:
   pull_request:
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   scan:
-    name: Grep built artifacts for SB_MGMT_ACCESS_TOKEN
+    name: Scan built artifacts for SB_MGMT_ACCESS_TOKEN
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -49,40 +49,34 @@ jobs:
 
       - name: Build client bundle with sourcemaps
         env:
-          # Force sourcemap emission so the grep also inspects the mapped
+          # Force sourcemap emission so the scan also inspects the mapped
           # original module paths, not just minified output.
           VITE_SOURCEMAP: "true"
         run: bunx vite build --sourcemap
 
-      - name: Grep dist/ for SB_MGMT_ACCESS_TOKEN
+      - name: Run verify-no-mgmt-token guard
+        id: guard
+        run: bunx tsx scripts/verify-no-mgmt-token.ts
+
+      - name: Append report to GitHub step summary
+        if: always()
         run: |
           set -euo pipefail
-          NEEDLE="SB_MGMT_ACCESS_TOKEN"
-          if [ ! -d dist ]; then
-            echo "::error::dist/ was not produced by the build step."
-            exit 1
+          if [ -f dist/verify-no-mgmt-token.summary.md ]; then
+            cat dist/verify-no-mgmt-token.summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## SB_MGMT_ACCESS_TOKEN leak check" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "No summary was produced — the build step likely failed before the guard ran." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          # Search every file under dist/ (JS, CSS, HTML, .map, etc.).
-          # -r recursive, -I skip binary, -F fixed string, -l list matching files.
-          MATCHES=$(grep -rIlF "$NEEDLE" dist/ || true)
-
-          if [ -n "$MATCHES" ]; then
-            echo "::error::Found literal '$NEEDLE' in built artifacts:"
-            echo "$MATCHES"
-            {
-              echo "## SB_MGMT_ACCESS_TOKEN leak detected"
-              echo ""
-              echo "The following built artifacts contain the literal string \`$NEEDLE\`:"
-              echo ""
-              echo '```'
-              echo "$MATCHES"
-              echo '```'
-              echo ""
-              echo "This token name should only appear in server-side code (edge functions, CI). Remove any client-side reference before merging."
-            } >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
-
-          echo "OK — no occurrences of $NEEDLE in dist/."
-          echo "## SB_MGMT_ACCESS_TOKEN leak check passed" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload leak-scan report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-no-mgmt-token-report
+          path: |
+            dist/verify-no-mgmt-token.report.json
+            dist/verify-no-mgmt-token.summary.md
+          if-no-files-found: warn
+          retention-days: 14
