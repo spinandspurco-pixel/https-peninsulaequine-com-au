@@ -163,6 +163,19 @@ export default function Contact() {
         : [...prev.scopes, id],
     }));
 
+  // Helper: upload a single File to the server upload endpoint
+  async function uploadFileToServer(file: File): Promise<{ id: string; object_path: string }> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const resp = await fetch("/api/upload-inquiry-attachment", { method: "POST", body: formData });
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({ error: "upload failed" }));
+      throw new Error(body?.error || "upload failed");
+    }
+    const body = await resp.json();
+    return body.attachment;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = formSchema.safeParse({
@@ -186,25 +199,21 @@ export default function Contact() {
     setSubmitting(true);
 
     try {
-      // 1. Upload attachments (if any) BEFORE creating the inquiry row.
-      let attachment_urls: string[] = [];
+      // 1. Upload attachments (if any) to server endpoint to get attachment row ids
+      const attachmentIds: string[] = [];
       if (files.length > 0) {
-        const folder = crypto.randomUUID();
-        const uploads = await Promise.all(
-          files.map(async (file) => {
-            const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
-            const path = `${folder}/${Date.now()}-${safeName}`;
-            const { error: upErr } = await supabase.storage
-              .from("inquiry-attachments")
-              .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type || undefined });
-            if (upErr) throw upErr;
-            return path;
-          })
-        );
-        attachment_urls = uploads;
+        for (const file of files) {
+          try {
+            const att = await uploadFileToServer(file); // returns { id, object_path }
+            attachmentIds.push(att.id);
+          } catch (err) {
+            throw new Error(`Attachment upload failed: ${String((err as Error).message || err)}`);
+          }
+        }
       }
 
-      const { error } = await supabase.from("inquiries").insert({
+      // 2. Create inquiry via server RPC endpoint (atomic with attachments linking)
+      const payload = {
         name: form.name.trim().slice(0, 100),
         email: form.email.trim().slice(0, 255),
         phone: form.phone.trim().slice(0, 30) || null,
@@ -212,19 +221,29 @@ export default function Contact() {
         budget_range: form.budget || null,
         preferred_start: form.timeline || null,
         project_details: form.details.trim().slice(0, 2000) || null,
-        attachment_urls,
         notes: [
           form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
           form.propertyType ? `Type: ${form.propertyType}` : "",
           form.timeline ? `Timeline: ${form.timeline}` : "",
           form.budget ? `Investment range: ${form.budget}` : "",
-        ]
-          .filter(Boolean)
-          .join(" | "),
-        status: "new",
-      });
-      if (error) throw error;
+        ].filter(Boolean).join(" | "),
+        attachment_ids: attachmentIds,
+      };
 
+      const resp = await fetch("/api/create-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "create failed" }));
+        throw new Error(err.error || "Create inquiry failed");
+      }
+
+      const resultBody = await resp.json();
+
+      // Notify functions (as before) — include attachment count
       supabase.functions
         .invoke("send-inquiry-notification", {
           body: {
@@ -233,7 +252,7 @@ export default function Contact() {
             services: form.scopes,
             budgetRange: form.budget || undefined,
             goals: form.details.trim() || "Site assessment request",
-            attachmentCount: attachment_urls.length,
+            attachmentCount: attachmentIds.length,
           },
         })
         .catch(() => {});
@@ -262,7 +281,8 @@ export default function Contact() {
         title: "Brief received",
         description: "We'll read the details and respond within two business days.",
       });
-    } catch {
+    } catch (err) {
+      console.error("Contact submit error:", err);
       trackFormError("contact_assessment", "insert_failed");
       toast({
         title: "Submission failed",
@@ -332,7 +352,7 @@ export default function Contact() {
                   <div className="space-y-5 text-sm text-[hsl(var(--footer-muted))] leading-[1.9]">
                     <p>This allows us to properly evaluate:</p>
                     <div className="space-y-3">
-                      {["Ground conditions", "Drainage pathways", "Site layout", "Long-term performance requirements"].map((item) => (
+                      {['Ground conditions', 'Drainage pathways', 'Site layout', 'Long-term performance requirements'].map((item) => (
                         <div key={item} className="flex items-center gap-3">
                           <div className="w-px h-4 bg-accent/40 shrink-0" />
                           <span className="text-foreground/80 text-sm">{item}</span>
@@ -686,7 +706,7 @@ export default function Contact() {
                     <div className="space-y-3">
                       <label
                         htmlFor="contact-files"
-                        className="flex flex-col items-center justify-center rounded-md border border-dashed border-input bg-background/40 px-4 py-8 text-center cursor-pointer hover:border-accent/60 transition-colors"
+                        className="flex flex-col items-center justify-center rounded-md border border-dashed border-input bg-background/40 px-4 py-8 text-center cursor-pointer hover:border-accent"
                       >
                         <span className="text-sm text-foreground/80">
                           Drop files or click to upload
