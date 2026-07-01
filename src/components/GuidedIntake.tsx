@@ -7,7 +7,6 @@ import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useSiteChrome } from "@/hooks/useSiteChrome";
 import {
-  uploadInquiryAttachments,
   linkAttachmentsToInquiry,
   UploadValidationError,
   type AttachmentRecord,
