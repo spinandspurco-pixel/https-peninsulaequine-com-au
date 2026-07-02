@@ -231,7 +231,7 @@ verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header (e.g., `Authorization: ****** or `Authorization: ******
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header (e.g., `Authorization: ******
 - `verify_jwt = false`: Disables automatic JWT verification; however, this **does NOT mean no authentication**. Authentication is instead handled by custom logic within the function code (e.g., custom guards in `mgmtApiGuard.ts` for admin functions)
 
 Most admin/protected functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify management tokens, providing more flexible authentication than the automatic JWT check.
@@ -371,7 +371,7 @@ supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database (connection: run `supabase status` for credentials; typically `******localhost:54322/postgres`)
+- Local PostgreSQL database (run `supabase status` to see connection details; default: `postgresql://localhost:54322/postgres`)
 - Supabase Auth emulator
 - Edge functions emulator on `http://localhost:54321`
 - Storage emulator
