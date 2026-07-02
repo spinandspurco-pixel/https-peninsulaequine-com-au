@@ -43,6 +43,12 @@
     --destructive: 0 55% 48%;
     --destructive-foreground: 38 12% 92%;
 
+    /* Blueprint Alert — high-tech, desaturated, on-brand */
+    --bp-alert-color: 38 50% 50%; /* Antique gold for on-brand alerts */
+    --bp-alert-danger: 35 42% 48%; /* Muted warm-amber for errors */
+    --bp-alert-warning: 30 50% 52%; /* Soft amber-gold for warnings */
+    --bp-alert-info: 220 50% 55%; /* Cool slate-blue for info */
+
     /* Borders — subtle warm edge */
     --border: 220 10% 15%;
     --input: 220 10% 15%;
@@ -221,7 +227,13 @@
   /* ── PE Reveal — one motion vocabulary ──────────────────
      Apply .pe-reveal to a wrapper, then .pe-revealed when
      visible (driven by useScrollReveal). Children stagger
-     via inline style: --reveal-delay. */
+     via inline style: --reveal-delay.
+     
+     IMPORTANT: min-height prevents layout shift during the entire
+     animation lifecycle. Set data-reveal-min-height on the wrapper
+     to reserve vertical space before reveal animation begins. This
+     prevents the browser from recalculating layout positions as
+     content stagger-reveals from top to bottom. */
   .pe-reveal {
     opacity: 0;
     transform: translateY(8px);
@@ -229,6 +241,8 @@
       opacity var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms),
       transform var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms);
     will-change: opacity, transform;
+    /* Prevent layout shift: set explicit min-height before reveal completes */
+    min-height: var(--reveal-min-height, auto);
   }
   .pe-revealed {
     opacity: 1;
@@ -893,5 +907,63 @@
     transform: none !important;
     opacity: 1 !important;
     clip-path: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   LEGACY CLEANUP — Blueprint Alert Standardization
+   ═══════════════════════════════════════════════════════
+   
+   Global override for any legacy red text, error messages,
+   or alert styling. This catches elements using old color
+   schemes and harmonizes them with the Blueprint Design System.
+   
+   Target patterns:
+   - [class*="error"] — any class containing "error"
+   - [class*="alert"] — any class containing "alert"
+   - [class*="warning"] — any class containing "warning"
+   - [class*="danger"] — any class containing "danger"
+   - [class*="invalid"] — any class containing "invalid"
+   - color: red, #FF0000, #ff0000
+   
+   Uses CSS specificity to override legacy inline styles.
+ */
+
+[class*="alert"],
+[class*="warning"],
+[class*="danger"],
+[class*="invalid"],
+.legacy-red-text,
+.alert-danger,
+.text-alert {
+  color: hsl(var(--bp-alert-danger)) !important;
+  border-color: hsl(var(--bp-alert-danger)) !important;
+  background-color: transparent !important;
+}
+
+/* Error elements get subtle background for emphasis */
+[class*="error"],
+.text-error {
+  color: hsl(var(--bp-alert-danger)) !important;
+  border-color: hsl(var(--bp-alert-danger)) !important;
+  background-color: hsl(var(--card) / 0.5) !important;
+}
+
+/* Override inline style="color: red" patterns */
+[style*="color: red"],
+[style*="color:#FF0000"],
+[style*="color:#ff0000"],
+[style*="color: #FF0000"],
+[style*="color: #ff0000"] {
+  color: hsl(var(--bp-alert-danger)) !important;
+}
+
+/* High-contrast mode — ensure alert text remains readable */
+@media (prefers-contrast: more) {
+  [class*="error"],
+  [class*="alert"],
+  [class*="warning"],
+  [class*="danger"] {
+    color: hsl(35 50% 58%) !important;
   }
 }
