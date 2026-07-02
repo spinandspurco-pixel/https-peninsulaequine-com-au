@@ -116,7 +116,7 @@ SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
 
 **Important:** These are safe to expose in frontend code (publishable key is read-only by design).
 
-⚠️ **Legacy JWT Warning:** Supabase has two key formats for the publishable/anon key: older JWT format (`eyJ...`) and newer `sb_publishable_*` format. Both are valid keys, but the JWT format may encounter rotation issues. If you're experiencing 401 authentication errors (especially "invalid_grant"), update from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key format.
+⚠️ **Legacy JWT Warning:** Supabase has two key formats: older JWT format (`eyJ...`) which is **deprecated** and newer `sb_publishable_*` format which is current. The JWT format is susceptible to rotation issues. If you're experiencing 401 authentication errors (especially "invalid_grant"), you must update from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key format.
 
 ### Backend Secrets (Lovable Secrets Dashboard Only)
 
@@ -231,7 +231,7 @@ verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization: ****** header
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header (format: `******
 - `verify_jwt = false`: Disables automatic JWT verification; however, this **does NOT mean no authentication**. Authentication is instead handled by custom logic within the function code (e.g., custom guards in `mgmtApiGuard.ts` for admin functions)
 
 Most admin/protected functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify management tokens, providing more flexible authentication than the automatic JWT check.
@@ -370,7 +370,7 @@ supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database at `******localhost:54322/postgres` (default credentials from `supabase status` output)
+- Local PostgreSQL database at `******localhost:54322/postgres` (use these credentials when connecting)
 - Supabase Auth emulator
 - Edge functions emulator on `http://localhost:54321`
 - Storage emulator
@@ -561,7 +561,7 @@ The platform provides diagnostic edge functions:
 
 ---
 
-## 13. Current Project State & Recent Updates (July 2026)
+## 11. Current Project State & Recent Updates (July 2026)
 
 ### Verified Components
 - ✅ **Database**: 128 migrations deployed and synced with Git
@@ -596,7 +596,7 @@ The platform provides diagnostic edge functions:
 
 ---
 
-## 14. Support & Escalation
+## 13. Support & Escalation
 
 - **Supabase outages/issues:** Check supabase.com/status
 - **Lovable Cloud support:** https://lovable.dev/support
