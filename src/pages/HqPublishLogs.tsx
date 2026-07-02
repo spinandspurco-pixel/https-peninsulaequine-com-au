@@ -109,7 +109,7 @@ export default function HqPublishLogs() {
   return (
     <Layout>
       <div className="mx-auto max-w-6xl px-6 py-10">
-        <HqBreadcrumbs items={[{ label: "Operations" }, { label: "Publish Logs" }]} />
+        <HqBreadcrumbs current="Publish Logs" />
         <HqNav />
 
         <header className="mt-8 flex items-end justify-between gap-4">
