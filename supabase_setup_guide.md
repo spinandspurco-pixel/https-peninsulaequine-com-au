@@ -110,7 +110,7 @@ These are synced from Lovable Cloud to `.env`:
 ```env
 VITE_SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
 VITE_SUPABASE_PROJECT_ID=aizkqajrzkvwuobisnzr
-VITE_SUPABASE_PUBLISHABLE_KEY=eyJ...  # Publishable key (safe to expose)
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...  # Current format (or eyJ... legacy format - see warning below)
 SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
 ```
 
@@ -231,7 +231,7 @@ verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header (format: `******
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header (e.g., `Authorization: ****** or `Authorization: ******
 - `verify_jwt = false`: Disables automatic JWT verification; however, this **does NOT mean no authentication**. Authentication is instead handled by custom logic within the function code (e.g., custom guards in `mgmtApiGuard.ts` for admin functions)
 
 Most admin/protected functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify management tokens, providing more flexible authentication than the automatic JWT check.
@@ -285,9 +285,10 @@ serve(async (req) => {
 ```
 
 **Key points:**
-- **Runtime environment variables**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected into edge functions at execution time (these are different from `.env` frontend variables)
-  - Frontend uses: `VITE_SUPABASE_PUBLISHABLE_KEY` (from `.env`)
-  - Backend runtime uses: `SUPABASE_ANON_KEY` (injected by Supabase, same value as publishable key)
+- **Runtime environment variables**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected into edge functions at execution time
+  - Frontend uses: `VITE_SUPABASE_PUBLISHABLE_KEY` (from `.env`, passed to browser client)
+  - Backend runtime uses: `SUPABASE_ANON_KEY` (injected by Supabase at runtime, contains same key value as `VITE_SUPABASE_PUBLISHABLE_KEY`)
+  - Naming difference: `VITE_` prefix exposes to frontend; `SUPABASE_` runtime names are internal
 - These backend secrets should NOT be hardcoded in `.env` — they're managed through Lovable Cloud → Backend Secrets
 - Each function runs in a Deno runtime with full access to environment secrets
 
@@ -370,7 +371,7 @@ supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database at `******localhost:54322/postgres` (use these credentials when connecting)
+- Local PostgreSQL database (connection: run `supabase status` for credentials; typically `******localhost:54322/postgres`)
 - Supabase Auth emulator
 - Edge functions emulator on `http://localhost:54321`
 - Storage emulator
@@ -525,7 +526,7 @@ The platform provides diagnostic edge functions:
 |---|---|
 | **Email not sending** | Run `email-ops-status` function; check sender secrets in Lovable |
 | **Function timeout** | Increase timeout in `config.toml`, or optimize function code |
-| **Auth failing (401 Unauthorized)** | Check JWT in function code; ensure `verify_jwt` setting matches. If you see `eyJ...` keys in `.env`, update to `sb_publishable_*` format from Lovable Cloud |
+| **Auth failing (401 Unauthorized)** | Check JWT in function code; ensure `verify_jwt` setting matches. If your VITE_SUPABASE_PUBLISHABLE_KEY starts with `eyJ...` (JWT format), it's deprecated. Look in Lovable Cloud → Backend → API keys for a key starting with `sb_publishable_*` and update .env |
 | **Legacy JWT "invalid_grant" errors** | Supabase disabled the old JWT key family. Update VITE_SUPABASE_PUBLISHABLE_KEY from Lovable Cloud → Backend → API keys |
 | **Migration not applying** | Verify `.sql` syntax; check `supabase db push` output for errors |
 | **Local Supabase connection refused** | Ensure `supabase start` is running and Docker daemon is active |
