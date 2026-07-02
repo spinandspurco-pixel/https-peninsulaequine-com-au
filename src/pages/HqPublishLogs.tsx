@@ -322,7 +322,40 @@ export default function HqPublishLogs() {
     () => (rows ?? []).filter((r) => filteredRunIds.has(r.run_id)),
     [rows, filteredRunIds],
   );
-  const clusters = useMemo(() => clusterFailures(filteredRows), [filteredRows]);
+
+  // ── Cluster-scoped filters (independent from the list filters above) ─────
+  const [clusterStatus, setClusterStatus] = useState<"all" | "fail">("all");
+  const [clusterPhase, setClusterPhase] = useState<string>("all");
+  const [clusterRange, setClusterRange] = useState<"24h" | "7d" | "30d" | "all">("all");
+
+  const clusterRows = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      clusterRange === "24h" ? 24 * 3_600_000 :
+      clusterRange === "7d"  ? 7  * 24 * 3_600_000 :
+      clusterRange === "30d" ? 30 * 24 * 3_600_000 :
+      null;
+    return filteredRows.filter((r) => {
+      if (clusterStatus !== "all" && r.status !== clusterStatus) return false;
+      if (rangeMs !== null && now - new Date(r.created_at).getTime() > rangeMs) return false;
+      if (clusterPhase !== "all") {
+        const p = (r.meta as { phase?: unknown } | null)?.phase;
+        if (p !== clusterPhase) return false;
+      }
+      return true;
+    });
+  }, [filteredRows, clusterStatus, clusterPhase, clusterRange]);
+
+  const clusters = useMemo(() => clusterFailures(clusterRows), [clusterRows]);
+
+  const clusterFiltersActive =
+    clusterStatus !== "all" || clusterPhase !== "all" || clusterRange !== "all";
+  const resetClusterFilters = useCallback(() => {
+    setClusterStatus("all");
+    setClusterPhase("all");
+    setClusterRange("all");
+  }, []);
+
 
   const filtersActive =
     filterStatus !== "all" ||
