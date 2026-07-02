@@ -191,15 +191,77 @@ export default function HqPublishLogs() {
               publish attempt that streamed a log. Latest 500 rows, grouped by run.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => void load()}
-            className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
-            disabled={loading}
-          >
-            {loading ? "Refreshing…" : "Refresh"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setReportOpen((v) => !v)}
+              className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
+            >
+              {reportOpen ? "Cancel report" : "Report a failure"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void load()}
+              className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
+              disabled={loading}
+            >
+              {loading ? "Refreshing…" : "Refresh"}
+            </button>
+          </div>
         </header>
+
+        {reportOpen && (
+          <section className="mt-6 rounded border border-border/50 bg-background/40 p-4">
+            <h2 className="font-serif text-lg">Record a publishing failure</h2>
+            <p className="mt-1 text-xs text-foreground/60">
+              Captures timestamp, bundle id, and the exact error message so it can be reviewed
+              later or shared with support if it repeats.
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Bundle id
+                <input
+                  type="text"
+                  value={reportBundleId}
+                  onChange={(e) => setReportBundleId(e.target.value)}
+                  placeholder="e.g. deploy_abc123 or bundle hash"
+                  className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
+                />
+              </label>
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Context (optional)
+                <input
+                  type="text"
+                  value={reportContext}
+                  onChange={(e) => setReportContext(e.target.value)}
+                  placeholder="What you were doing when it failed"
+                  className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 text-xs text-foreground normal-case tracking-normal"
+                />
+              </label>
+            </div>
+            <label className="mt-3 block text-xs uppercase tracking-wide text-foreground/60">
+              Error message *
+              <textarea
+                value={reportMessage}
+                onChange={(e) => setReportMessage(e.target.value)}
+                rows={5}
+                placeholder="Paste the exact error text shown in the publish dialog"
+                className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
+              />
+            </label>
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <span className="text-xs text-foreground/60">{reportNotice}</span>
+              <button
+                type="button"
+                onClick={() => void submitReport()}
+                disabled={reportSubmitting}
+                className="rounded border border-border/60 bg-background/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/80 hover:text-foreground disabled:opacity-50"
+              >
+                {reportSubmitting ? "Saving…" : "Save report"}
+              </button>
+            </div>
+          </section>
+        )}
 
         {error && (
           <div className="mt-6 rounded border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-300">
