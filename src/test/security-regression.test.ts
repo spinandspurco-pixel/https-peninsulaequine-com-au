@@ -20,16 +20,19 @@
 
 import { describe, it, expect } from "vitest";
 import { createClient } from "@supabase/supabase-js";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 
-const SUPABASE_URL =
-  import.meta.env.VITE_SUPABASE_URL ?? "https://aizkqajrzkvwuobisnzr.supabase.co";
-const SUPABASE_ANON_KEY =
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpemtxYWpyemt2d3VvYmlzbnpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjE3NzEsImV4cCI6MjA4NjkzNzc3MX0.YC8M-qD2Ek5SNFjJ1mMZ3fj5S7cfzmgpwI7ZvJ8KkIw";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = getClientSupabaseKey();
+const hasLiveEnv = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
-const anon = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
+const anon = hasLiveEnv
+  ? createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+  : null;
+
+const maybeDescribe = hasLiveEnv ? describe : describe.skip;
 
 /** Anon must NOT be able to SELECT *any* row from these tables. */
 const ANON_READ_LOCKED_TABLES = [
@@ -83,10 +86,10 @@ function isPermissionDenied(error: { code?: string; message?: string } | null): 
   );
 }
 
-describe("security regression — anon Data API lockdown", () => {
+maybeDescribe("security regression — anon Data API lockdown", () => {
   for (const table of ANON_READ_LOCKED_TABLES) {
     it(`anon cannot SELECT from public.${table}`, async () => {
-      const { data, error } = await anon.from(table as any).select("*").limit(1);
+      const { data, error } = await anon!.from(table as any).select("*").limit(1);
       // Either an explicit permission denied OR an empty result with NO rows leaked.
       // RLS-without-policy returns [] with no error; that is acceptable because
       // no row content is exposed. Any non-empty data is a regression.
@@ -96,16 +99,16 @@ describe("security regression — anon Data API lockdown", () => {
   }
 });
 
-describe("security regression — slot_holds column lockdown", () => {
+maybeDescribe("security regression — slot_holds column lockdown", () => {
   it("anon cannot read slot_holds at all", async () => {
-    const { data, error } = await anon.from("slot_holds").select("id").limit(1);
+    const { data, error } = await anon!.from("slot_holds").select("id").limit(1);
     expect(data ?? []).toEqual([]);
     if (error) expect(isPermissionDenied(error)).toBe(true);
   });
 
   it("anon cannot DELETE arbitrary slot_holds rows", async () => {
     const fakeSlotId = "00000000-0000-0000-0000-000000000000";
-    const { error } = await anon
+    const { error } = await anon!
       .from("slot_holds")
       .delete()
       .eq("slot_id", fakeSlotId);
@@ -115,9 +118,9 @@ describe("security regression — slot_holds column lockdown", () => {
   });
 });
 
-describe("security regression — quote share-token RPC is the only path", () => {
+maybeDescribe("security regression — quote share-token RPC is the only path", () => {
   it("get_quote_by_share_token rejects short / empty tokens", async () => {
-    const { data, error } = await anon.rpc("get_quote_by_share_token" as any, {
+    const { data, error } = await anon!.rpc("get_quote_by_share_token" as any, {
       p_token: "too-short",
     });
     expect(error).toBeNull();
@@ -125,7 +128,7 @@ describe("security regression — quote share-token RPC is the only path", () =>
   });
 
   it("get_quote_by_share_token returns null for an unknown but well-formed token", async () => {
-    const { data, error } = await anon.rpc("get_quote_by_share_token" as any, {
+    const { data, error } = await anon!.rpc("get_quote_by_share_token" as any, {
       p_token: "this-token-does-not-exist-in-the-database-xxxxxxxxxx",
     });
     expect(error).toBeNull();
@@ -133,7 +136,7 @@ describe("security regression — quote share-token RPC is the only path", () =>
   });
 
   it("accept_quote_by_share_token rejects short tokens", async () => {
-    const { data, error } = await anon.rpc("accept_quote_by_share_token" as any, {
+    const { data, error } = await anon!.rpc("accept_quote_by_share_token" as any, {
       p_token: "nope",
     });
     expect(error).toBeNull();
@@ -141,9 +144,9 @@ describe("security regression — quote share-token RPC is the only path", () =>
   });
 });
 
-describe("security regression — slot-hold RPCs accept their contract", () => {
+maybeDescribe("security regression — slot-hold RPCs accept their contract", () => {
   it("release_slot_hold is callable by anon and is a no-op for unknown sessions", async () => {
-    const { error } = await anon.rpc("release_slot_hold" as any, {
+    const { error } = await anon!.rpc("release_slot_hold" as any, {
       p_slot_id: "00000000-0000-0000-0000-000000000000",
       p_session_id: "regression-test-no-such-session",
     });
@@ -151,7 +154,7 @@ describe("security regression — slot-hold RPCs accept their contract", () => {
   });
 
   it("refresh_slot_hold is callable by anon and is a no-op for unknown sessions", async () => {
-    const { error } = await anon.rpc("refresh_slot_hold" as any, {
+    const { error } = await anon!.rpc("refresh_slot_hold" as any, {
       p_slot_id: "00000000-0000-0000-0000-000000000000",
       p_session_id: "regression-test-no-such-session",
       p_expires_at: new Date(Date.now() + 60_000).toISOString(),
@@ -160,10 +163,10 @@ describe("security regression — slot-hold RPCs accept their contract", () => {
   });
 });
 
-describe("security regression — internal SECURITY DEFINER functions are NOT anon-callable", () => {
+maybeDescribe("security regression — internal SECURITY DEFINER functions are NOT anon-callable", () => {
   for (const fn of ANON_FORBIDDEN_RPCS) {
     it(`anon cannot execute public.${fn}`, async () => {
-      const { error } = await anon.rpc(fn as any, {});
+      const { error } = await anon!.rpc(fn as any, {});
       // Expect EITHER permission denied OR function-signature mismatch (PGRST202).
       // What we MUST NOT see is a 2xx success.
       expect(error).not.toBeNull();
@@ -183,7 +186,7 @@ describe("security regression — internal SECURITY DEFINER functions are NOT an
     // has_role used to be in the anon-allowed list. It has since been locked
     // down to authenticated callers only — anon must receive a permission
     // error (42501) or a function-not-found response on its search path.
-    const { error } = await anon.rpc("has_role" as any, {
+    const { error } = await anon!.rpc("has_role" as any, {
       _user_id: "00000000-0000-0000-0000-000000000000",
       _role: "admin",
     });
@@ -203,7 +206,7 @@ describe("security regression — internal SECURITY DEFINER functions are NOT an
     // release_slot_hold is intentionally anon-callable so the public booking
     // flow can release its own hold. A no-op call with a non-existent
     // session must succeed without a permission error.
-    const { error } = await anon.rpc("release_slot_hold" as any, {
+    const { error } = await anon!.rpc("release_slot_hold" as any, {
       p_slot_id: "00000000-0000-0000-0000-000000000000",
       p_session_id: "regression-test-no-such-session",
     });
@@ -211,12 +214,12 @@ describe("security regression — internal SECURITY DEFINER functions are NOT an
   });
 });
 
-describe("security regression — public storage buckets", () => {
+maybeDescribe("security regression — public storage buckets", () => {
   it("storage.objects is not exposed through the public Data API", async () => {
     // The storage schema is not exposed via PostgREST. Any attempt to query
     // `objects` through the public Data API must return no data — either an
     // error or an empty result.
-    const { data } = await anon.from("objects" as any).select("*").limit(1);
+    const { data } = await anon!.from("objects" as any).select("*").limit(1);
     expect(data ?? []).toEqual([]);
   });
 });

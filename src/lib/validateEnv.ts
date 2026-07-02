@@ -1,3 +1,5 @@
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
+
 /**
  * Startup validation for frontend Supabase env vars.
  *
@@ -21,7 +23,7 @@ type EnvProblem = {
 
 export function validateSupabaseEnv(): EnvProblem | null {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const key = getClientSupabaseKey();
 
   if (!url) {
     return {
@@ -33,9 +35,9 @@ export function validateSupabaseEnv(): EnvProblem | null {
 
   if (!key) {
     return {
-      title: "VITE_SUPABASE_PUBLISHABLE_KEY is missing",
+      title: "Supabase client key is missing",
       detail: "The frontend has no publishable key to authenticate API calls.",
-      fix: "Copy the sb_publishable_… value from Lovable → Cloud → Backend → API Keys and set it as VITE_SUPABASE_PUBLISHABLE_KEY in your hosting environment for Production and Preview, then redeploy.",
+      fix: "Copy the sb_publishable_… value from Lovable → Cloud → Backend → API Keys and set it as VITE_SUPABASE_PUBLISHABLE_KEY (or VITE_SUPABASE_ANON_KEY for compatibility) in your hosting environment for Production and Preview, then redeploy.",
     };
   }
 
