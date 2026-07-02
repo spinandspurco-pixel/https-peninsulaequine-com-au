@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { HqHeader } from "./HqHeader";
 import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
 import { DeployHealthBanner } from "@/components/hq/DeployHealthBanner";
+import { DeployStatusBanner } from "@/components/hq/DeployStatusBanner";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
@@ -70,6 +71,7 @@ export function Layout({ children }: LayoutProps) {
       </a>
       {showSiteRail ? null : isPrivate ? <HqHeader /> : <Header />}
       {isPrivate && !showSiteRail && <HqPreviewBanner />}
+      {isPrivate && !showSiteRail && <DeployStatusBanner />}
       {isPrivate && !showSiteRail && <DeployHealthBanner />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>

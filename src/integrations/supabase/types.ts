@@ -2297,6 +2297,48 @@ export type Database = {
           },
         ]
       }
+      publish_logs: {
+        Row: {
+          actor: string | null
+          branch: string | null
+          commit_sha: string | null
+          created_at: string
+          duration_ms: number | null
+          id: string
+          kind: string
+          log: string
+          meta: Json
+          run_id: string
+          status: string
+        }
+        Insert: {
+          actor?: string | null
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind: string
+          log?: string
+          meta?: Json
+          run_id: string
+          status: string
+        }
+        Update: {
+          actor?: string | null
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind?: string
+          log?: string
+          meta?: Json
+          run_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       quote_follow_ups: {
         Row: {
           action_type: string
@@ -2887,6 +2929,20 @@ export type Database = {
           rsvp_count: number
           total_guests: number
           waitlisted_guests: number
+        }[]
+      }
+      get_latest_deploy_status: {
+        Args: never
+        Returns: {
+          branch: string
+          commit_short: string
+          duration_ms: number
+          failing_hint: string
+          failing_phase: string
+          failing_step: string
+          finished_at: string
+          run_id: string
+          status: string
         }[]
       }
       get_quote_by_share_token: { Args: { p_token: string }; Returns: Json }
