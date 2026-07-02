@@ -114,7 +114,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...  # Current format (or eyJ... le
 SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
 ```
 
-**Important:** These are safe to expose in frontend code (publishable key is read-only by design).
+**Important:** These are safe to expose in frontend code (publishable key is not inherently read-only—it can perform writes wherever Row Level Security (RLS) policies allow them).
 
 ⚠️ **Legacy JWT Warning:** Supabase has two key formats: older JWT format (`eyJ...`) which is **deprecated** and newer `sb_publishable_*` format which is current. The JWT format is susceptible to rotation issues. If you're experiencing 401 authentication errors (especially "invalid_grant"), you must update from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key format.
 
@@ -168,7 +168,6 @@ supabase/functions/
 ├── generate-enquiry-response/    # AI-assisted response drafting
 ├── create-lesson-checkout/       # Stripe checkout creation
 ├── e2e-seed-users/               # Test data seeding
-├── validate-inquiry-upload/      # Inquiry file validation
 ├── mgmt-db-lints/                # Database integrity checks
 ├── mint-josh-preview/            # Preview system integration
 ├── preview-mint-check/           # Preview health check
@@ -186,8 +185,8 @@ supabase/functions/
 | `send-document-notification` | Document upload | Notify on document received | Public |
 | `send-test-email` | Manual trigger | Test email setup (diagnostics) | Admin only |
 | `send-welcome-series` | Scheduled / manual | Automated welcome email sequence | Admin |
-| `email-ops-status` | Scheduled / manual | Check sender email config health | Public |
-| `resend-domain-status` | Scheduled / manual | Verify `notify.peninsulaequine.systems` is verified in Resend | Public |
+| `email-ops-status` | Scheduled / manual | Check sender email config health | Admin |
+| `resend-domain-status` | Scheduled / manual | Verify `notify.peninsulaequine.systems` is verified in Resend | Admin |
 | `verify-google-dns` | Scheduled / manual | Validate DNS propagation | Public |
 | `notify-dns-propagated` | Scheduled | Notify on DNS propagation complete | Public |
 | `admin-ai-assistant` | Chat input (HQ) | Run AI queries via Lovable AI Gateway | Admin (custom guard) |
@@ -526,7 +525,7 @@ The platform provides diagnostic edge functions:
 |---|---|
 | **Email not sending** | Run `email-ops-status` function; check sender secrets in Lovable |
 | **Function timeout** | Increase timeout in `config.toml`, or optimize function code |
-| **Auth failing (401 Unauthorized)** | Check JWT in function code; ensure `verify_jwt` setting matches. If your VITE_SUPABASE_PUBLISHABLE_KEY starts with `eyJ...` (JWT format), it's deprecated. Look in Lovable Cloud → Backend → API keys for a key starting with `sb_publishable_*` and update .env |
+| **Auth failing (401 Unauthorized)** | Check JWT in function code; ensure `verify_jwt` setting matches. A common cause is missing the `Authorization: ****** header when calling admin/protected functions (even when `verify_jwt = false`, custom guards still check for this header). If your VITE_SUPABASE_PUBLISHABLE_KEY starts with `eyJ...` (JWT format), it's deprecated. Look in Lovable Cloud → Backend → API keys for a key starting with `sb_publishable_*` and update .env |
 | **Legacy JWT "invalid_grant" errors** | Supabase disabled the old JWT key family. Update VITE_SUPABASE_PUBLISHABLE_KEY from Lovable Cloud → Backend → API keys |
 | **Migration not applying** | Verify `.sql` syntax; check `supabase db push` output for errors |
 | **Local Supabase connection refused** | Ensure `supabase start` is running and Docker daemon is active |
