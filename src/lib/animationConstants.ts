@@ -54,7 +54,7 @@ export const ANIMATION_TIMING = {
     hero: 1000,
 
     /** SVG line drawing, atmospheric fades (1200ms) */
-    cinematic: 1200,
+    draw: 1200,
 
     /** Parallax image transitions (800ms) */
     parallax: 800,

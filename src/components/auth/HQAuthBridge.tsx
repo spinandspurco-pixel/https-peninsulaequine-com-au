@@ -14,6 +14,11 @@ export type HQAuthResult =
   | { status: "success"; user: string }
   | { status: "error"; message: string };
 
+interface HQAuthBridgeProps {
+  /** Callback fired on successful authentication. Use for client-side routing. */
+  onSuccess?: (user: string) => void;
+}
+
 /**
  * HQ Login Form with Server-Side Auth Bridge
  *
@@ -23,8 +28,9 @@ export type HQAuthResult =
  * - Handles cookies/tokens transparently
  * - Graceful error handling with Blueprint-themed alerts
  * - Blueprint-consistent motion and timing
+ * - Supports client-side routing via onSuccess callback
  */
-export function HQAuthBridge() {
+export function HQAuthBridge({ onSuccess }: HQAuthBridgeProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [result, setResult] = useState<HQAuthResult>({ status: "idle" });
@@ -64,13 +70,22 @@ export function HQAuthBridge() {
         user: data.user || username,
       });
 
-      // Clear form and redirect after brief success state
-      setTimeout(() => {
-        setUsername("");
-        setPassword("");
-        // Redirect to HQ dashboard
-        window.location.href = "/hq";
-      }, 800);
+      // Call the success callback if provided (for client-side routing)
+      // Otherwise, fall back to page reload after brief success state
+      if (onSuccess) {
+        setTimeout(() => {
+          setUsername("");
+          setPassword("");
+          onSuccess(data.user || username);
+        }, 800);
+      } else {
+        setTimeout(() => {
+          setUsername("");
+          setPassword("");
+          // Fallback: reload the page (requires server-side routing)
+          window.location.href = "/hq";
+        }, 800);
+      }
     } catch (error) {
       setResult({
         status: "error",

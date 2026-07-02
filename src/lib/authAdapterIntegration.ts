@@ -180,7 +180,7 @@ export function HQLoginForm() {
   return (
     <form
       style={{
-        "--reveal-min-height": "60px", // Prevent layout shift
+        "--reveal-min-height": "400px", // Prevents layout shift during animation reveal
       } as React.CSSProperties}
       className="pe-reveal"
     >
