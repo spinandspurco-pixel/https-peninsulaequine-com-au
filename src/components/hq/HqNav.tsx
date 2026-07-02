@@ -7,6 +7,7 @@ import {
   visibleHqItemsForSection,
   type HqSection,
 } from "./hqAccess";
+import { getNavItemDelayClass, getSubNavDelayClass, BLUEPRINT_MARK_ANIM } from "@/lib/blueprintAnimations";
 import { cn } from "@/lib/utils";
 
 interface HqNavProps {
@@ -76,7 +77,7 @@ export function HqNav({ className }: HqNavProps) {
               const active = isSectionActive(section.key);
               const to = section.defaultPath;
               return (
-                <li key={section.key} className={`bp-mark bp-delay-${Math.min(idx + 1, 4)}`}>
+                <li key={section.key} className={`${BLUEPRINT_MARK_ANIM} ${getNavItemDelayClass(idx)}`}>
                   <NavLink
                     to={`${to}${previewSuffix(to)}`}
                     state={{ hqSection: section.key }}
@@ -97,7 +98,7 @@ export function HqNav({ className }: HqNavProps) {
         ) : (
           <NavLink
             to={`/hq${previewSuffix("/hq")}`}
-            className="text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-foreground bp-mark"
+            className={`text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-foreground ${BLUEPRINT_MARK_ANIM}`}
           >
             Overview
           </NavLink>
@@ -124,7 +125,7 @@ export function HqNav({ className }: HqNavProps) {
               {subItems.map((item, idx) => {
                 const active = isItemActive(item.to);
                 return (
-                  <li key={item.key} className={`bp-mark bp-delay-${Math.min(idx + 2, 4)}`}>
+                  <li key={item.key} className={`${BLUEPRINT_MARK_ANIM} ${getSubNavDelayClass(idx)}`}>
                     <NavLink
                       to={`${item.to}${previewSuffix(item.to)}`}
                       className={cn(
