@@ -17,6 +17,8 @@ export type HQAuthResult =
 interface HQAuthBridgeProps {
   /** Callback fired on successful authentication. Use for client-side routing. */
   onSuccess?: (user: string) => void;
+  /** Redirect path on success (default: '/hq'). Used when onSuccess callback is not provided. */
+  redirectPath?: string;
 }
 
 /**
@@ -30,7 +32,7 @@ interface HQAuthBridgeProps {
  * - Blueprint-consistent motion and timing
  * - Supports client-side routing via onSuccess callback
  */
-export function HQAuthBridge({ onSuccess }: HQAuthBridgeProps) {
+export function HQAuthBridge({ onSuccess, redirectPath = "/hq" }: HQAuthBridgeProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [result, setResult] = useState<HQAuthResult>({ status: "idle" });
@@ -82,8 +84,8 @@ export function HQAuthBridge({ onSuccess }: HQAuthBridgeProps) {
         setTimeout(() => {
           setUsername("");
           setPassword("");
-          // Fallback: reload the page (requires server-side routing)
-          window.location.href = "/hq";
+          // Fallback: reload the page with configured redirect path
+          window.location.href = redirectPath;
         }, 800);
       }
     } catch (error) {

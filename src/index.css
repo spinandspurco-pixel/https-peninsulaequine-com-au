@@ -229,8 +229,11 @@
      visible (driven by useScrollReveal). Children stagger
      via inline style: --reveal-delay.
      
-     IMPORTANT: min-height prevents layout shift during reveal.
-     If content is very tall, set data-min-height on the wrapper. */
+     IMPORTANT: min-height prevents layout shift during the entire
+     animation lifecycle. Set data-reveal-min-height on the wrapper
+     to reserve vertical space before reveal animation begins. This
+     prevents the browser from recalculating layout positions as
+     content stagger-reveals from top to bottom. */
   .pe-reveal {
     opacity: 0;
     transform: translateY(8px);

@@ -89,7 +89,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ──────────────────────────────────────────────────
     // 3. Parse and relay the response
     // ──────────────────────────────────────────────────
-    const data = await legacyResponse.json();
+    let data;
+    try {
+      data = await legacyResponse.json();
+    } catch (parseError) {
+      // Legacy API returned non-JSON content (e.g., HTML error page)
+      console.error("[auth-adapter] Failed to parse legacy response as JSON", {
+        status: legacyResponse.status,
+        contentType: legacyResponse.headers.get("content-type"),
+        error: parseError instanceof Error ? parseError.message : String(parseError),
+      });
+      
+      return res.status(legacyResponse.status || 502).json({
+        error: "Authentication service returned invalid response format",
+        details: "The legacy API response could not be parsed",
+      });
+    }
 
     // Log response status (without sensitive data)
     if (process.env.NODE_ENV !== "production") {
