@@ -161,7 +161,7 @@ In addition to the secrets above, @supabase/server requires these environment va
 
 **Key Format Notes:**
 - Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon key (recommended)
-- Older projects may still use the JWT format `eyJ...` which is the older key format
+- Older projects may still use the JWT format `eyJ...`
 - Both formats work with @supabase/server, but newer projects use `sb_publishable_*`
 - If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys
 
