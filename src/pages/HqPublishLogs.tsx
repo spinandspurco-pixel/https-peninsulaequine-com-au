@@ -345,6 +345,15 @@ export default function HqPublishLogs() {
 
                 {isOpen && (
                   <div className="border-t border-border/40 px-4 py-3">
+                    <div className="mb-3 flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void copyForSupport(run)}
+                        className="rounded border border-border/60 px-2.5 py-1 text-[10px] uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                      >
+                        {copyNotice === run.run_id ? "Copied" : "Copy for support"}
+                      </button>
+                    </div>
                     <ul className="space-y-2">
                       {run.steps.map((step) => {
                         const key = `${run.run_id}:${step.kind}`;
