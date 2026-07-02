@@ -20,7 +20,7 @@
  * getDelayClass(2, 1) => "bp-delay-4" (offset of 1 + index 2 = 3, capped at 4)
  */
 export function getDelayClass(index: number, offset = 0): string {
-  const delayIndex = Math.min(index + offset + 1, 4);
+  const delayIndex = Math.max(1, Math.min(index + offset + 1, 4));
   return `bp-delay-${delayIndex}`;
 }
 

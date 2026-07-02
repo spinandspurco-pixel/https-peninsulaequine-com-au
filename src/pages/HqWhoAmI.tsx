@@ -36,7 +36,7 @@ export default function HqWhoAmI() {
     setBootstrapResult(null);
     try {
       // bootstrap_user_role is a stored procedure that returns role information
-      const result = await supabase.rpc("bootstrap_user_role", {}, {
+      const result = await supabase.rpc("bootstrap_user_role", {
         headers: {
           "x-client-info": "supabase-js/web",
         },
