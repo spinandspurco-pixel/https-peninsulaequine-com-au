@@ -225,6 +225,15 @@ export default function HqPublishLogs() {
   }, []);
 
   const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
+  const clusters = useMemo(() => clusterFailures(rows ?? []), [rows]);
+
+  const jumpToRun = useCallback((runId: string) => {
+    setExpanded(runId);
+    setTimeout(() => {
+      const el = document.getElementById(`run-${runId}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 40);
+  }, []);
 
   return (
     <Layout>
