@@ -660,8 +660,9 @@ export default function HqPublishLogs() {
                 No clusters match the current filters.
               </p>
             )}
-
+            <ul className="space-y-2">
               {clusters.map((c) => (
+
                 <li
                   key={c.key}
                   className="rounded border border-red-500/30 bg-red-500/5 px-4 py-3"
