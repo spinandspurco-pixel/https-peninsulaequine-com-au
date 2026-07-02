@@ -175,13 +175,15 @@ import { withSupabase } from "@supabase/server"
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (_req, ctx) => {
-    // ctx.supabase is an RLS-scoped client (respects user permissions)
-    const { data: todos } = await ctx.supabase
+    const { supabase, supabaseAdmin, userClaims } = ctx
+    
+    // supabase is an RLS-scoped client (respects user permissions)
+    const { data: todos } = await supabase
       .from("todos")
       .select()
     
-    // ctx.supabaseAdmin bypasses RLS (full access)
-    const { data: allData } = await ctx.supabaseAdmin
+    // supabaseAdmin bypasses RLS (full access)
+    const { data: allData } = await supabaseAdmin
       .from("todos")
       .select()
     
@@ -229,12 +231,13 @@ interface TodoRequest {
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-    // User is authenticated; ctx.user contains user data
-    const user = ctx.user
+    // User is authenticated; ctx.userClaims contains user identity (id, email, role)
+    const { supabase, supabaseAdmin, userClaims } = ctx
+    const user = userClaims
     
     if (req.method === "GET") {
       // Fetch user's todos (RLS-scoped to their data)
-      const { data, error } = await ctx.supabase
+      const { data, error } = await supabase
         .from("todos")
         .select()
         .eq("user_id", user.id)
@@ -246,7 +249,7 @@ export default {
       const body = await req.json() as TodoRequest
       
       // Create todo for authenticated user
-      const { data, error } = await ctx.supabase
+      const { data, error } = await supabase
         .from("todos")
         .insert([{
           user_id: user.id,
