@@ -80,6 +80,55 @@ function groupRuns(rows: Row[]): Run[] {
   );
 }
 
+type FailureCluster = {
+  key: string;
+  commit_sha: string | null;
+  bundle_id: string | null;
+  count: number;
+  first_seen: string;
+  last_seen: string;
+  run_ids: string[];
+  sample_message: string;
+};
+
+function clusterFailures(rows: Row[]): FailureCluster[] {
+  const map = new Map<string, FailureCluster>();
+  for (const r of rows) {
+    if (r.status !== "fail") continue;
+    const bundleId =
+      (r.meta && typeof r.meta === "object" && "bundle_id" in r.meta
+        ? ((r.meta as { bundle_id?: unknown }).bundle_id ?? null)
+        : null) as string | null;
+    const commit = r.commit_sha ?? null;
+    if (!commit && !bundleId) continue;
+    const key = `${commit ?? "—"}::${bundleId ?? "—"}`;
+    let c = map.get(key);
+    if (!c) {
+      c = {
+        key,
+        commit_sha: commit,
+        bundle_id: bundleId,
+        count: 0,
+        first_seen: r.created_at,
+        last_seen: r.created_at,
+        run_ids: [],
+        sample_message: (r.log ?? "").split("\n")[0]?.slice(0, 160) ?? "",
+      };
+      map.set(key, c);
+    }
+    c.count += 1;
+    if (new Date(r.created_at) > new Date(c.last_seen)) c.last_seen = r.created_at;
+    if (new Date(r.created_at) < new Date(c.first_seen)) c.first_seen = r.created_at;
+    if (!c.run_ids.includes(r.run_id)) c.run_ids.push(r.run_id);
+  }
+  return Array.from(map.values())
+    .filter((c) => c.count >= 1)
+    .sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime();
+    });
+}
+
 function buildSupportBundle(run: Run): string {
   return JSON.stringify(
     {
