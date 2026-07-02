@@ -12,8 +12,7 @@ function readInitial(): boolean {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored !== null) return stored === "1";
-  } catch {}
-  // Default: enabled unless OS prefers reduced motion
+  } catch { /* ignore localStorage errors */ }
   if (typeof window !== "undefined") {
     return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
@@ -25,7 +24,7 @@ export const useParallaxDepthStore = create<ParallaxDepthState>((set) => ({
   toggle: () =>
     set((s) => {
       const next = !s.enabled;
-      try { localStorage.setItem(STORAGE_KEY, next ? "1" : "0"); } catch {}
+      try { localStorage.setItem(STORAGE_KEY, next ? "1" : "0"); } catch { /* ignore write errors */ }
       return { enabled: next };
     }),
 }));

@@ -63,7 +63,7 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
     try {
       const saved = localStorage.getItem(SWMS_DRAFT_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { /* ignore parse errors */ }
     return null;
   };
 
@@ -94,7 +94,7 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
 
   // Auto-save draft
   const saveDraft = useCallback(() => {
-    try { localStorage.setItem(SWMS_DRAFT_KEY, JSON.stringify(form)); } catch {}
+    try { localStorage.setItem(SWMS_DRAFT_KEY, JSON.stringify(form)); } catch { /* ignore write errors */ }
   }, [form]);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
 import type { BuildInfo, DiagResponse, HealthResponse } from "@/types/health";
@@ -59,7 +60,59 @@ export function ClientDiagPanel() {
   const [healthHistory, setHealthHistory] = useState<number[]>([]);
   const [diagHistory, setDiagHistory] = useState<number[]>([]);
   const [buildHistory, setBuildHistory] = useState<number[]>([]);
+  const [docCacheHistory, setDocCacheHistory] = useState<number[]>([]);
+  const [bundleCacheHistory, setBundleCacheHistory] = useState<number[]>([]);
   const HISTORY_MAX = 10;
+
+  // Unified probe history — last N entries across all endpoints, so users
+  // can compare latency and payload hash over time.
+  type ProbeEntry = {
+    id: string;
+    endpoint: "build-info" | "health" | "diag";
+    fetchedAt: string;
+    latencyMs: number;
+    ok: boolean;
+    httpStatus?: number;
+    error?: string;
+    payloadHash?: string;
+    bytes?: number;
+  };
+  const PROBE_HISTORY_MAX = 20;
+  const [probeHistory, setProbeHistory] = useState<ProbeEntry[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem("pe.diag.probeHistory");
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.slice(-PROBE_HISTORY_MAX) : [];
+    } catch {
+      return [];
+    }
+  });
+  const pushProbe = useCallback((entry: Omit<ProbeEntry, "id">) => {
+    setProbeHistory((prev) => {
+      const next = [
+        ...prev,
+        { ...entry, id: `${entry.fetchedAt}-${entry.endpoint}-${Math.random().toString(36).slice(2, 7)}` },
+      ].slice(-PROBE_HISTORY_MAX);
+      try {
+        window.localStorage.setItem("pe.diag.probeHistory", JSON.stringify(next));
+      } catch {
+        /* ignore quota */
+      }
+      return next;
+    });
+  }, []);
+
+  // Short deterministic hash of a payload string (FNV-1a 32-bit, hex).
+  const hashPayload = (text: string): string => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+    }
+    return h.toString(16).padStart(8, "0");
+  };
 
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
@@ -84,11 +137,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setServerBuild({ error: `HTTP ${r.status}`, status: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "build-info",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as BuildInfo;
+      const j = JSON.parse(text) as BuildInfo;
       setServerBuild({
         buildTime: j.buildTime,
         buildCommit: j.buildCommit,
@@ -97,10 +162,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "build-info",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setServerBuild({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setServerBuild({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "build-info", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchHealth = useCallback(async () => {
     const stop = measure();
@@ -108,11 +185,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "health",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as HealthResponse;
+      const j = JSON.parse(text) as HealthResponse;
       setHealth({
         status: j.status,
         service: j.service,
@@ -122,10 +211,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "health",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setHealth({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setHealth({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "health", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const fetchDiag = useCallback(async () => {
     const stop = measure();
@@ -133,11 +234,23 @@ export function ClientDiagPanel() {
     try {
       const r = await fetch("/api/diag", { cache: "no-store", credentials: "omit" });
       const latencyMs = stop();
+      const text = await r.text();
+      const payloadHash = hashPayload(text);
       if (!r.ok) {
         setDiag({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        pushProbe({
+          endpoint: "diag",
+          fetchedAt,
+          latencyMs,
+          ok: false,
+          httpStatus: r.status,
+          error: `HTTP ${r.status}`,
+          payloadHash,
+          bytes: text.length,
+        });
         return;
       }
-      const j = (await r.json()) as DiagResponse;
+      const j = JSON.parse(text) as DiagResponse;
       setDiag({
         service: j.service,
         checkedAt: j.checkedAt,
@@ -147,10 +260,22 @@ export function ClientDiagPanel() {
         latencyMs,
         fetchedAt,
       });
+      pushProbe({
+        endpoint: "diag",
+        fetchedAt,
+        latencyMs,
+        ok: true,
+        httpStatus: r.status,
+        payloadHash,
+        bytes: text.length,
+      });
     } catch (e) {
-      setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+      const latencyMs = stop();
+      const message = String((e as Error)?.message ?? e);
+      setDiag({ error: message, latencyMs, fetchedAt });
+      pushProbe({ endpoint: "diag", fetchedAt, latencyMs, ok: false, error: message });
     }
-  }, []);
+  }, [pushProbe]);
 
   const lastBuildStamp = serverBuild?.fetchedAt ?? null;
   const lastHealthStamp = health?.fetchedAt ?? null;
@@ -174,6 +299,27 @@ export function ClientDiagPanel() {
     }
   }, [lastDiagStamp, diag?.latencyMs]);
 
+  // Track the most recent error cause per endpoint so we can surface it
+  // next to the latency row even after a subsequent probe recovers.
+  type LastErr = { message: string; httpStatus?: number; at: string } | null;
+  const [buildLastErr, setBuildLastErr] = useState<LastErr>(null);
+  const [healthLastErr, setHealthLastErr] = useState<LastErr>(null);
+  const [diagLastErr, setDiagLastErr] = useState<LastErr>(null);
+  useEffect(() => {
+    if (serverBuild?.error && serverBuild.fetchedAt) {
+      setBuildLastErr({ message: serverBuild.error, httpStatus: serverBuild.status, at: serverBuild.fetchedAt });
+    }
+  }, [serverBuild?.error, serverBuild?.status, serverBuild?.fetchedAt]);
+  useEffect(() => {
+    if (health?.error && health.fetchedAt) {
+      setHealthLastErr({ message: health.error, httpStatus: health.httpStatus, at: health.fetchedAt });
+    }
+  }, [health?.error, health?.httpStatus, health?.fetchedAt]);
+  useEffect(() => {
+    if (diag?.error && diag.fetchedAt) {
+      setDiagLastErr({ message: diag.error, httpStatus: diag.httpStatus, at: diag.fetchedAt });
+    }
+  }, [diag?.error, diag?.httpStatus, diag?.fetchedAt]);
 
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
@@ -204,11 +350,29 @@ export function ClientDiagPanel() {
     void fetchDiag();
   }, [fetchDiag]);
 
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const POLL_MS = 10_000;
+  // Auto-probe interval in seconds; 0 = off. Persisted in localStorage.
+  const POLL_OPTIONS = [0, 5, 10, 30, 60] as const;
+  const [pollSeconds, setPollSeconds] = useState<number>(() => {
+    if (typeof window === "undefined") return 10;
+    const raw = window.localStorage.getItem("pe.diag.pollSeconds");
+    const n = raw == null ? 10 : Number(raw);
+    return POLL_OPTIONS.includes(n as typeof POLL_OPTIONS[number]) ? n : 10;
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.pollSeconds", String(pollSeconds));
+    } catch {
+      /* ignore */
+    }
+  }, [pollSeconds]);
+  const cyclePollSeconds = () => {
+    const idx = POLL_OPTIONS.indexOf(pollSeconds as typeof POLL_OPTIONS[number]);
+    const next = POLL_OPTIONS[(idx + 1) % POLL_OPTIONS.length];
+    setPollSeconds(next);
+  };
 
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!pollSeconds) return;
     const tick = async () => {
       if (document.visibilityState !== "visible") return;
       await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
@@ -216,9 +380,9 @@ export function ClientDiagPanel() {
     };
     const id = window.setInterval(() => {
       void tick();
-    }, POLL_MS);
+    }, pollSeconds * 1000);
     return () => window.clearInterval(id);
-  }, [autoRefresh, fetchBuildInfo, fetchHealth, fetchDiag]);
+  }, [pollSeconds, fetchBuildInfo, fetchHealth, fetchDiag]);
 
 
 
@@ -285,6 +449,14 @@ export function ClientDiagPanel() {
       }
       setCacheHeaders(out);
       setCacheCheckedAt(Date.now());
+      const docMs = Number(out["document.latencyMs"]);
+      if (Number.isFinite(docMs)) {
+        setDocCacheHistory((prev) => [...prev, docMs].slice(-HISTORY_MAX));
+      }
+      const bundleMs = Number(out["bundle.latencyMs"]);
+      if (Number.isFinite(bundleMs)) {
+        setBundleCacheHistory((prev) => [...prev, bundleMs].slice(-HISTORY_MAX));
+      }
     } catch (err) {
       setCacheError(String((err as Error)?.message ?? err));
     }
@@ -312,7 +484,6 @@ export function ClientDiagPanel() {
   // Gate: route + opt-in
   const path = location.pathname;
   const onAuthSurface = path === "/login" || path === "/hq" || path.startsWith("/hq/");
-  if (!onAuthSurface) return null;
 
   let enabled = false;
   try {
@@ -324,7 +495,6 @@ export function ClientDiagPanel() {
   } catch {
     enabled = false;
   }
-  if (!enabled) return null;
 
   // Bundle hash — read the main module script src injected by Vite at build time.
   let bundleHash = "(unknown)";
@@ -349,6 +519,8 @@ export function ClientDiagPanel() {
   let supaKeyShape = "missing";
   let supaKeyLen = 0;
   let supaKeyPrefix = "—";
+  let supaKeyChecksum = "—";
+  let supaKeyMasked = "—";
   if (supaKey) {
     supaKeyLen = supaKey.length;
     if (supaKey.startsWith("sb_publishable_")) {
@@ -365,6 +537,17 @@ export function ClientDiagPanel() {
       supaKeyShape = "unknown format";
       supaKeyPrefix = "(unrecognised)";
     }
+    // Non-cryptographic djb2 checksum → 4 hex chars. Sufficient to detect
+    // "same key across environments" without exposing key material. Never
+    // reversible to the original secret.
+    let h = 5381;
+    for (let i = 0; i < supaKey.length; i++) {
+      h = ((h << 5) + h + supaKey.charCodeAt(i)) & 0xffffffff;
+    }
+    supaKeyChecksum = (h >>> 0).toString(16).padStart(8, "0").slice(-4);
+    // Masked representation: prefix + bullets + checksum. Never render supaKey directly.
+    const prefixForMask = supaKeyPrefix === "(unrecognised)" ? "" : supaKeyPrefix.replace("…", "");
+    supaKeyMasked = `${prefixForMask}${"•".repeat(6)}…(chk:${supaKeyChecksum})`;
   }
 
   const lastEvent = [...entries].reverse().find((e) => e.scope.startsWith("event:"));
@@ -378,20 +561,32 @@ export function ClientDiagPanel() {
   );
 
   // Configurable latency thresholds (ms). Persisted in localStorage.
-  const readThresholds = () => {
+  // Shape supports a shared `default` plus optional per-endpoint overrides
+  // for /api/build-info, /api/health, /api/diag so each can be fine-tuned.
+  type ThresholdPair = { warn: number; crit: number };
+  type EndpointKey = "buildInfo" | "health" | "diag";
+  type LatencyThresholds = { default: ThresholdPair } & Partial<Record<EndpointKey, ThresholdPair>>;
+  const DEFAULT_PAIR: ThresholdPair = { warn: 200, crit: 500 };
+  const readThresholds = (): LatencyThresholds => {
     try {
       const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
       if (raw) {
         const p = JSON.parse(raw);
-        if (typeof p?.warn === "number" && typeof p?.crit === "number") return p as { warn: number; crit: number };
+        // Migrate legacy shape { warn, crit } → { default: { warn, crit } }
+        if (typeof p?.warn === "number" && typeof p?.crit === "number") {
+          return { default: { warn: p.warn, crit: p.crit } };
+        }
+        if (p?.default && typeof p.default.warn === "number" && typeof p.default.crit === "number") {
+          return p as LatencyThresholds;
+        }
       }
     } catch {
       /* ignore */
     }
-    return { warn: 200, crit: 500 };
+    return { default: { ...DEFAULT_PAIR } };
   };
-  const [latencyThresholds, setLatencyThresholds] = useState<{ warn: number; crit: number }>(readThresholds);
-  const persistThresholds = (next: { warn: number; crit: number }) => {
+  const [latencyThresholds, setLatencyThresholds] = useState<LatencyThresholds>(readThresholds);
+  const persistThresholds = (next: LatencyThresholds) => {
     setLatencyThresholds(next);
     try {
       window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
@@ -399,12 +594,136 @@ export function ClientDiagPanel() {
       /* ignore */
     }
   };
-  const latencyColor = (ms: number | null | undefined): string | undefined => {
+  const pairFor = (endpoint?: EndpointKey): ThresholdPair =>
+    (endpoint && latencyThresholds[endpoint]) || latencyThresholds.default;
+  const setEndpointPair = (endpoint: EndpointKey, pair: ThresholdPair | null) => {
+    const next: LatencyThresholds = { ...latencyThresholds };
+    if (pair === null) {
+      delete next[endpoint];
+    } else {
+      next[endpoint] = pair;
+    }
+    persistThresholds(next);
+  };
+  const latencyColor = (ms: number | null | undefined, endpoint?: EndpointKey): string | undefined => {
     if (typeof ms !== "number" || !isFinite(ms)) return undefined;
-    if (ms >= latencyThresholds.crit) return "#ff8a8a";
-    if (ms >= latencyThresholds.warn) return "#fde68a";
+    const p = pairFor(endpoint);
+    if (ms >= p.crit) return "#ff8a8a";
+    if (ms >= p.warn) return "#fde68a";
     return "#86efac";
   };
+
+  // Optional: when any endpoint's latest latency is at or above its crit
+  // threshold (or has a current error), automatically re-run /api/health
+  // and /api/diag. Debounced to avoid tight re-probe loops.
+  const [critAutoProbe, setCritAutoProbe] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("pe.diag.critAutoProbe") === "1";
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.critAutoProbe", critAutoProbe ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }, [critAutoProbe]);
+  const [lastCritReprobeAt, setLastCritReprobeAt] = useState<number | null>(null);
+  const [lastCritReason, setLastCritReason] = useState<string | null>(null);
+  useEffect(() => {
+    if (!critAutoProbe) return;
+    const CRIT_COOLDOWN_MS = 5000;
+    const now = Date.now();
+    if (lastCritReprobeAt && now - lastCritReprobeAt < CRIT_COOLDOWN_MS) return;
+    const offenders: string[] = [];
+    const check = (endpoint: EndpointKey, label: string, ms?: number | null, err?: string | null) => {
+      if (err) {
+        offenders.push(`${label} error`);
+        return;
+      }
+      if (typeof ms === "number" && isFinite(ms) && ms >= pairFor(endpoint).crit) {
+        offenders.push(`${label} ${ms}ms ≥ ${pairFor(endpoint).crit}ms`);
+      }
+    };
+    check("buildInfo", "/api/build-info", serverBuild?.latencyMs, serverBuild?.error);
+    check("health", "/api/health", health?.latencyMs, health?.error);
+    check("diag", "/api/diag", diag?.latencyMs, diag?.error);
+    if (offenders.length === 0) return;
+    setLastCritReprobeAt(now);
+    setLastCritReason(offenders.join(" · "));
+    void Promise.all([fetchHealth(), fetchDiag()]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    critAutoProbe,
+    serverBuild?.latencyMs,
+    serverBuild?.fetchedAt,
+    serverBuild?.error,
+    health?.latencyMs,
+    health?.fetchedAt,
+    health?.error,
+    diag?.latencyMs,
+    diag?.fetchedAt,
+    diag?.error,
+  ]);
+
+  // Optional latency-threshold toast notifications for /api/health and /api/diag.
+  // Fires when the tier transitions upward (ok→warn, ok→crit, warn→crit) or on
+  // a new error. Also fires a "recovered" toast when the endpoint returns to ok.
+  const [latencyToasts, setLatencyToasts] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("pe.diag.latencyToasts") === "1";
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.latencyToasts", latencyToasts ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }, [latencyToasts]);
+  const lastToastTierRef = useRef<Record<EndpointKey, "ok" | "warn" | "crit" | "error" | "none">>({
+    buildInfo: "none",
+    health: "none",
+    diag: "none",
+  });
+  useEffect(() => {
+    if (!latencyToasts) return;
+    const evaluate = (
+      endpoint: EndpointKey,
+      label: string,
+      ms?: number | null,
+      err?: string | null,
+    ) => {
+      const pair = pairFor(endpoint);
+      const prev = lastToastTierRef.current[endpoint];
+      let next: "ok" | "warn" | "crit" | "error" | "none" = "none";
+      if (err) next = "error";
+      else if (typeof ms === "number" && isFinite(ms)) {
+        next = ms >= pair.crit ? "crit" : ms >= pair.warn ? "warn" : "ok";
+      } else return;
+      if (next === prev) return;
+      lastToastTierRef.current[endpoint] = next;
+      if (prev === "none") return; // seed only on first sample; no toast
+      const msg = err
+        ? `${label} error: ${err.length > 80 ? err.slice(0, 80) + "…" : err}`
+        : `${label} ${ms}ms (warn ≥ ${pair.warn}ms · crit ≥ ${pair.crit}ms)`;
+      if (next === "crit" || next === "error") toast.error(msg);
+      else if (next === "warn") toast.warning(msg);
+      else if (next === "ok" && (prev === "warn" || prev === "crit" || prev === "error"))
+        toast.success(`${label} recovered · ${ms}ms`);
+    };
+    evaluate("health", "/api/health", health?.latencyMs, health?.error);
+    evaluate("diag", "/api/diag", diag?.latencyMs, diag?.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    latencyToasts,
+    health?.latencyMs,
+    health?.fetchedAt,
+    health?.error,
+    diag?.latencyMs,
+    diag?.fetchedAt,
+    diag?.error,
+  ]);
+
+
   const sparkline = (points: number[]) => {
     if (!points || points.length < 2) return null;
     const w = 60;
@@ -434,14 +753,25 @@ export function ClientDiagPanel() {
       </svg>
     );
   };
-  const latencyRow = (label: string, ms: number | null | undefined, history?: number[]) => {
-    const color = latencyColor(ms);
+  const latencyRow = (
+    label: string,
+    ms: number | null | undefined,
+    history?: number[],
+    opts?: {
+      currentError?: { message: string; httpStatus?: number } | null;
+      lastError?: LastErr;
+      endpoint?: EndpointKey;
+    },
+  ) => {
+    const endpoint = opts?.endpoint;
+    const pair = pairFor(endpoint);
+    const color = latencyColor(ms, endpoint);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
       typeof ms === "number" && isFinite(ms)
-        ? ms >= latencyThresholds.crit
+        ? ms >= pair.crit
           ? " · slow"
-          : ms >= latencyThresholds.warn
+          : ms >= pair.warn
             ? " · warn"
             : " · ok"
         : "";
@@ -450,24 +780,88 @@ export function ClientDiagPanel() {
       points.length >= 2
         ? ` · min ${Math.min(...points)} / max ${Math.max(...points)} / n=${points.length}`
         : "";
+    const cur = opts?.currentError ?? null;
+    const last = opts?.lastError ?? null;
+    const classification =
+      typeof ms === "number" && isFinite(ms)
+        ? ms >= pair.crit
+          ? `crit (≥ ${pair.crit}ms)`
+          : ms >= pair.warn
+            ? `warn (≥ ${pair.warn}ms, < ${pair.crit}ms)`
+            : `ok (< ${pair.warn}ms)`
+        : "no sample yet";
+    const sourceNote = endpoint
+      ? latencyThresholds[endpoint]
+        ? " · source: per-endpoint override"
+        : " · source: default"
+      : "";
+    const tooltip =
+      `${label}\n` +
+      `current: ${display}\n` +
+      `classification: ${classification}\n` +
+      `warn ≥ ${pair.warn}ms · crit ≥ ${pair.crit}ms${sourceNote}`;
     return (
-      <div className="flex gap-2 leading-snug items-center">
-        <span className="opacity-50 min-w-[140px]">{label}</span>
-        <span className="font-mono break-all" style={color ? { color } : undefined}>
-          {display}
-          {tier}
-        </span>
-        {points.length >= 2 ? (
-          <>
-            <span className="inline-flex items-center" title={`last ${points.length}: ${points.join(", ")} ms`}>
-              {sparkline(points)}
+      <div className="leading-snug">
+        <div className="flex gap-2 items-center" title={tooltip}>
+          <span className="opacity-50 min-w-[140px]">{label}</span>
+          <span className="font-mono break-all" style={color ? { color } : undefined} title={tooltip}>
+            {display}
+            {tier}
+          </span>
+          {points.length >= 2 ? (
+            <>
+              <span
+                className="inline-flex items-center"
+                title={`last ${points.length}: ${points.join(", ")} ms`}
+              >
+                {sparkline(points)}
+              </span>
+              <span className="opacity-40 font-mono text-[10px]">{stats}</span>
+            </>
+          ) : null}
+          {cur ? (
+            <span
+              className="font-mono text-[10px]"
+              style={{ color: "#ff8a8a" }}
+              title={cur.message}
+            >
+              ✗ {cur.httpStatus ? `HTTP ${cur.httpStatus} · ` : ""}
+              {cur.message.length > 60 ? cur.message.slice(0, 60) + "…" : cur.message}
             </span>
-            <span className="opacity-40 font-mono text-[10px]">{stats}</span>
-          </>
+          ) : last ? (
+            <span
+              className="font-mono text-[10px] opacity-60"
+              style={{ color: "#eab308" }}
+              title={`${last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}${last.message} @ ${last.at}`}
+            >
+              ⚠ recovered · last error {last.at.slice(11, 19)}
+            </span>
+          ) : (
+            <span className="font-mono text-[10px] opacity-40" style={{ color: "#7fbf7f" }}>
+              ✓ ok
+            </span>
+          )}
+        </div>
+        {cur ? (
+          <div
+            className="font-mono text-[10px] mt-0.5"
+            style={{ color: "#ff9a9a", paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            cause: {cur.message}
+          </div>
+        ) : last ? (
+          <div
+            className="font-mono text-[10px] mt-0.5 opacity-60"
+            style={{ paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            last cause: {last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}
+            {last.message}
+          </div>
         ) : null}
       </div>
     );
   };
+
 
 
 
@@ -631,26 +1025,35 @@ export function ClientDiagPanel() {
     const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
     const fmtMs = (ms: number | null | undefined) =>
       typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "not measured";
-    const tier = (ms: number | null | undefined) => {
+    const tier = (ms: number | null | undefined, endpoint?: EndpointKey) => {
       if (typeof ms !== "number" || !isFinite(ms)) return "n/a";
-      if (ms >= latencyThresholds.crit) return `slow (≥ ${latencyThresholds.crit} ms)`;
-      if (ms >= latencyThresholds.warn) return `warn (≥ ${latencyThresholds.warn} ms)`;
+      const p = pairFor(endpoint);
+      if (ms >= p.crit) return `slow (≥ ${p.crit} ms)`;
+      if (ms >= p.warn) return `warn (≥ ${p.warn} ms)`;
       return "ok";
+    };
+    const d = latencyThresholds.default;
+    const fmtPair = (k: EndpointKey) => {
+      const p = latencyThresholds[k];
+      return p ? `warn ≥ ${p.warn} · crit ≥ ${p.crit}` : `inherit default`;
     };
     const lines = [
       `# Peninsula HQ diagnostics — captured ${stamp}`,
       `# origin: ${origin}`,
       `# route:  ${path}`,
-      `# latency thresholds: warn ≥ ${latencyThresholds.warn} ms · crit ≥ ${latencyThresholds.crit} ms`,
+      `# latency thresholds (default): warn ≥ ${d.warn} ms · crit ≥ ${d.crit} ms`,
+      `#   /api/build-info override: ${fmtPair("buildInfo")}`,
+      `#   /api/health override:     ${fmtPair("health")}`,
+      `#   /api/diag override:       ${fmtPair("diag")}`,
       `# observed latencies (client-measured, performance.now):`,
-      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
-      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs)}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
-      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs)}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
+      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
+      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs, "health")}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
+      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs, "diag")}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
       `#   document probe:  ${fmtMs(cacheHeaders?.["document.latencyMs"] ? Number(cacheHeaders["document.latencyMs"]) : null)}`,
       `#   bundle probe:    ${fmtMs(cacheHeaders?.["bundle.latencyMs"] ? Number(cacheHeaders["bundle.latencyMs"]) : null)}`,
       ``,
       `# 1. Build info (expected: JSON with buildTime, buildCommit, bundleHash)`,
-      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]`,
+      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]`,
       `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
       `  -D - -o /tmp/build-info.json \\`,
       `  -H 'Accept: application/json' \\`,
@@ -737,6 +1140,8 @@ export function ClientDiagPanel() {
     }
     setTimeout(() => setEnvCopied(null), 2500);
   };
+
+  if (!onAuthSurface || !enabled) return null;
 
   const btn: React.CSSProperties = {
     background: "transparent",
@@ -828,38 +1233,207 @@ export function ClientDiagPanel() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
               <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>LATENCY THRESHOLDS (ms)</span>
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.warn}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, warn: Math.max(0, Number(e.target.value) || 0) })
+              <button
+                onClick={() => {
+                  try {
+                    window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
+                  } catch {
+                    /* ignore */
                   }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={latencyThresholds.crit}
-                  onChange={(e) =>
-                    persistThresholds({ ...latencyThresholds, crit: Math.max(0, Number(e.target.value) || 0) })
+                  persistThresholds({ default: { ...DEFAULT_PAIR } });
+                }}
+                style={btn}
+                disabled={
+                  latencyThresholds.default.warn === DEFAULT_PAIR.warn &&
+                  latencyThresholds.default.crit === DEFAULT_PAIR.crit &&
+                  !latencyThresholds.buildInfo &&
+                  !latencyThresholds.health &&
+                  !latencyThresholds.diag
+                }
+                title="Restore default 200/500 ms and clear all per-endpoint overrides"
+              >
+                reset defaults
+              </button>
+              <button
+                onClick={() => {
+                  setHealthHistory([]);
+                  setDiagHistory([]);
+                  setBuildHistory([]);
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Clear stored latency trend samples for /api/build-info, /api/health, and /api/diag (sparklines reset)"
+              >
+                clear history
+              </button>
+              <button
+                onClick={() => {
+                  const payload = {
+                    exportedAt: new Date().toISOString(),
+                    origin: typeof window !== "undefined" ? window.location.origin : null,
+                    unit: "ms",
+                    max: HISTORY_MAX,
+                    endpoints: {
+                      buildInfo: {
+                        thresholds: pairFor("buildInfo"),
+                        samples: buildHistory,
+                      },
+                      health: { thresholds: pairFor("health"), samples: healthHistory },
+                      diag: { thresholds: pairFor("diag"), samples: diagHistory },
+                    },
+                  };
+                  try {
+                    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                      type: "application/json",
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `pe-diag-latency-${new Date()
+                      .toISOString()
+                      .replace(/[:.]/g, "-")}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  } catch {
+                    /* ignore */
                   }
-                  style={{ width: 56, background: "transparent", color: "#e6edf3", border: "1px solid #2a313a", padding: "1px 4px", fontSize: 10 }}
-                />
-                <button onClick={() => persistThresholds({ warn: 200, crit: 500 })} style={btn} title="Reset to 200 / 500">
-                  reset
-                </button>
-              </div>
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Download the last ≤10 latency measurements per endpoint as JSON"
+              >
+                export JSON
+              </button>
+              <button
+                onClick={() => {
+                  const rows: string[] = ["endpoint,index,latency_ms,warn_ms,crit_ms"];
+                  const push = (name: string, samples: number[], endpoint: EndpointKey) => {
+                    const p = pairFor(endpoint);
+                    samples.forEach((v, i) => rows.push(`${name},${i + 1},${v},${p.warn},${p.crit}`));
+                  };
+                  push("/api/build-info", buildHistory, "buildInfo");
+                  push("/api/health", healthHistory, "health");
+                  push("/api/diag", diagHistory, "diag");
+                  try {
+                    const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `pe-diag-latency-${new Date()
+                      .toISOString()
+                      .replace(/[:.]/g, "-")}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                style={btn}
+                disabled={
+                  healthHistory.length === 0 &&
+                  diagHistory.length === 0 &&
+                  buildHistory.length === 0
+                }
+                title="Download the last ≤10 latency measurements per endpoint as CSV"
+              >
+                export CSV
+              </button>
             </div>
-            <div style={{ opacity: 0.5, fontSize: 10 }}>
-              <span style={{ color: "#86efac" }}>green</span> &lt; {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#fde68a" }}>yellow</span> ≥ {latencyThresholds.warn} ·{" "}
-              <span style={{ color: "#ff8a8a" }}>red</span> ≥ {latencyThresholds.crit}
+            {(() => {
+              type Row = { key: EndpointKey | "default"; label: string };
+              const rows: Row[] = [
+                { key: "default", label: "default (fallback)" },
+                { key: "buildInfo", label: "/api/build-info" },
+                { key: "health", label: "/api/health" },
+                { key: "diag", label: "/api/diag" },
+              ];
+              const rowStyle: React.CSSProperties = {
+                display: "grid",
+                gridTemplateColumns: "1fr auto auto auto auto auto",
+                gap: 4,
+                alignItems: "center",
+                marginBottom: 3,
+              };
+              const inputStyle: React.CSSProperties = {
+                width: 56,
+                background: "transparent",
+                color: "#e6edf3",
+                border: "1px solid #2a313a",
+                padding: "1px 4px",
+                fontSize: 10,
+              };
+              return rows.map(({ key, label }) => {
+                const isDefault = key === "default";
+                const override = !isDefault ? latencyThresholds[key as EndpointKey] : undefined;
+                const active = isDefault ? latencyThresholds.default : (override ?? latencyThresholds.default);
+                const inherited = !isDefault && !override;
+                const update = (patch: Partial<ThresholdPair>) => {
+                  if (isDefault) {
+                    persistThresholds({
+                      ...latencyThresholds,
+                      default: { ...latencyThresholds.default, ...patch },
+                    });
+                  } else {
+                    setEndpointPair(key as EndpointKey, { ...active, ...patch });
+                  }
+                };
+                return (
+                  <div key={key} style={rowStyle}>
+                    <span style={{ opacity: inherited ? 0.5 : 0.85, fontSize: 10 }}>
+                      {label}
+                      {inherited ? " · inherit" : ""}
+                    </span>
+                    <span style={{ color: "#fde68a", fontSize: 10 }}>warn</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.warn}
+                      onChange={(e) => update({ warn: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    <span style={{ color: "#ff8a8a", fontSize: 10 }}>crit</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={active.crit}
+                      onChange={(e) => update({ crit: Math.max(0, Number(e.target.value) || 0) })}
+                      style={{ ...inputStyle, opacity: inherited ? 0.6 : 1 }}
+                    />
+                    {!isDefault ? (
+                      <button
+                        onClick={() => setEndpointPair(key as EndpointKey, null)}
+                        style={{ ...btn, opacity: override ? 1 : 0.4 }}
+                        disabled={!override}
+                        title="Clear override — inherit default"
+                      >
+                        clear
+                      </button>
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                );
+              });
+            })()}
+            <div style={{ opacity: 0.5, fontSize: 10, marginTop: 2 }}>
+              <span style={{ color: "#86efac" }}>green</span> &lt; warn ·{" "}
+              <span style={{ color: "#fde68a" }}>yellow</span> ≥ warn ·{" "}
+              <span style={{ color: "#ff8a8a" }}>red</span> ≥ crit. Per-endpoint values override the default.
             </div>
           </div>
+
 
 
 
@@ -885,11 +1459,33 @@ export function ClientDiagPanel() {
               </span>
               <div style={{ display: "flex", gap: 4 }}>
                 <button
-                  onClick={() => setAutoRefresh((v) => !v)}
-                  style={{ ...btn, color: autoRefresh ? "#7fbf7f" : "#9aa4af" }}
-                  title={`Auto-refresh every ${POLL_MS / 1000}s (pauses when tab hidden)`}
+                  onClick={cyclePollSeconds}
+                  style={{ ...btn, color: pollSeconds ? "#7fbf7f" : "#9aa4af" }}
+                  title="Auto-probe interval — cycles off / 5s / 10s / 30s / 60s. Pauses when tab hidden."
                 >
-                  {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
+                  {pollSeconds ? `auto ${pollSeconds}s ✓` : "auto off"}
+                </button>
+                <button
+                  onClick={() => setCritAutoProbe((v) => !v)}
+                  style={{ ...btn, color: critAutoProbe ? "#ff8a8a" : "#9aa4af" }}
+                  title={
+                    critAutoProbe
+                      ? `Auto re-probe on ≥ crit / error is ON${lastCritReprobeAt ? ` · last trigger ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)} (${lastCritReason ?? ""})` : ""}`
+                      : "Auto re-probe /api/health + /api/diag whenever any endpoint hits its crit threshold or errors (5s cooldown)"
+                  }
+                >
+                  {critAutoProbe ? `crit-reprobe ✓${lastCritReprobeAt ? ` · ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)}` : ""}` : "crit-reprobe off"}
+                </button>
+                <button
+                  onClick={() => setLatencyToasts((v) => !v)}
+                  style={{ ...btn, color: latencyToasts ? "#fde68a" : "#9aa4af" }}
+                  title={
+                    latencyToasts
+                      ? "Latency toasts ON — notified when /api/health or /api/diag cross warn/crit or error"
+                      : "Show toast notifications when /api/health or /api/diag cross warn/crit or error"
+                  }
+                >
+                  {latencyToasts ? "toasts ✓" : "toasts off"}
                 </button>
                 <button
                   onClick={async () => {
@@ -940,7 +1536,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -948,7 +1544,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -1004,7 +1600,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory)}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr, endpoint: "health" })}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -1041,12 +1637,97 @@ export function ClientDiagPanel() {
                   color: palette.fg,
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 8 }}>
                   <span style={{ letterSpacing: "0.06em", fontWeight: 600 }}>SUPABASE KEY · {palette.label}</span>
-                  <span style={{ opacity: 0.8, fontSize: 10 }}>family: {family}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const serverKey = diag && !diag.error ? diag.supabase?.key : undefined;
+                        const payload = {
+                          capturedAt: new Date().toISOString(),
+                          origin: typeof window !== "undefined" ? window.location.origin : null,
+                          bundleHash,
+                          supabase: {
+                            url: supaUrl ?? null,
+                            urlValid: supaUrlValid,
+                            urlHost: supaUrl ? (() => { try { return new URL(supaUrl).host; } catch { return null; } })() : null,
+                          },
+                          publishableKey: {
+                            family,
+                            status: palette.label,
+                            message: palette.msg,
+                            masked: supaKeyMasked,
+                            prefix: supaKeyPrefix,
+                            checksum: supaKeyChecksum,
+                            length: supaKeyLen || null,
+                            shape: supaKeyShape,
+                            expectedPrefix: "sb_publishable_",
+                          },
+                          serverComparison: diag === null
+                            ? { state: "pending" }
+                            : diag.error
+                              ? { state: "error", error: diag.error, httpStatus: diag.httpStatus ?? null }
+                              : {
+                                  state: "ok",
+                                  urlHost: diag.supabase?.urlHost ?? null,
+                                  keyFamily: serverKey?.family ?? null,
+                                  keyPrefix: serverKey?.prefix ?? null,
+                                  keyLength: serverKey?.length ?? null,
+                                  familyMatch: (serverKey?.family ?? null) === (
+                                    !supaKey ? "missing"
+                                      : supaKey.startsWith("sb_publishable_") ? "sb_publishable"
+                                        : supaKey.startsWith("sb_secret_") ? "sb_secret"
+                                          : supaKey.startsWith("eyJ") ? "legacy_jwt"
+                                            : "unknown"
+                                  ),
+                                  prefixMatch: (serverKey?.prefix ?? "") === supaKeyPrefix,
+                                  lengthMatch: (serverKey?.length ?? -1) === supaKeyLen,
+                                },
+                        };
+                        const pretty = JSON.stringify(payload, null, 2);
+                        try {
+                          await navigator.clipboard.writeText(pretty);
+                          setCopied("key-payload:copied ✓");
+                        } catch {
+                          setCopied("key-payload:copy failed");
+                        }
+                        setTimeout(() => setCopied(null), 2500);
+                      }}
+                      style={{
+                        fontSize: 10,
+                        letterSpacing: "0.05em",
+                        padding: "2px 6px",
+                        border: `1px solid ${palette.border}`,
+                        background: "transparent",
+                        color: palette.fg,
+                        cursor: "pointer",
+                        borderRadius: 3,
+                      }}
+                      title="Copy publishable-key debug payload for bug reports (no secret value)"
+                      aria-label="Copy publishable-key debug payload"
+                    >
+                      {copied?.startsWith("key-payload:") ? copied.slice("key-payload:".length) : "copy payload"}
+                    </button>
+                    <span style={{ opacity: 0.8, fontSize: 10 }}>family: {family}</span>
+                  </span>
                 </div>
                 <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
+                {row(
+                  "family",
+                  family === "new"
+                    ? "sb_publishable_ (new — expected)"
+                    : family === "legacy"
+                      ? "eyJ legacy (disabled by Supabase)"
+                      : family === "secret"
+                        ? "sb_secret_ (SERVER-ONLY — must not ship to client)"
+                        : family === "missing"
+                          ? "missing (VITE_SUPABASE_PUBLISHABLE_KEY undefined)"
+                          : "unknown (unrecognised prefix)",
+                )}
+                {row("masked", supaKeyMasked)}
                 {row("prefix", supaKeyPrefix)}
+                {row("checksum", supaKeyChecksum)}
                 {row("length", supaKeyLen || "—")}
                 {row("expected", "sb_publishable_*")}
                 {!ok && row("action", "Rotate via Lovable Cloud → API keys, then republish")}
@@ -1060,7 +1741,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -1085,7 +1766,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
@@ -1136,6 +1817,18 @@ export function ClientDiagPanel() {
             <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 6 }}>
               {cacheError && row("probe error", cacheError)}
               {!cacheHeaders && !cacheError && row("status", "probing…")}
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 4 }}>
+                {latencyRow(
+                  "document ms",
+                  docCacheHistory.length ? docCacheHistory[docCacheHistory.length - 1] : null,
+                  docCacheHistory,
+                )}
+                {latencyRow(
+                  "bundle ms",
+                  bundleCacheHistory.length ? bundleCacheHistory[bundleCacheHistory.length - 1] : null,
+                  bundleCacheHistory,
+                )}
+              </div>
               {cacheHeaders &&
                 Object.keys(cacheHeaders)
                   .sort()
@@ -1156,6 +1849,187 @@ export function ClientDiagPanel() {
                 re-probe
               </button>
             </div>
+          </details>
+          <details style={{ marginTop: 6 }} open>
+            <summary style={{ cursor: "pointer", opacity: 0.7 }}>
+              probe history ({probeHistory.length}/{PROBE_HISTORY_MAX})
+            </summary>
+            {probeHistory.length === 0 ? (
+              <div style={{ opacity: 0.5, fontSize: 10, marginTop: 4 }}>
+                No probes recorded yet. Run "probe now" or wait for auto-probe.
+              </div>
+            ) : (
+              <div style={{ marginTop: 4 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "78px 78px 44px 60px 74px 1fr",
+                    columnGap: 8,
+                    rowGap: 2,
+                    fontSize: 10,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  }}
+                >
+                  <div style={{ opacity: 0.5 }}>time</div>
+                  <div style={{ opacity: 0.5 }}>endpoint</div>
+                  <div style={{ opacity: 0.5 }}>ok</div>
+                  <div style={{ opacity: 0.5 }}>latency</div>
+                  <div style={{ opacity: 0.5 }}>hash</div>
+                  <div style={{ opacity: 0.5 }}>notes</div>
+                  {[...probeHistory]
+                    .slice()
+                    .reverse()
+                    .map((p, idx, arr) => {
+                      const prevSameEndpoint = arr
+                        .slice(idx + 1)
+                        .find((x) => x.endpoint === p.endpoint);
+                      const hashChanged =
+                        !!prevSameEndpoint &&
+                        !!p.payloadHash &&
+                        !!prevSameEndpoint.payloadHash &&
+                        prevSameEndpoint.payloadHash !== p.payloadHash;
+                      return (
+                        <Fragment key={p.id}>
+                          <div>{p.fetchedAt.slice(11, 19)}</div>
+                          <div>{p.endpoint}</div>
+                          <div style={{ color: p.ok ? "#7fbf7f" : "#ff8a8a" }}>
+                            {p.ok ? "✓" : "✗"}
+                            {typeof p.httpStatus === "number" ? ` ${p.httpStatus}` : ""}
+                          </div>
+                          <div style={{ color: latencyColor(p.latencyMs) }}>{p.latencyMs} ms</div>
+                          <div
+                            style={{ color: hashChanged ? "#eab308" : undefined }}
+                            title={hashChanged ? "payload changed since previous probe" : ""}
+                          >
+                            {p.payloadHash ?? "—"}
+                            {hashChanged ? " Δ" : ""}
+                          </div>
+                          <div style={{ opacity: 0.7, wordBreak: "break-all" }}>
+                            {p.error
+                              ? `error: ${p.error.length > 60 ? p.error.slice(0, 60) + "…" : p.error}`
+                              : typeof p.bytes === "number"
+                                ? `${p.bytes} B`
+                                : ""}
+                          </div>
+                        </Fragment>
+                      );
+                    })}
+                </div>
+                <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const json = JSON.stringify(probeHistory, null, 2);
+                      navigator.clipboard?.writeText(json).catch(() => {});
+                    }}
+                    title="Copy full probe history as JSON"
+                  >
+                    copy JSON
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const latestByEndpoint: Record<string, ProbeEntry> = {};
+                      for (const p of probeHistory) {
+                        const prev = latestByEndpoint[p.endpoint];
+                        if (!prev || p.fetchedAt > prev.fetchedAt) latestByEndpoint[p.endpoint] = p;
+                      }
+                      const latest = probeHistory.reduce<ProbeEntry | null>(
+                        (acc, p) => (!acc || p.fetchedAt > acc.fetchedAt ? p : acc),
+                        null,
+                      );
+                      const payload = {
+                        exportedAt: new Date().toISOString(),
+                        origin: typeof window !== "undefined" ? window.location.origin : null,
+                        latest,
+                        endpoints: latestByEndpoint,
+                      };
+                      try {
+                        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `pe-diag-latest-${new Date()
+                          .toISOString()
+                          .replace(/[:.]/g, "-")}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                    title="Download the most recent probe result per endpoint as JSON"
+                    disabled={probeHistory.length === 0}
+                  >
+                    export latest
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const diagnostics = buildDiagnosticPayload();
+                      const latestByEndpoint: Record<string, ProbeEntry> = {};
+                      for (const p of probeHistory) {
+                        const prev = latestByEndpoint[p.endpoint];
+                        if (!prev || p.fetchedAt > prev.fetchedAt) latestByEndpoint[p.endpoint] = p;
+                      }
+                      const payload = {
+                        exportedAt: new Date().toISOString(),
+                        origin: typeof window !== "undefined" ? window.location.origin : null,
+                        thresholds: {
+                          default: latencyThresholds.default,
+                          overrides: {
+                            buildInfo: latencyThresholds.buildInfo ?? null,
+                            health: latencyThresholds.health ?? null,
+                            diag: latencyThresholds.diag ?? null,
+                          },
+                          units: "ms",
+                        },
+                        latestByEndpoint,
+                        probeHistory,
+                        diagnostics,
+                      };
+                      try {
+                        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                          type: "application/json",
+                        });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `pe-diag-snapshot-${new Date()
+                          .toISOString()
+                          .replace(/[:.]/g, "-")}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                    title="Download a full snapshot: latest probe results, timestamps, and current threshold settings"
+                  >
+                    export snapshot
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      setProbeHistory([]);
+                      try {
+                        window.localStorage.removeItem("pe.diag.probeHistory");
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                  >
+                    clear
+                  </button>
+                </div>
+              </div>
+            )}
           </details>
           <details style={{ marginTop: 6 }}>
             <summary style={{ cursor: "pointer", opacity: 0.7 }}>auth log buffer ({entries.length})</summary>

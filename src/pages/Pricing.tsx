@@ -11,6 +11,7 @@ import { LessonPricingCalculator } from "@/components/LessonPricingCalculator";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/data/content";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // ── Package Data ─────────────────────────────────────
 
@@ -921,21 +922,14 @@ function PricingSchemaMarkup() {
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
-  // SEO meta
-  useEffect(() => {
-    const prev = document.title;
-    document.title = "Riding Lesson Pricing & Packages | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Book private riding lessons from $95 AUD. Save up to 20% with lesson packages. Clinics & group rates available. Mornington Peninsula."
-    );
-    return () => {
-      document.title = prev;
-      meta?.setAttribute("content", prevDesc);
-    };
-  }, []);
+  usePageMeta({
+    title: "Riding Lesson Pricing & Packages — Peninsula Equine",
+    description:
+      "Book private riding lessons from $95 AUD. Save up to 20% with lesson packages. Clinics & group rates available. Mornington Peninsula.",
+    path: "/pricing",
+  });
+
+
 
   return (
     <Layout>

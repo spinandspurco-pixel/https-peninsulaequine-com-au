@@ -285,3 +285,190 @@ describe("retry outcome -> UI banner mapping", () => {
     expect(bannerFor("error")).toEqual({ tone: "red", label: "Retry error" });
   });
 });
+
+describe("runRetryPromotion cache-bust behavior", () => {
+  const collectProbe = (calls: string[]) => async (label: string, url: string) => {
+    calls.push(url);
+    // Always report the same stuck legacy bundle so we exhaust maxAttempts.
+    return stuckLegacy(label, "index-old.js");
+  };
+
+  it("applies ?_rh=<i> to every attempt for every target when never promoted", async () => {
+    const calls: string[] = [];
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: collectProbe(calls),
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+    });
+
+    // 1 initial "before" probe per target + 4 attempts * 2 targets = 10 total
+    expect(calls).toHaveLength(2 + 4 * TARGETS.length);
+    expect(outcome.attempts).toBe(4);
+    expect(outcome.status).toBe("no_change");
+
+    // Initial "before" probes carry NO cache-bust marker.
+    expect(calls.slice(0, 2).every((u) => !u.includes("_rh="))).toBe(true);
+
+    // Each attempt hits every target with the same _rh=<i> value.
+    for (let i = 0; i < 4; i++) {
+      const attempt = calls.slice(2 + i * TARGETS.length, 2 + (i + 1) * TARGETS.length);
+      expect(attempt).toEqual([
+        `https://example.test?_rh=${i}`,
+        `https://example-pub.test?_rh=${i}`,
+      ]);
+    }
+  });
+
+  it("uses the same ?_rh=<i> scheme when initialBefore skips the pre-probe", async () => {
+    const calls: string[] = [];
+    const before = TARGETS.map((t) => stuckLegacy(t.label, "index-old.js"));
+
+    await runRetryPromotion({
+      targets: TARGETS,
+      probe: collectProbe(calls),
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+      initialBefore: before,
+    });
+
+    // No pre-probe when initialBefore is provided: 4 * 2 = 8 calls.
+    expect(calls).toHaveLength(4 * TARGETS.length);
+    for (let i = 0; i < 4; i++) {
+      const attempt = calls.slice(i * TARGETS.length, (i + 1) * TARGETS.length);
+      expect(attempt).toEqual([
+        `https://example.test?_rh=${i}`,
+        `https://example-pub.test?_rh=${i}`,
+      ]);
+    }
+  });
+
+  it("still applies ?_rh=0 on the attempt that promotes and then stops", async () => {
+    const calls: string[] = [];
+    let attemptIdx = 0;
+    const probeFn = async (label: string, url: string) => {
+      calls.push(url);
+      // "Before" probes (no _rh) return the stuck legacy bundle.
+      if (!url.includes("_rh=")) return stuckLegacy(label, "index-old.js");
+      // First retry attempt reports a fresh bundle — should terminate the loop.
+      attemptIdx = Math.max(attemptIdx, 1);
+      return fresh(label, "index-new.js");
+    };
+
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: probeFn,
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+    });
+
+    expect(outcome.attempts).toBe(1);
+    expect(outcome.status).toBe("success");
+    // 2 pre-probes + 2 attempt-0 probes, and every attempted probe used _rh=0.
+    expect(calls).toHaveLength(2 + TARGETS.length);
+    const attemptCalls = calls.slice(2);
+    expect(attemptCalls.every((u) => u.endsWith("?_rh=0"))).toBe(true);
+    // No further attempts (?_rh=1, ?_rh=2, …) fired once promoted.
+    expect(calls.some((u) => /_rh=[1-9]/.test(u))).toBe(false);
+  });
+});
+
+describe("runRetryPromotion structured logging", () => {
+  it("emits before + per-attempt + outcome events with timing and classification", async () => {
+    const events: import("@/lib/deployHealth/retry").RetryLogEvent[] = [];
+    let tick = 0;
+    const now = () => new Date(1_700_000_000_000 + tick++ * 250).toISOString();
+
+    await runRetryPromotion({
+      targets: TARGETS,
+      probe: async (label) => stuckLegacy(label, "index-old.js"),
+      sleep: async () => {},
+      now,
+      maxAttempts: 3,
+      backoffMs: () => 0,
+      onLog: (e) => events.push(e),
+    });
+
+    const phases = events.map((e) => e.phase);
+    expect(phases).toEqual(["before", "attempt", "attempt", "attempt", "outcome"]);
+
+    // Every event is tagged with the command name for grep-ability.
+    expect(events.every((e) => e.command === "runRetryPromotion")).toBe(true);
+
+    // Timing is populated and non-negative on every event.
+    for (const e of events) {
+      expect(typeof e.durationMs).toBe("number");
+      expect(e.durationMs).toBeGreaterThanOrEqual(0);
+      expect(new Date(e.startedAt).getTime()).toBeGreaterThan(0);
+      expect(new Date(e.finishedAt).getTime()).toBeGreaterThanOrEqual(
+        new Date(e.startedAt).getTime(),
+      );
+      expect(e.targets).toHaveLength(TARGETS.length);
+      expect(e.targets[0]).toMatchObject({
+        label: "Custom domain",
+        url: "https://example.test",
+        ok: true,
+        stuck: true,
+      });
+    }
+
+    // Middle attempts flag willRetry=true; last attempt has willRetry=false.
+    const attempts = events.filter((e) => e.phase === "attempt");
+    expect(attempts.map((a) => a.classification?.willRetry)).toEqual([true, true, false]);
+    expect(attempts.every((a) => a.classification?.stillStuck === true)).toBe(true);
+    expect(attempts.every((a) => a.classification?.changed === false)).toBe(true);
+
+    const outcome = events[events.length - 1]!;
+    expect(outcome.phase).toBe("outcome");
+    expect(outcome.classification?.status).toBe("no_change");
+    expect(outcome.classification?.message).toMatch(/No change/);
+  });
+
+  it("emits an outcome event with error classification when probe throws", async () => {
+    const events: import("@/lib/deployHealth/retry").RetryLogEvent[] = [];
+    let call = 0;
+    const probeFn = async (label: string) => {
+      call += 1;
+      // Let the "before" pass succeed; blow up on the first retry attempt.
+      if (call <= TARGETS.length) return stuckLegacy(label, "index-old.js");
+      throw new Error("network down");
+    };
+
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: probeFn,
+      sleep: async () => {},
+      now: () => new Date().toISOString(),
+      maxAttempts: 4,
+      backoffMs: () => 0,
+      onLog: (e) => events.push(e),
+    });
+
+    expect(outcome.status).toBe("error");
+    const last = events[events.length - 1]!;
+    expect(last.phase).toBe("outcome");
+    expect(last.classification?.status).toBe("error");
+    expect(last.error).toBe("network down");
+  });
+
+  it("swallows onLog exceptions so logging never breaks the retry loop", async () => {
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: async (label) => fresh(label, "index-new.js"),
+      sleep: async () => {},
+      now: () => new Date().toISOString(),
+      maxAttempts: 2,
+      backoffMs: () => 0,
+      onLog: () => {
+        throw new Error("logger crashed");
+      },
+    });
+    expect(outcome.status).toBe("success");
+  });
+});

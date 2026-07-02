@@ -18,7 +18,7 @@ interface WelcomeRequest {
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
 const WELCOME_REPLY_TO = "info@peninsulaequine.systems";
-const SITE_URL = "https://peninsulaequine.lovable.app";
+const SITE_URL = "https://peninsulaequine.systems";
 
 function assertSender(): Response | null {
   if (!FROM_EMAIL || /resend\.dev/i.test(FROM_EMAIL)) {
@@ -32,6 +32,9 @@ function assertSender(): Response | null {
   }
   return null;
 }
+
+const esc = (v: unknown) =>
+  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
 
 // ── Welcome Series Emails ──────────────────────────────────────────
 
@@ -54,7 +57,7 @@ function emailStep1(name: string): { subject: string; html: string } {
 
 <!-- Body -->
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Thank you for reaching out to Peninsula Equine. We're a family-run operation on Victoria's Mornington Peninsula, and we're thrilled you're interested in what we do.</p>
   <p>Over the next few days we'll share some helpful resources to get you started:</p>
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
@@ -104,7 +107,7 @@ function emailStep2(name: string): { subject: string; html: string } {
 </td></tr>
 
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Whether you're booking a lesson, touring our facilities, or planning a build — here's what to keep in mind:</p>
   
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
@@ -154,7 +157,7 @@ function emailStep3(name: string): { subject: string; html: string } {
 </td></tr>
 
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Peninsula Equine is built on decades of horsemanship, craftsmanship, and a genuine love of the equestrian lifestyle.</p>
   
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">

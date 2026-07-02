@@ -30,7 +30,7 @@ export type SupabaseKeyIndicator = {
   length: number;
 };
 
-const EXPECTED: "sb_publishable_" = "sb_publishable_";
+const EXPECTED = "sb_publishable_" as const;
 
 export function classifyClientSupabaseKey(
   rawKey: string | null | undefined,

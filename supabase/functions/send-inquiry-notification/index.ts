@@ -22,6 +22,17 @@ interface InquiryNotificationRequest {
   budgetRange?: string;
   preferredDate?: string;
   additionalNotes?: string;
+  inquiryId?: string;
+  attachmentIds?: string[];
+}
+
+/** Format bytes for humans */
+function formatBytes(n: number | null | undefined): string {
+  if (!n || n <= 0) return "";
+  const units = ["B", "KB", "MB", "GB"];
+  let v = n, i = 0;
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+  return `${v.toFixed(v >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
 /** Pad a number to 2 digits */
@@ -123,7 +134,7 @@ function generateConsultationICS(opts: {
   services: string[];
   isConstruction: boolean;
 }): { icsBase64: string; readableDate: string } {
-  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const uid = crypto.randomUUID() + "@peninsulaequine.systems";
   const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
   // Suggest consultation 3 business days from now at 10am Melbourne time
@@ -398,6 +409,8 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="highlight">${esc(inquiry.additionalNotes)}</div>
             </div>
             ` : ""}
+
+            <!--ATTACHMENTS_SECTION-->
           </div>
           
           <div class="footer">
@@ -407,6 +420,60 @@ const handler = async (req: Request): Promise<Response> => {
       </body>
       </html>
     `;
+
+    // Build attachments section: fetch linked rows and generate 7-day signed URLs.
+    let attachmentsHtml = "";
+    try {
+      const attachmentRows: Array<{ id: string; filename: string; size_bytes: number | null; mime_type: string | null; storage_path: string }> = [];
+      if (inquiry.inquiryId) {
+        const { data } = await admin
+          .from("inquiry_attachments")
+          .select("id, filename, size_bytes, mime_type, storage_path")
+          .eq("inquiry_id", inquiry.inquiryId)
+          .limit(20);
+        if (data) attachmentRows.push(...data);
+      }
+      if (attachmentRows.length === 0 && Array.isArray(inquiry.attachmentIds) && inquiry.attachmentIds.length) {
+        const { data } = await admin
+          .from("inquiry_attachments")
+          .select("id, filename, size_bytes, mime_type, storage_path")
+          .in("id", inquiry.attachmentIds)
+          .limit(20);
+        if (data) attachmentRows.push(...data);
+      }
+
+      if (attachmentRows.length > 0) {
+        const EXPIRES_IN = 60 * 60 * 24 * 7; // 7 days
+        const signed = await Promise.all(
+          attachmentRows.map(async (a) => {
+            const { data: s } = await admin.storage
+              .from("inquiry-attachments")
+              .createSignedUrl(a.storage_path, EXPIRES_IN);
+            return { ...a, url: s?.signedUrl ?? null };
+          }),
+        );
+        const items = signed.map((a) => {
+          const size = formatBytes(a.size_bytes);
+          const meta = [a.mime_type, size].filter(Boolean).join(" · ");
+          const label = a.url
+            ? `<a href="${safeAttr(a.url)}" style="color:#c9a227;text-decoration:none;font-weight:600;">${esc(a.filename)}</a>`
+            : `<span>${esc(a.filename)}</span>`;
+          return `<li style="margin:6px 0;">${label}${meta ? ` <span style="color:#888;font-size:12px;">(${esc(meta)})</span>` : ""}</li>`;
+        }).join("");
+        attachmentsHtml = `
+            <div class="section">
+              <div class="section-title">Attachments (${attachmentRows.length})</div>
+              <div class="highlight">
+                <ul style="margin:0;padding-left:18px;list-style:disc;">${items}</ul>
+                <p style="margin:12px 0 0;font-size:11px;color:#888;">Secure download links expire in 7 days. Files are stored privately.</p>
+              </div>
+            </div>`;
+      }
+    } catch (e) {
+      console.error("[send-inquiry-notification] attachments block failed", e);
+    }
+    const emailHtmlWithAttachments = emailHtml.replace("<!--ATTACHMENTS_SECTION-->", attachmentsHtml);
+
 
     // Tailored next-steps based on services requested
     const serviceLabels: Record<string, string> = {
@@ -486,8 +553,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Tailored CTA based on service type
     const ctaUrl = isLessons
-      ? `https://peninsulaequine.lovable.app/book-lesson`
-      : `https://peninsulaequine.lovable.app/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}`;
+      ? `https://peninsulaequine.systems/book-lesson`
+      : `https://peninsulaequine.systems/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}`;
     const ctaText = isLessons ? "Browse Lesson Programs" : "Schedule a Follow-Up Call";
     const ctaEmoji = isLessons ? "🐴" : "📅";
 
@@ -554,7 +621,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: HQ_FROM,
         to: notifyRecipients,
         subject: `New Project Inquiry from ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
-        html: emailHtml,
+        html: emailHtmlWithAttachments,
         reply_to: inquiry.email,
       }),
       // Send the confirmation email to the submitter with .ics calendar invite
@@ -569,7 +636,7 @@ const handler = async (req: Request): Promise<Response> => {
       sendViaGmail({
         to: notifyRecipients,
         subject: `[Gmail] New Project Inquiry — ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
-        html: emailHtml,
+        html: emailHtmlWithAttachments,
         replyTo: inquiry.email,
       }),
     ]);

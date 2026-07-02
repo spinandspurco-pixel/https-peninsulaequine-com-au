@@ -10,6 +10,7 @@ export interface TestimonialItem {
   quote: string;
   rating: number;
   pinned?: boolean;
+  featured?: boolean;
   mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   serviceTags: string[];
@@ -86,7 +87,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
   try {
     const { data, error } = await supabase
       .from("managed_testimonials")
-      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, trainer")
+      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, featured, trainer")
       .eq("active", true)
       .order("pinned", { ascending: false })
       .order("sort_order", { ascending: true });
@@ -107,6 +108,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
       quote: t.quote,
       rating: t.rating,
       pinned: (t as any).pinned ?? false,
+      featured: (t as any).featured ?? false,
       mediaType: (t.media_type as "image" | "video" | null) ?? null,
       mediaUrl: t.media_url ?? null,
       serviceTags: (t.service_tags as string[]) ?? [],
@@ -138,4 +140,35 @@ export function getTrainerFilters(testimonials: TestimonialItem[]): string[] {
     if (t.trainer) trainers.add(t.trainer);
   });
   return Array.from(trainers).sort();
+}
+
+/**
+ * Fetch testimonials for the homepage strip.
+ * STRICT: returns only items that are both Published (active=true) AND Featured.
+ * No fallback to pinned/unfeatured/static — drafts must never render on the homepage.
+ */
+export async function fetchFeaturedTestimonials(limit = 3): Promise<TestimonialItem[]> {
+  const { data, error } = await supabase
+    .from("managed_testimonials")
+    .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, featured, trainer")
+    .eq("active", true)
+    .eq("featured", true)
+    .order("sort_order", { ascending: true })
+    .limit(limit);
+
+  if (error || !data) return [];
+
+  return data.map((t) => ({
+    id: t.id,
+    name: t.client_name,
+    role: t.client_role ?? "",
+    quote: t.quote,
+    rating: t.rating,
+    pinned: (t as any).pinned ?? false,
+    featured: true,
+    mediaType: (t.media_type as "image" | "video" | null) ?? null,
+    mediaUrl: t.media_url ?? null,
+    serviceTags: (t.service_tags as string[]) ?? [],
+    trainer: (t as any).trainer ?? null,
+  }));
 }

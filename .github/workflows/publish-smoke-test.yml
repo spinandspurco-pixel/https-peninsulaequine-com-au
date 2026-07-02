@@ -100,15 +100,41 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache Bun dependencies
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-v2-
+
       - name: Install dependencies
         if: steps.gate.outputs.run == 'true'
         run: bun install --frozen-lockfile
+
+      # Shared build cache — see strict-build.yml for the full pattern.
+      # Only meaningful for push/PR runs where we actually build; the
+      # schedule/webhook branches skip the build entirely below.
+      - name: Cache build output (dist + Vite deps)
+        id: build-cache
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch'
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist
+            node_modules/.vite
+          key: ${{ runner.os }}-dist-v2-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-dist-v2-
 
       # Build locally so the hero-asset hash check has a baseline to compare
       # against. On schedule/webhook runs we skip the build and the check
       # soft-passes.
       - name: Build (for asset hash comparison)
-        if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch'
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch' && steps.build-cache.outputs.cache-hit != 'true'
         run: bun run build
 
       - name: Run publish smoke test
@@ -197,6 +223,9 @@ jobs:
           BODY: ${{ steps.failmsg.outputs.body }}
         run: |
           set -e
+          # Ensure the required labels exist (idempotent — no-op if already present)
+          gh label create smoke-test --color "e11d48" --description "Live smoke test failure tracking" 2>/dev/null || true
+          gh label create production --color "dc2626" --description "Production issue" 2>/dev/null || true
           title="Publish smoke test failing on peninsulaequine.systems"
           existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
           if [ -n "$existing" ] && [ "$existing" != "null" ]; then

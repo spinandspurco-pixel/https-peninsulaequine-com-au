@@ -18,7 +18,7 @@ export function DailySiteReportForm({ onSubmit, loading, userId, defaults }: { o
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { /* ignore parse errors */ }
     return null;
   };
 
@@ -52,7 +52,7 @@ export function DailySiteReportForm({ onSubmit, loading, userId, defaults }: { o
 
   // Auto-save draft
   const saveDraft = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* ignore write errors */ }
   }, [form]);
 
   useEffect(() => {

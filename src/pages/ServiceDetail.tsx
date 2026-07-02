@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CheckCircle, Phone, Star, X, ZoomIn, ChevronLeft, ChevronRight, HelpCircle, Images, Calendar, MessageSquare } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
@@ -15,6 +15,9 @@ import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
+import { usePageMeta } from "@/lib/usePageMeta";
+import { serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
+import { SITE_BASE } from "@/lib/seo/localBusinessJsonLd";
 
 // ── Approved cinematic asset library ────────────────────────────────────
 // All legacy bright-daytime phone photos (covered-arena-finished-lit,
@@ -390,10 +393,17 @@ function ConstructionProcess() {
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
   const hardcoded = services.find((s) => s.id === slug);
+  if (!hardcoded) return <Navigate to="/services" replace />;
+  return <ServiceDetailContent hardcoded={hardcoded} />;
+}
+
+function ServiceDetailContent({
+  hardcoded,
+}: {
+  hardcoded: (typeof services)[number];
+}) {
   const [showGallery, setShowGallery] = useState(false);
   const { data: managedServices } = useManagedServicesMap();
-
-  if (!hardcoded) return <Navigate to="/services" replace />;
 
   // Overlay editable text/feature fields from managed_services while keeping
   // hardcoded imagery, pricing tiers and FAQs intact.
@@ -426,8 +436,49 @@ export default function ServiceDetail() {
   const galleryImages = serviceGalleryImages[service.id] || [];
   const heroImage = serviceImages[service.id] || peArenaGrading;
 
+  const description =
+    service.shortDescription ||
+    service.description?.slice(0, 155) ||
+    "Peninsula Equine service.";
+
+  const jsonLd = useMemo(() => {
+    const graphs: Array<Record<string, unknown>> = [
+      serviceSchema({
+        id: service.id,
+        name: service.title,
+        description,
+        path: `/services/${service.id}`,
+        image: typeof heroImage === "string" ? heroImage : undefined,
+        tiers,
+      }),
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Capabilities", path: "/services" },
+        { name: service.title, path: `/services/${service.id}` },
+      ]),
+    ];
+    if (faqs.length > 0) {
+      graphs.push(
+        faqSchema(
+          faqs.map((f) => ({ question: f.question, answer: f.answer })),
+          `${SITE_BASE}/services/${service.id}#faq`,
+        ),
+      );
+    }
+    return graphs;
+  }, [service.id, service.title, description, heroImage, tiers, faqs]);
+
+  usePageMeta({
+    title: `${service.title} — Peninsula Equine`,
+    description,
+    path: `/services/${service.id}`,
+    image: typeof heroImage === "string" ? heroImage : undefined,
+    jsonLd,
+  });
+
+
   // Find adjacent services for navigation
-  const currentIndex = services.findIndex((s) => s.id === slug);
+  const currentIndex = services.findIndex((s) => s.id === hardcoded.id);
   const prevService = currentIndex > 0 ? services[currentIndex - 1] : null;
   const nextService = currentIndex < services.length - 1 ? services[currentIndex + 1] : null;
 
@@ -728,9 +779,9 @@ export default function ServiceDetail() {
                 Experience our facilities firsthand with a riding lesson. 50% deposit secures your spot.
               </p>
               <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link to="/lessons">
+                <Link to="/lessons/book">
                   <Calendar className="mr-2 h-4 w-4" />
-                  Browse Lessons
+                  Book a Lesson
                 </Link>
               </Button>
             </div>
@@ -745,7 +796,7 @@ export default function ServiceDetail() {
                 Tell us about your project and receive a personalised quote within 1–2 business days.
               </p>
               <Button asChild variant="outline" className="w-full">
-                <Link to={`/contact?services=${service.id}&ref=consult-cta`}>
+                <Link to={`/consult?services=${service.id}&ref=consult-cta`}>
                   <Phone className="mr-2 h-4 w-4" />
                   Request a Consult
                 </Link>

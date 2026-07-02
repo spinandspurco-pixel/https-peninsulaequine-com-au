@@ -41,7 +41,7 @@ export function ProtectedRoute({
   const location = useLocation();
 
   // TEMP: HQ login-hang investigation
-  // eslint-disable-next-line no-console
+   
   console.log("[auth:guard:render]", { path: location.pathname, ready, authLoading, rolesLoading, hasUser: !!user, roles, rolesError, allowedRoles });
 
   if (!ready) {

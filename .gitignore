@@ -34,3 +34,4 @@ scripts/live-smoke-test/.env
 
 # Vitest coverage output
 coverage/
+smoke-summary.json

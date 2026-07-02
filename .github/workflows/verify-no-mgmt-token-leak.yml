@@ -1,0 +1,82 @@
+name: Verify no SB_MGMT_ACCESS_TOKEN leak
+
+# Builds the client bundle with sourcemaps enabled and runs
+# scripts/verify-no-mgmt-token.ts against every emitted artifact.
+# The script writes a JSON report and a markdown summary into dist/,
+# which we surface in the GitHub step summary and upload as an artifact
+# so failures show exactly which dist file (and line) triggered the guard.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: verify-no-mgmt-token-leak-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Scan built artifacts for SB_MGMT_ACCESS_TOKEN
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build client bundle with sourcemaps
+        env:
+          # Force sourcemap emission so the scan also inspects the mapped
+          # original module paths, not just minified output.
+          VITE_SOURCEMAP: "true"
+        run: bunx vite build --sourcemap
+
+      - name: Run verify-no-mgmt-token guard
+        id: guard
+        run: bunx tsx scripts/verify-no-mgmt-token.ts
+
+      - name: Append report to GitHub step summary
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ -f dist/verify-no-mgmt-token.summary.md ]; then
+            cat dist/verify-no-mgmt-token.summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## SB_MGMT_ACCESS_TOKEN leak check" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "No summary was produced — the build step likely failed before the guard ran." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload leak-scan report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-no-mgmt-token-report
+          path: |
+            dist/verify-no-mgmt-token.report.json
+            dist/verify-no-mgmt-token.summary.md
+          if-no-files-found: warn
+          retention-days: 14

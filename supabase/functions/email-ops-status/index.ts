@@ -88,7 +88,7 @@ serve(async (req) => {
     });
 
     // ── Resend domain health ───────────────────────────
-    let resendDomain: {
+    const resendDomain: {
       requested: string;
       found: boolean;
       status?: string;

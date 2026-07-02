@@ -33,7 +33,7 @@ function generateEventICS(opts: {
   dtEnd: string;
   attendee: string;
 }): string {
-  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const uid = crypto.randomUUID() + "@peninsulaequine.systems";
   const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return [
     "BEGIN:VCALENDAR",
@@ -61,6 +61,9 @@ function generateEventICS(opts: {
     "END:VCALENDAR",
   ].join("\r\n");
 }
+
+const esc = (v: unknown) =>
+  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -156,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
 
         <div style="padding: 32px 24px; background: #faf8f4;">
-          <p style="font-size: 16px;">Hi ${data.name},</p>
+          <p style="font-size: 16px;">Hi ${esc(data.name)},</p>
 
           ${isConfirmed
             ? `<p>Great news — your spot is secured! We're looking forward to seeing you${data.guests > 1 ? ` and your ${data.guests - 1} guest${data.guests > 2 ? "s" : ""}` : ""}.</p>`
@@ -165,7 +168,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           <!-- Event Details Card -->
           <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
-            <h2 style="margin: 0 0 14px; font-size: 18px; color: #2d2418;">${data.eventTitle}</h2>
+            <h2 style="margin: 0 0 14px; font-size: 18px; color: #2d2418;">${esc(data.eventTitle)}</h2>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 7px 0; font-weight: 600; color: #888; width: 100px; font-size: 14px;">📅 Date</td>
@@ -180,7 +183,7 @@ const handler = async (req: Request): Promise<Response> => {
               ${data.eventLocation ? `
               <tr>
                 <td style="padding: 7px 0; font-weight: 600; color: #888; font-size: 14px;">📍 Location</td>
-                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${data.eventLocation}</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${esc(data.eventLocation)}</td>
               </tr>
               ` : ""}
               <tr>
@@ -192,7 +195,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           ${data.eventDescription ? `
           <div style="font-style: italic; color: #555; background: #fff; padding: 14px 16px; border-left: 3px solid #c9a227; margin: 16px 0; font-size: 14px; line-height: 1.7;">
-            ${data.eventDescription.slice(0, 300)}${data.eventDescription.length > 300 ? "…" : ""}
+            ${esc(data.eventDescription.slice(0, 300))}${data.eventDescription.length > 300 ? "…" : ""}
           </div>
           ` : ""}
 
@@ -234,11 +237,11 @@ const handler = async (req: Request): Promise<Response> => {
           `}
 
           <div style="text-align: center; margin: 24px 0;">
-            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">View All Upcoming Events</a>
+            <a href="https://peninsulaequine.systems/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">View All Upcoming Events</a>
           </div>
           ` : `
           <div style="text-align: center; margin: 24px 0;">
-            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">Browse Other Events</a>
+            <a href="https://peninsulaequine.systems/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">Browse Other Events</a>
           </div>
           `}
 
@@ -304,7 +307,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
         subject: `New RSVP: ${data.name} → ${data.eventTitle} (${data.status})`,
-        html: `<p><strong>${data.name}</strong> (${data.email}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${data.eventTitle}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,
+        html: `<p><strong>${esc(data.name)}</strong> (${esc(data.email)}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${esc(data.eventTitle)}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,
         reply_to: data.email,
       }),
     ]);

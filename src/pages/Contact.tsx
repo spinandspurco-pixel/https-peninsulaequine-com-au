@@ -12,6 +12,10 @@ import { z } from "zod";
 import { trackConversion, trackFormError } from "@/lib/analytics";
 import { trackContactConversion } from "@/lib/adsConversions";
 import { usePageMeta } from "@/lib/usePageMeta";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
+import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
+import { useAttachmentUpload } from "@/hooks/useAttachmentUpload";
 
 
 
@@ -125,9 +129,43 @@ export default function Contact() {
     timeline: "",
     budget: "",
   });
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const spamGuard = useSpamGuard();
+
+  const MAX_FILES = 5;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB per file
+  const ALLOWED = /\.(pdf|jpe?g|png|webp|heic|dwg|dxf|doc|docx|xls|xlsx)$/i;
+  // Flip to true (or wire to form state) to require attachments before submit.
+  const REQUIRE_ATTACHMENTS = false;
+
+  const uploader = useAttachmentUpload();
+
+  const addFiles = (incoming: FileList | null) => {
+    if (!incoming) return;
+    setFileError(null);
+    const next = [...files];
+    for (const f of Array.from(incoming)) {
+      if (next.length >= MAX_FILES) { setFileError(`Maximum ${MAX_FILES} files.`); break; }
+      if (f.size > MAX_SIZE) { setFileError(`${f.name} exceeds 10MB.`); continue; }
+      if (!ALLOWED.test(f.name)) { setFileError(`${f.name}: file type not supported.`); continue; }
+      if (next.some((x) => x.name === f.name && x.size === f.size)) continue;
+      next.push(f);
+    }
+    setFiles(next);
+    uploader.syncFiles(next);
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      uploader.syncFiles(next);
+      return next;
+    });
+  };
 
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -142,6 +180,12 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Silent spam short-circuit: pretend success so bots don't retry.
+    const guard = spamGuard.check();
+    if (!guard.ok) {
+      setSubmitted(true);
+      return;
+    }
     const result = formSchema.safeParse({
       name: form.name,
       email: form.email,
@@ -159,29 +203,72 @@ export default function Contact() {
       setErrors({ scopes: "Please select at least one." });
       return;
     }
+    if (REQUIRE_ATTACHMENTS && files.length === 0) {
+      setFileError("Please attach at least one file before submitting.");
+      return;
+    }
+    if (uploader.isUploading) {
+      setFileError("Please wait for uploads to finish before submitting.");
+      return;
+    }
+    if (uploader.hasErrors) {
+      setFileError(
+        uploader.errorSummary ??
+          "Some attachments failed. Retry or remove them before submitting.",
+      );
+      return;
+    }
     setErrors({});
+    setFileError(null);
     setSubmitting(true);
 
     try {
-      const { error } = await supabase.from("inquiries").insert({
-        name: form.name.trim().slice(0, 100),
-        email: form.email.trim().slice(0, 255),
-        phone: form.phone.trim().slice(0, 30) || null,
-        services: form.scopes,
-        budget_range: form.budget || null,
-        preferred_start: form.timeline || null,
-        project_details: form.details.trim().slice(0, 2000) || null,
-        notes: [
-          form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
-          form.propertyType ? `Type: ${form.propertyType}` : "",
-          form.timeline ? `Timeline: ${form.timeline}` : "",
-          form.budget ? `Investment range: ${form.budget}` : "",
-        ]
-          .filter(Boolean)
-          .join(" | "),
-        status: "new",
-      });
-      if (error) throw error;
+      // 1. Upload attachments (if any) via the server-side validated edge
+      // function BEFORE creating the inquiry row.
+      let attachment_urls: string[] = [];
+      let attachment_ids: string[] = [];
+      let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
+      if (files.length > 0) {
+        const records = await uploader.uploadAll(files);
+        attachments = records;
+        attachment_ids = records.map((r) => r.id);
+        attachment_urls = records.map((r) => r.path);
+      }
+
+      const { data: submitResp, error } = await supabase.functions.invoke(
+        "submit-inquiry",
+        {
+          body: {
+            name: form.name.trim().slice(0, 100),
+            email: form.email.trim().slice(0, 255),
+            phone: form.phone.trim().slice(0, 30) || null,
+            services: form.scopes,
+            budget_range: form.budget || null,
+            preferred_start: form.timeline || null,
+            project_details: form.details.trim().slice(0, 2000) || null,
+            attachment_urls,
+            attachment_ids,
+            attachments,
+            notes: [
+              form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
+              form.propertyType ? `Type: ${form.propertyType}` : "",
+              form.timeline ? `Timeline: ${form.timeline}` : "",
+              form.budget ? `Investment range: ${form.budget}` : "",
+            ]
+              .filter(Boolean)
+              .join(" | "),
+            source: "contact-assessment",
+            hp: spamGuard.honeypotProps.value,
+            elapsed_ms: spamGuard.elapsedMs(),
+          },
+        },
+      );
+      if (error || !submitResp?.ok) throw error ?? new Error(submitResp?.code ?? "persist_failed");
+
+      if (attachment_ids.length && submitResp?.id) {
+        const { linkAttachmentsToInquiry } = await import("@/lib/uploadInquiryAttachment");
+        await linkAttachmentsToInquiry(attachment_ids, submitResp.id).catch(() => {});
+      }
 
       supabase.functions
         .invoke("send-inquiry-notification", {
@@ -191,6 +278,9 @@ export default function Contact() {
             services: form.scopes,
             budgetRange: form.budget || undefined,
             goals: form.details.trim() || "Site assessment request",
+            attachmentCount: attachment_urls.length,
+            inquiryId: submitResp?.id,
+            attachmentIds: attachment_ids,
           },
         })
         .catch(() => {});
@@ -219,13 +309,24 @@ export default function Contact() {
         title: "Brief received",
         description: "We'll read the details and respond within two business days.",
       });
-    } catch {
-      trackFormError("contact_assessment", "insert_failed");
-      toast({
-        title: "Submission failed",
-        description: "Please try again or call the office directly.",
-        variant: "destructive",
-      });
+    } catch (err) {
+      const { UploadValidationError } = await import("@/lib/uploadInquiryAttachment");
+      if (err instanceof UploadValidationError) {
+        trackFormError("contact_assessment", `upload_${err.code}`);
+        setFileError(err.message);
+        toast({
+          title: "Attachment rejected",
+          description: err.message,
+          variant: "destructive",
+        });
+      } else {
+        trackFormError("contact_assessment", "insert_failed");
+        toast({
+          title: "Submission failed",
+          description: "Please try again or call the office directly.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -378,6 +479,7 @@ export default function Contact() {
               </RevealOnScroll>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-16">
+                <HoneypotField guard={spamGuard} />
                 {/* Section 1 — Contact Details */}
                 <RevealOnScroll direction="up">
                   <div className="space-y-6">
@@ -628,7 +730,60 @@ export default function Contact() {
 
                 <div className="w-12 h-px bg-border mx-auto" />
 
-                {/* removed — form is direct enough */}
+                {/* Attachments (optional) */}
+                <RevealOnScroll>
+                  <div className="grid md:grid-cols-[220px_1fr] gap-8 md:gap-12">
+                    <div className="md:pt-1">
+                      <p className="text-[10px] uppercase tracking-[0.25em] text-[hsl(var(--footer-muted))] font-mono mb-2">
+                        07
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Attachments
+                      </h3>
+                      <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
+                    </div>
+                    <div className="space-y-3">
+                      <label
+                        htmlFor="contact-files"
+                        className="flex flex-col items-center justify-center rounded-md border border-dashed border-input bg-background/40 px-4 py-8 text-center cursor-pointer hover:border-accent/60 transition-colors"
+                      >
+                        <span className="text-sm text-foreground/80">
+                          Drop files or click to upload
+                        </span>
+                        <span className="mt-1 text-[11px] text-[hsl(var(--footer-muted))]">
+                          Site plans, photos, drawings · PDF, JPG, PNG, DWG, DOCX, XLSX · max 5 files · 10MB each
+                        </span>
+                        <input
+                          id="contact-files"
+                          data-testid="contact-files"
+                          type="file"
+                          multiple
+                          className="hidden"
+                          accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.dwg,.dxf,.doc,.docx,.xls,.xlsx"
+                          onChange={(e) => { addFiles(e.target.files); e.currentTarget.value = ""; }}
+                        />
+                      </label>
+                      {files.length > 0 && (
+                        <AttachmentPreviewList
+                          files={files}
+                          onRemove={removeFile}
+                          statuses={uploader.statuses}
+                          onRetry={() => uploader.uploadAll(files).catch(() => {})}
+                          busy={uploader.isUploading || submitting}
+                        />
+                      )}
+                      {fileError && (
+                        <p className="text-xs text-destructive">{fileError}</p>
+                      )}
+                      {!fileError && uploader.errorSummary && (
+                        <p className="text-xs text-destructive">{uploader.errorSummary}</p>
+                      )}
+                    </div>
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
 
                 {/* Submit */}
                 <div className="text-center space-y-3">
@@ -636,7 +791,7 @@ export default function Contact() {
                     type="submit"
                     data-testid="contact-submit"
                     size="lg"
-                    disabled={submitting}
+                    disabled={submitting || uploader.isUploading || uploader.hasErrors}
                     variant="gold"
                     className="uppercase tracking-[0.14em] text-xs font-medium px-10"
                   >

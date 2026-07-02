@@ -97,11 +97,9 @@ export function ProjectNotes({ projectId }: { projectId: string }) {
   const [suggestQuery, setSuggestQuery] = useState("");
   const taRef = useRef<HTMLTextAreaElement>(null);
 
-  /* ── Hard guard: never render anything in client preview ── */
-  if (isPreview) return null;
-
   /* ── Initial load ─────────────────────────────────────── */
   const load = useCallback(async () => {
+    if (isPreview) return;
     setLoading(true);
     const [notesRes, staffRes] = await Promise.all([
       supabase
@@ -136,11 +134,12 @@ export function ProjectNotes({ projectId }: { projectId: string }) {
       setMentions([]);
     }
     setLoading(false);
-  }, [projectId]);
+  }, [isPreview, projectId]);
 
   useEffect(() => {
+    if (isPreview) return;
     load();
-  }, [load]);
+  }, [isPreview, load]);
 
   /* ── @ suggestion ─────────────────────────────────────── */
   const onBodyChange = (v: string) => {
@@ -180,6 +179,9 @@ export function ProjectNotes({ projectId }: { projectId: string }) {
       })
       .slice(0, 6);
   }, [staff, suggestQuery, suggestOpen]);
+
+  /* ── Hard guard: never render anything in client preview ── */
+  if (isPreview) return null;
 
   /* ── Post note ────────────────────────────────────────── */
   const post = async () => {

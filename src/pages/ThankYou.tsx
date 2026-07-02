@@ -1,10 +1,32 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle, ArrowRight, CalendarIcon, Phone, Star } from "lucide-react";
+import { CheckCircle, ArrowRight, ArrowLeft, CalendarIcon, Phone, Star, Copy, Hash, Layers } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { siteConfig, testimonials, services } from "@/data/content";
 import type { CalendarEvent } from "@/lib/calendarSync";
+import { usePageMeta } from "@/lib/usePageMeta";
+
+// Whitelist of allowed originating form paths — prevents open-redirect via ?from=
+const ALLOWED_ORIGIN_PATHS: Record<string, string> = {
+  "/contact": "Contact form",
+  "/consult": "Consult request",
+  "/consult/request": "Consult request",
+  "/lessons/book": "Lesson booking",
+  "/lessons/inquiry": "Lesson inquiry",
+  "/book-lesson": "Lesson booking",
+  "/site-assessment": "Site assessment",
+  "/schedule": "Schedule a call",
+  "/quote": "Quote builder",
+};
+
+function shortRef(id: string): string {
+  // Reference IDs are typically UUIDs — surface the first 8 chars uppercased for humans.
+  const trimmed = id.trim();
+  if (trimmed.length <= 8) return trimmed.toUpperCase();
+  return trimmed.slice(0, 8).toUpperCase();
+}
 
 const steps = [
   { title: "Inquiry Received", description: "We've logged your details and project requirements." },
@@ -35,10 +57,19 @@ function getConsultationDate(daysOut: number): string {
 const featured = testimonials[0];
 
 export default function ThankYou() {
+  usePageMeta({
+    title: "Inquiry Received — Peninsula Equine",
+    description: "Thank you — your inquiry has been received. We'll follow up within one business day.",
+    path: "/thank-you",
+  });
   const [searchParams] = useSearchParams();
   const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
   const clientName = searchParams.get("name") || "";
   const clientEmail = searchParams.get("email") || "";
+  const referenceId = (searchParams.get("ref") || searchParams.get("id") || "").trim();
+  const rawFrom = searchParams.get("from") || "";
+  const originLabel = ALLOWED_ORIGIN_PATHS[rawFrom];
+  const originPath = originLabel ? rawFrom : null;
 
   const primaryService = services.find((s) => s.id === serviceIds[0]);
   const suggestedDuration = SERVICE_DURATIONS[serviceIds[0]] || 45;
@@ -54,9 +85,20 @@ export default function ThankYou() {
         : primaryService ? `Regarding: ${primaryService.title}` : "General consultation",
       clientName ? `Client: ${clientName}` : "",
       clientEmail ? `Email: ${clientEmail}` : "",
+      referenceId ? `Reference: ${referenceId}` : "",
     ].filter(Boolean).join("\n"),
     location: "Peninsula Equine — On-site or Phone",
   } : null;
+
+  const copyReference = async () => {
+    if (!referenceId) return;
+    try {
+      await navigator.clipboard.writeText(referenceId);
+      toast.success("Reference copied to clipboard");
+    } catch {
+      toast.error("Couldn't copy — please select the reference manually.");
+    }
+  };
 
   return (
     <Layout>
@@ -66,11 +108,39 @@ export default function ThankYou() {
             <CheckCircle className="h-10 w-10 text-accent" />
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl font-normal text-primary-foreground mb-4">
-            Thank You!
+            Thank You{clientName ? `, ${clientName.split(" ")[0]}` : ""}.
           </h1>
           <p className="text-primary-foreground/70 text-lg max-w-xl mx-auto">
             Your inquiry has been submitted successfully. Here's what happens next.
           </p>
+
+          {referenceId && (
+            <div className="mt-8 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 rounded-md border border-primary-foreground/15 bg-primary-foreground/5 px-4 py-3 text-left">
+              <div className="flex items-center gap-2 text-primary-foreground/60 text-[0.7rem] uppercase tracking-[0.25em]">
+                <Hash className="h-3 w-3" />
+                Reference
+              </div>
+              <div className="flex items-center gap-2">
+                <code className="font-mono text-sm text-primary-foreground/90 tracking-wider">
+                  {shortRef(referenceId)}
+                </code>
+                <button
+                  type="button"
+                  onClick={copyReference}
+                  className="inline-flex items-center gap-1 text-xs text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                  aria-label="Copy full reference ID"
+                >
+                  <Copy className="h-3 w-3" />
+                  Copy
+                </button>
+              </div>
+            </div>
+          )}
+          {referenceId && (
+            <p className="mt-3 text-xs text-primary-foreground/50">
+              Quote this reference in any follow-up correspondence.
+            </p>
+          )}
         </div>
       </section>
 
@@ -132,7 +202,7 @@ export default function ThankYou() {
 
       {/* CTAs */}
       <section className="section-padding bg-background">
-        <div className="section-container max-w-xl text-center space-y-4">
+        <div className="section-container max-w-2xl text-center space-y-4">
           <p className="text-muted-foreground text-sm mb-6">In the meantime, you can:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
@@ -143,6 +213,12 @@ export default function ThankYou() {
               }).toString()}`}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Schedule a Call
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/services">
+                <Layers className="mr-2 h-4 w-4" />
+                Browse Our Services
               </Link>
             </Button>
             <Button asChild variant="outline">
@@ -158,8 +234,27 @@ export default function ThankYou() {
               </Link>
             </Button>
           </div>
+
+          {originPath && (
+            <div className="pt-8 mt-8 border-t border-border/60">
+              <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground/70 mb-3">
+                Need to amend something?
+              </p>
+              <Button asChild variant="link" className="text-muted-foreground hover:text-accent">
+                <Link to={originPath}>
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Return to {originLabel}
+                </Link>
+              </Button>
+              <p className="text-xs text-muted-foreground/60 mt-2 max-w-md mx-auto">
+                Submitting again will create a separate inquiry. To update your existing one,
+                reply to the acknowledgement email{referenceId ? ` and quote ${shortRef(referenceId)}` : ""}.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </Layout>
   );
 }
+

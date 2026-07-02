@@ -6,6 +6,30 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 
 ---
 
+## Build & Security Status
+
+> Replace `OWNER/REPO` below with this repository's GitHub `owner/repo` slug. All badges reflect the `main` branch.
+
+| Workflow | Status |
+|---|---|
+| Security gate (blocking, per-PR) | [![Security gate](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/security-gate.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/security-gate.yml) |
+| Nightly security scan | [![Nightly security scan](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/nightly-security-scan.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/nightly-security-scan.yml) |
+| Strict build (typecheck + lint + vitest) | [![Strict Build](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/strict-build.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/strict-build.yml) |
+| Node.js CI | [![Node.js CI](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/node.js.yml) |
+| Prerender unit tests | [![Prerender unit tests](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/prerender-unit-tests.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/prerender-unit-tests.yml) |
+| Verify prerendered head tags | [![Verify prerendered head tags](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-prerender.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-prerender.yml) |
+| Verify accessibility (axe) | [![Verify accessibility](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-accessibility.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-accessibility.yml) |
+| Verify asset pointers | [![Verify asset pointers](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-assets.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-assets.yml) |
+| Verify internal links | [![Verify internal links](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-internal-links.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-internal-links.yml) |
+| Publish smoke test (post-deploy) | [![Publish Smoke Test](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/publish-smoke-test.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/publish-smoke-test.yml) |
+| Preview mint gate | [![Preview Mint Gate](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/preview-mint-check.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/preview-mint-check.yml) |
+
+---
+
+
+
+---
+
 ## 1. Tech stack
 
 | Layer | Choice |
@@ -53,6 +77,7 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 ├── vercel.json              # SPA rewrite for Vercel
 ├── public/_redirects        # SPA fallback (Netlify-style; harmless on Lovable)
 ├── OPS_ALERTS.md            # Live operational alerts (external infra)
+├── RUNBOOK.md               # Deploy, rollback, key rotation, and governance
 └── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
 ```
 
@@ -263,7 +288,7 @@ Same build/output settings. `public/_redirects` handles SPA fallback on both.
 
 ## 13. Operational status
 
-- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). Currently tracks the `procasa.com.au` cPanel AutoSSL renewal failure (disk quota — external, unrelated to this codebase).
+- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). No open alerts.
 - **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
 - **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
 

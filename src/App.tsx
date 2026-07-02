@@ -54,6 +54,8 @@ const HqReview = lazy(() => import("./pages/HqReview"));
 const HqGraphSmoke = lazy(() => import("./pages/HqGraphSmoke"));
 const HqDiagnostics = lazy(() => import("./pages/HqDiagnostics"));
 const HqDeployHealth = lazy(() => import("./pages/HqDeployHealth"));
+const HqDbLints = lazy(() => import("./pages/HqDbLints"));
+
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
@@ -64,6 +66,10 @@ const HqStaff = lazy(() => import("./pages/HqStaff"));
 
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
+const LessonInquiry = lazy(() => import("./pages/LessonInquiry"));
+const BookLessonInquiry = lazy(() => import("./pages/BookLessonInquiry"));
+const ConsultInquiry = lazy(() => import("./pages/ConsultInquiry"));
+
 const Lessons = lazy(() => import("./pages/Lessons"));
 const Events = lazy(() => import("./pages/Events"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
@@ -163,6 +169,8 @@ function AppContent() {
           <Route path="/hq/graph-smoke" element={<ProtectedRoute allowedRoles={["admin"]}><HqGraphSmoke /></ProtectedRoute>} />
           <Route path="/hq/deploy-health" element={<ProtectedRoute allowedRoles={["admin"]}><HqDeployHealth /></ProtectedRoute>} />
           <Route path="/hq/diagnostics" element={<ProtectedRoute allowedRoles={["admin"]}><HqDiagnostics /></ProtectedRoute>} />
+          <Route path="/hq/db-lints" element={<ProtectedRoute allowedRoles={["admin"]}><HqDbLints /></ProtectedRoute>} />
+
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
             <Route path="/hq/dns-publish" element={<ProtectedRoute allowedRoles={["admin"]}><DnsPublish /></ProtectedRoute>} />
             <Route path="/hq/dns-status" element={<ProtectedRoute allowedRoles={["admin"]}><DnsStatus /></ProtectedRoute>} />
@@ -176,6 +184,12 @@ function AppContent() {
             <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
             <Route path="/employee" element={<ProtectedRoute allowedRoles={["admin","employee"]}><EmployeeDashboard /></ProtectedRoute>} />
             <Route path="/lessons" element={<Lessons />} />
+            <Route path="/lessons/inquiry" element={<BookLessonInquiry />} />
+            <Route path="/lessons/book" element={<BookLessonInquiry />} />
+            <Route path="/consult" element={<ConsultInquiry />} />
+            <Route path="/consult/request" element={<ConsultInquiry />} />
+            <Route path="/inquiry" element={<LessonInquiry />} />
+
             {/*
               * /book-lesson is intentionally redirected to /lessons until public lesson
               * booking is rolled out. The BookLesson page (and create-lesson-checkout slot-hold

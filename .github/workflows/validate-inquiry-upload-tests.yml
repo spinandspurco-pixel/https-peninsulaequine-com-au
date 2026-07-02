@@ -1,0 +1,100 @@
+name: validate-inquiry-upload tests
+
+# Runs the Deno test suites for the `validate-inquiry-upload` edge function
+# on every pull request that touches the function or its tests, and on
+# pushes to main. Any regression (validation logic, boundary handling,
+# safe-handling of renamed executables, or config loader) fails the build.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "supabase/functions/validate-inquiry-upload/**"
+      - ".github/workflows/validate-inquiry-upload-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "supabase/functions/validate-inquiry-upload/**"
+      - ".github/workflows/validate-inquiry-upload-tests.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: validate-inquiry-upload-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deno-tests:
+    name: Deno test — validate-inquiry-upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # The handler eagerly instantiates a Supabase client on import; the
+      # tests only exercise validation paths (never the storage success
+      # path), so dummy values are safe. Explicit here so nothing depends
+      # on real secrets leaking into the test process.
+      SUPABASE_URL: "https://example.supabase.co"
+      SUPABASE_SERVICE_ROLE_KEY: "service-test-key"
+      SUPABASE_ANON_KEY: "anon-test-key"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/deno
+            ~/.deno
+          key: ${{ runner.os }}-deno-${{ hashFiles('supabase/functions/validate-inquiry-upload/*.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-
+
+      - name: Type-check test suites
+        run: |
+          deno check \
+            supabase/functions/validate-inquiry-upload/index.ts \
+            supabase/functions/validate-inquiry-upload/integration_test.ts \
+            supabase/functions/validate-inquiry-upload/boundary_test.ts \
+            supabase/functions/validate-inquiry-upload/config_test.ts
+
+      - name: Run integration test suite
+        run: |
+          deno test \
+            --allow-env --allow-net --allow-read \
+            --reporter=pretty \
+            supabase/functions/validate-inquiry-upload/integration_test.ts
+
+      - name: Run boundary / safe-handling suite
+        run: |
+          deno test \
+            --allow-env --allow-net --allow-read \
+            --reporter=pretty \
+            supabase/functions/validate-inquiry-upload/boundary_test.ts
+
+      - name: Run config loader suite
+        run: |
+          deno test \
+            --allow-env --allow-net --allow-read \
+            --reporter=pretty \
+            supabase/functions/validate-inquiry-upload/config_test.ts
+
+      - name: Step summary
+        if: always()
+        run: |
+          {
+            echo "## validate-inquiry-upload test suite"
+            echo ""
+            echo "- integration_test.ts — documented error-code + status shape"
+            echo "- boundary_test.ts — 10 MB boundary + renamed-executable safe handling"
+            echo "- config_test.ts — env-driven limit/allow-list loader"
+            echo ""
+            echo "Any failure above blocks merge on the PR."
+          } >> "$GITHUB_STEP_SUMMARY"

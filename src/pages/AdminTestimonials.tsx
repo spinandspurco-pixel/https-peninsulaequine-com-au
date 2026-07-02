@@ -19,7 +19,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, Download, FileText, Eye, EyeOff, Sparkles } from "lucide-react";
+import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
@@ -134,18 +135,28 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
-  const moveItem = async (item: ManagedTestimonial, direction: "up" | "down") => {
+  const FEATURED_LIMIT = 1;
+  const toggleFeatured = async (item: ManagedTestimonial) => {
     if (isPreview) { toast.error("View-only in client preview"); return; }
-    const idx = items.findIndex((i) => i.id === item.id);
-    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= items.length) return;
-    const other = items[swapIdx];
-    await Promise.all([
-      supabase.from("managed_testimonials").update({ sort_order: other.sort_order }).eq("id", item.id),
-      supabase.from("managed_testimonials").update({ sort_order: item.sort_order }).eq("id", other.id),
-    ]);
-    fetchData();
+    const next = !(item as any).featured;
+    if (next) {
+      const currentFeatured = items.filter((x) => (x as any).featured && x.id !== item.id);
+      if (currentFeatured.length >= FEATURED_LIMIT) {
+        // Auto-swap: unfeature the existing one to enforce single featured testimonial
+        const existing = currentFeatured[0];
+        const { error: unsetErr } = await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        if (unsetErr) { toast.error("Failed to update"); return; }
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+        setItems((prev) => prev.map((x) => (x.id === existing.id ? ({ ...x, featured: false } as ManagedTestimonial) : x)));
+      }
+    }
+    const { error } = await supabase.from("managed_testimonials").update({ featured: next }).eq("id", item.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Featured on homepage" : "Removed from homepage");
+    setItems((prev) => prev.map((x) => (x.id === item.id ? ({ ...x, featured: next } as ManagedTestimonial) : x)));
   };
+
+  // Drag-and-drop reorder handled by SortableList (see below).
 
   useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
 
@@ -156,6 +167,15 @@ export default function AdminTestimonials() {
       return;
     }
     setSaving(true);
+    const wantFeatured = (editItem as any).featured ?? false;
+    if (wantFeatured) {
+      const others = items.filter((x) => (x as any).featured && x.id !== editItem.id);
+      if (others.length >= FEATURED_LIMIT) {
+        const existing = others[0];
+        await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+      }
+    }
     const payload = {
       client_name: editItem.client_name.trim(),
       client_role: editItem.client_role || null,
@@ -165,6 +185,7 @@ export default function AdminTestimonials() {
       media_url: editItem.media_url || null,
       sort_order: editItem.sort_order ?? 0,
       active: editItem.active ?? true,
+      featured: wantFeatured,
     };
 
     if (editItem.id) {
@@ -186,6 +207,15 @@ export default function AdminTestimonials() {
     toast.success("Deleted");
     setDeleteItem(null);
     fetchData();
+  };
+
+  const togglePublish = async (t: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !t.active;
+    const { error } = await supabase.from("managed_testimonials").update({ active: next }).eq("id", t.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setItems((prev) => prev.map((x) => (x.id === t.id ? { ...x, active: next } : x)));
   };
 
   if (loading || !canAccess) return null;
@@ -225,26 +255,36 @@ export default function AdminTestimonials() {
           ) : items.length === 0 ? (
             <Card><CardContent className="py-12 text-center text-muted-foreground">No testimonials yet.</CardContent></Card>
           ) : (
-            <div className="space-y-3">
-              {items.map((t, idx) => (
+            <SortableList
+              items={items}
+              disabled={isPreview}
+              onReorder={async (ids) => {
+                const prev = items;
+                const map = new Map(items.map((i) => [i.id, i]));
+                setItems(ids.map((id, i) => ({ ...(map.get(id) as ManagedTestimonial), sort_order: i })));
+                const { error } = await persistSortOrder(supabase as any, "managed_testimonials", ids);
+                if (error) {
+                  toast.error("Failed to save order");
+                  setItems(prev);
+                } else {
+                  toast.success("Order saved");
+                }
+              }}
+              renderItem={(t, dragHandle) => (
                 <Card key={t.id} className={`group ${(t as any).pinned ? "ring-1 ring-accent/30 bg-accent/5" : ""}`}>
                   <CardContent className="flex items-start gap-4 py-4">
-                    {/* Reorder arrows */}
-                    <div className="flex flex-col gap-0.5 shrink-0 pt-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === 0 || isPreview} onClick={() => moveItem(t, "up")}>
-                        <ArrowUp className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === items.length - 1 || isPreview} onClick={() => moveItem(t, "down")}>
-                        <ArrowDown className="h-3 w-3" />
-                      </Button>
-                    </div>
-
+                    <div className="pt-1">{dragHandle}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{t.client_name}</h3>
                         {t.client_role && <span className="text-xs text-muted-foreground">· {t.client_role}</span>}
-                        {!t.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {t.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                         {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
+                        {(t as any).featured && <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-400">Homepage</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
                       <div className="flex items-center gap-2 mt-1">
@@ -260,6 +300,15 @@ export default function AdminTestimonials() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => togglePublish(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : t.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {t.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => togglePin(t)}
                         disabled={isPreview}
                         title={isPreview ? "View-only" : ((t as any).pinned ? "Unpin" : "Pin to top")}
@@ -267,13 +316,23 @@ export default function AdminTestimonials() {
                       >
                         <Pin className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleFeatured(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((t as any).featured ? "Remove from homepage" : "Feature on homepage")}
+                        className={(t as any).featured ? "text-amber-400" : ""}
+                      >
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              )}
+            />
           )}
         </div>
       </div>
@@ -289,9 +348,17 @@ export default function AdminTestimonials() {
             <div><Label>Media Type</Label><Input value={editItem?.media_type || ""} onChange={(e) => setEditItem({ ...editItem, media_type: e.target.value })} placeholder="image or video" /></div>
             <div><Label>Media URL</Label><Input value={editItem?.media_url || ""} onChange={(e) => setEditItem({ ...editItem, media_url: e.target.value })} /></div>
             <div><Label>Sort Order</Label><Input type="number" value={editItem?.sort_order ?? 0} onChange={(e) => setEditItem({ ...editItem, sort_order: parseInt(e.target.value) || 0 })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
+            </div>
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
+              <Switch checked={(editItem as any)?.featured ?? false} onCheckedChange={(v) => setEditItem({ ...editItem, featured: v } as any)} />
+              <Label className="cursor-pointer">
+                {(editItem as any)?.featured ? "Featured — shown in homepage testimonials" : "Not featured on homepage"}
+              </Label>
             </div>
           </div>
           <DialogFooter>

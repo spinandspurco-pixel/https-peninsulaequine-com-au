@@ -13,6 +13,7 @@ import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from 
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
 import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBanner";
@@ -134,6 +135,11 @@ function classifyOAuthError(message: string): SignInError {
 
 
 export default function Login() {
+  usePageMeta({
+    title: "Sign In — Peninsula Equine HQ",
+    description: "Sign in to Peninsula Equine HQ.",
+    path: "/login",
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -290,7 +296,7 @@ export default function Login() {
         title="HQ Access"
         subtitle="Workbench sign-in for Peninsula Equine staff."
       >
-        <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl">
+        <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl" data-bp-armed="true">
           <div className="p-6 sm:p-8 space-y-6">
             <LegacyKeyBanner />
             <GoogleOAuthConfigBanner />
@@ -298,19 +304,19 @@ export default function Login() {
               <div
                 role="alert"
                 aria-live="assertive"
-                className="border border-destructive/40 bg-destructive/10 rounded-sm p-4 space-y-3"
+                className="border border-destructive/40 bg-destructive/10 rounded-sm p-4 space-y-3 bp-mark bp-delay-1"
               >
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" aria-hidden />
                   <div className="space-y-1 min-w-0 flex-1">
-                    <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-destructive">
+                    <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-destructive bp-mark bp-delay-2">
                       {signInError.title}
                     </p>
                     {signInError.hint && (
-                      <p className="text-[12px] text-foreground/80 leading-relaxed">{signInError.hint}</p>
+                      <p className="text-[12px] text-foreground/80 leading-relaxed bp-mark bp-delay-3">{signInError.hint}</p>
                     )}
                     {!signInError.hideDetail && (
-                      <p className="text-[11px] text-muted-foreground/80 font-mono break-words">
+                      <p className="text-[11px] text-muted-foreground/80 font-mono break-words bp-mark bp-delay-3">
                         {signInError.detail}
                       </p>
                     )}
@@ -329,7 +335,7 @@ export default function Login() {
                         }
                       }}
                       disabled={isLoading}
-                      className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors disabled:opacity-50 bp-mark bp-delay-4"
                     >
                       <RefreshCw className="h-3 w-3" aria-hidden />
                       Retry
@@ -339,7 +345,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => void clearLocalAuthCacheAndSignOut()}
-                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors bp-mark bp-delay-4"
                     >
                       Clear cache + retry
                     </button>

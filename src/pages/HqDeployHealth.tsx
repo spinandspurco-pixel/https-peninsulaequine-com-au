@@ -3,6 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
+import { RetryOutcomeRows } from "@/components/hq/RetryOutcomeRows";
+import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
@@ -48,6 +50,14 @@ const TARGETS = [
 const LEGACY_MARKER = "eyJhbGci";
 const MODERN_MARKER = "sb_publishable_";
 const BUNDLE_RE = /\/assets\/(index-[A-Za-z0-9_-]+\.js)/;
+
+const RETRY_MAX_ATTEMPTS = 4;
+const RETRY_BACKOFF_MS = (i: number) => 1500 * (i + 1);
+const RETRY_BACKOFF_SCHEDULE_MS = Array.from(
+  { length: RETRY_MAX_ATTEMPTS },
+  (_, i) => RETRY_BACKOFF_MS(i),
+);
+const RETRY_LOG_TRAIL_LIMIT = 8;
 
 type ProbeResult = {
   label: string;
@@ -145,7 +155,10 @@ export default function HqDeployHealth() {
   const [running, setRunning] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
+  const [retryProgress, setRetryProgress] = useState<{ attempt: number; max: number } | null>(null);
   const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
+  const [retryLogTrail, setRetryLogTrail] = useState<Array<Record<string, unknown>>>([]);
+  const [lastRetryError, setLastRetryError] = useState<{ name: string; message: string } | null>(null);
   const [audit, setAudit] = useState<AuditRow[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
   const [auditError, setAuditError] = useState<string | null>(null);
@@ -227,18 +240,55 @@ export default function HqDeployHealth() {
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
+    setRetryProgress({ attempt: 0, max: RETRY_MAX_ATTEMPTS });
+    setRetryLogTrail([]);
+    setLastRetryError(null);
     try {
       const { outcome, finalProbes } = await runRetryPromotion<ProbeResult>({
         targets: TARGETS,
         probe,
         sleep: (ms) => new Promise((res) => setTimeout(res, ms)),
         now: () => new Date().toISOString(),
-        maxAttempts: 4,
+        maxAttempts: RETRY_MAX_ATTEMPTS,
         // Preserve the original per-attempt backoff (1500ms, 3000ms, …).
-        backoffMs: (i) => 1500 * (i + 1),
+        backoffMs: RETRY_BACKOFF_MS,
         // Re-use the currently-visible probes as the "before" snapshot when
         // available so the retry doesn't double-fetch on the first pass.
         initialBefore: results.length ? results : null,
+        onAttempt: (attempt, max) => setRetryProgress({ attempt, max }),
+        onLog: (event) => {
+          // Retain a bounded ring buffer of recent events so the error
+          // boundary can copy the trail alongside the outcome.
+          setRetryLogTrail((prev) => {
+            const next = [...prev, event as unknown as Record<string, unknown>];
+            return next.length > RETRY_LOG_TRAIL_LIMIT
+              ? next.slice(-RETRY_LOG_TRAIL_LIMIT)
+              : next;
+          });
+          // Structured, single-line JSON so support can grep the console
+          // and correlate with latency history (matching ISO timestamps).
+          try {
+             
+            console.info("[deploy-health.retry]", JSON.stringify(event));
+          } catch {
+            /* noop */
+          }
+          if (event.phase === "attempt") {
+            void logDeployHealthAudit(
+              "retry_promotion_attempt",
+              event.classification?.willRetry ? "info" : "info",
+              {
+                attempt: event.attempt,
+                maxAttempts: event.maxAttempts,
+                durationMs: event.durationMs,
+                startedAt: event.startedAt,
+                finishedAt: event.finishedAt,
+                classification: event.classification,
+                targets: event.targets,
+              },
+            );
+          }
+        },
       });
 
       // Persist the final probe pass (URLs already stripped of cache-bust).
@@ -272,8 +322,15 @@ export default function HqDeployHealth() {
           },
         );
       }
+    } catch (err) {
+      setLastRetryError({
+        name: err instanceof Error ? err.name : "UnknownError",
+        message: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
     } finally {
       setRetrying(false);
+      setRetryProgress(null);
     }
   }, [results]);
 
@@ -621,25 +678,42 @@ export default function HqDeployHealth() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <button
-              type="button"
-              onClick={retryPromotion}
-              disabled={retrying || running}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
-              title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
-            >
-              {retrying ? "Retrying promotion…" : "Retry promotion"}
-            </button>
+            <div className="flex flex-col items-start gap-1">
+              <button
+                type="button"
+                onClick={retryPromotion}
+                disabled={retrying || running}
+                aria-busy={retrying}
+                className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
+              >
+                {retrying
+                  ? retryProgress && retryProgress.attempt > 0
+                    ? `Retrying… attempt ${retryProgress.attempt}/${retryProgress.max}`
+                    : "Retrying promotion…"
+                  : "Retry promotion"}
+              </button>
+              <span
+                role="status"
+                aria-live="polite"
+                className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 min-h-[12px]"
+              >
+                {retrying && retryProgress && retryProgress.attempt > 0
+                  ? `Attempt ${retryProgress.attempt} of ${retryProgress.max} in flight`
+                  : ""}
+              </span>
+            </div>
             <button
               type="button"
               onClick={run}
               disabled={running || retrying}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
               title="Immediately re-fetch bundle state, markers, and timestamps"
             >
               {running ? "Re-checking…" : "Re-run checks"}
             </button>
           </div>
+
         </section>
 
         <section
@@ -782,7 +856,64 @@ export default function HqDeployHealth() {
 
         <RetryOutcomeErrorBoundary
           debugPayload={retryOutcome}
-          onReset={() => setRetryOutcome(null)}
+          debugContext={{
+            projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+            actorEmail: user?.email ?? null,
+            pageBundle: pageBundle ?? null,
+            lastCheckedAt,
+            retrying,
+            retryProgress,
+            lastRetryError,
+            config: {
+              targets: TARGETS,
+              maxAttempts: RETRY_MAX_ATTEMPTS,
+              backoffScheduleMs: RETRY_BACKOFF_SCHEDULE_MS,
+              logTrailLimit: RETRY_LOG_TRAIL_LIMIT,
+            },
+            recentLogEvents: retryLogTrail,
+            currentResults: results.map((r) => ({
+              label: r.label,
+              url: r.url,
+              ok: r.ok,
+              bundleFile: r.bundleFile,
+              stuck: isStuck(r),
+              hasLegacyKey: r.hasLegacyKey,
+              hasModernKey: r.hasModernKey,
+            })),
+          }}
+          onReset={() => {
+            setRetryOutcome(null);
+            setRetryLogTrail([]);
+            setLastRetryError(null);
+          }}
+          onCapture={(report) => {
+            // Structured log for support correlation (parallels retry attempt logs).
+             
+            console.error("[analytics] retry_outcome_render_error", report);
+            try {
+              trackEvent("retry_outcome_render_error", {
+                surface: report.surface,
+                error_name: report.error.name,
+                error_message: report.error.message,
+                has_component_stack: report.componentStack !== null,
+                has_debug_payload: report.hasDebugPayload,
+                has_debug_context: report.hasDebugContext,
+                page_bundle: pageBundle ?? null,
+              });
+            } catch {
+              // trackEvent swallows on its own; extra guard just in case.
+            }
+            void logDeployHealthAudit("retry_promotion_attempt", "failure", {
+              kind: "render_error",
+              error_name: report.error.name,
+              error_message: report.error.message,
+              component_stack: report.componentStack,
+              href: report.href,
+              timestamp: report.timestamp,
+            }).catch(() => {
+              /* audit failures are non-fatal */
+            });
+          }}
         >
         {retryOutcome && (
           <section
@@ -848,45 +979,7 @@ export default function HqDeployHealth() {
                   </tr>
                 </thead>
                 <tbody>
-                  {retryOutcome.after.map((a, idx) => {
-                    const b = retryOutcome.before[idx];
-                    const beforeHash = b?.bundleFile ?? null;
-                    const afterHash = a.bundleFile ?? null;
-                    const changed = !!(beforeHash && afterHash && beforeHash !== afterHash);
-                    let rowStatus: "success" | "partial" | "no_change" | "error";
-                    let tone: string;
-                    if (!afterHash) {
-                      rowStatus = "error"; tone = "text-red-700";
-                    } else if (!a.stuck && changed) {
-                      rowStatus = "success"; tone = "text-emerald-700";
-                    } else if (!a.stuck) {
-                      rowStatus = "success"; tone = "text-emerald-700";
-                    } else if (changed) {
-                      rowStatus = "partial"; tone = "text-amber-700";
-                    } else {
-                      rowStatus = "no_change"; tone = "text-amber-700";
-                    }
-                    const label = rowStatus === "no_change" ? "no change" : rowStatus;
-                    return (
-                      <tr key={`row-${a.label}`} className="border-t border-border/10 align-top">
-                        <td className="px-3 py-2 text-foreground/70">{a.label}</td>
-                        <td className="px-3 py-2 text-foreground/70">{retryOutcome.attempts}</td>
-                        <td className="px-3 py-2">
-                          <code className={b?.stuck ? "text-amber-700" : "text-foreground/70"}>
-                            {beforeHash ?? "—"}
-                          </code>
-                        </td>
-                        <td className="px-3 py-2">
-                          <code className={a.stuck ? "text-amber-700" : "text-emerald-700"}>
-                            {afterHash ?? "—"}
-                          </code>
-                        </td>
-                        <td className={`px-3 py-2 uppercase tracking-[0.25em] text-[0.6rem] ${tone}`}>
-                          {label}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  <RetryOutcomeRows outcome={retryOutcome} />
                 </tbody>
               </table>
             </div>
