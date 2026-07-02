@@ -260,8 +260,84 @@ export default function HqPublishLogs() {
     }
   }, []);
 
-  const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
-  const clusters = useMemo(() => clusterFailures(rows ?? []), [rows]);
+  // ── Filters ──────────────────────────────────────────────────────────────
+  const [filterStatus, setFilterStatus] = useState<"all" | Row["status"]>("all");
+  const [filterPhase, setFilterPhase] = useState<string>("all");
+  const [filterBundle, setFilterBundle] = useState<string>("");
+  const [filterRange, setFilterRange] = useState<"24h" | "7d" | "30d" | "all">("all");
+  const [filterSearch, setFilterSearch] = useState<string>("");
+
+  const allRuns = useMemo(() => groupRuns(rows ?? []), [rows]);
+
+  const availablePhases = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of rows ?? []) {
+      const p = (r.meta as { phase?: unknown } | null)?.phase;
+      if (typeof p === "string" && p) set.add(p);
+    }
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const runs = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      filterRange === "24h" ? 24 * 3_600_000 :
+      filterRange === "7d"  ? 7  * 24 * 3_600_000 :
+      filterRange === "30d" ? 30 * 24 * 3_600_000 :
+      null;
+    const bundle = filterBundle.trim().toLowerCase();
+    const search = filterSearch.trim().toLowerCase();
+    return allRuns.filter((run) => {
+      if (filterStatus !== "all" && run.status !== filterStatus) return false;
+      if (rangeMs !== null && now - new Date(run.created_at).getTime() > rangeMs) return false;
+      if (filterPhase !== "all") {
+        const hit = run.steps.some(
+          (s) => (s.meta as { phase?: unknown } | null)?.phase === filterPhase,
+        );
+        if (!hit) return false;
+      }
+      if (bundle) {
+        const hit = run.steps.some((s) => {
+          const b = (s.meta as { bundle_id?: unknown } | null)?.bundle_id;
+          return typeof b === "string" && b.toLowerCase().includes(bundle);
+        });
+        if (!hit) return false;
+      }
+      if (search) {
+        const hay = [
+          run.run_id,
+          run.commit_sha ?? "",
+          run.branch ?? "",
+          run.actor ?? "",
+          ...run.steps.map((s) => s.log ?? ""),
+        ].join("\n").toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+  }, [allRuns, filterStatus, filterPhase, filterBundle, filterRange, filterSearch]);
+
+  const filteredRunIds = useMemo(() => new Set(runs.map((r) => r.run_id)), [runs]);
+  const filteredRows = useMemo(
+    () => (rows ?? []).filter((r) => filteredRunIds.has(r.run_id)),
+    [rows, filteredRunIds],
+  );
+  const clusters = useMemo(() => clusterFailures(filteredRows), [filteredRows]);
+
+  const filtersActive =
+    filterStatus !== "all" ||
+    filterPhase !== "all" ||
+    filterRange !== "all" ||
+    filterBundle.trim() !== "" ||
+    filterSearch.trim() !== "";
+
+  const resetFilters = useCallback(() => {
+    setFilterStatus("all");
+    setFilterPhase("all");
+    setFilterBundle("");
+    setFilterRange("all");
+    setFilterSearch("");
+  }, []);
 
   const jumpToRun = useCallback((runId: string) => {
     setExpanded(runId);
@@ -270,6 +346,7 @@ export default function HqPublishLogs() {
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 40);
   }, []);
+
 
   return (
     <Layout>
@@ -390,6 +467,88 @@ export default function HqPublishLogs() {
             {error}
           </div>
         )}
+
+        {rows && rows.length > 0 && (
+          <section className="mt-6 rounded border border-border/50 bg-background/40 p-3">
+            <div className="flex flex-wrap items-end gap-3 text-[11px] uppercase tracking-wider text-foreground/60">
+              <label className="flex flex-col gap-1">
+                Status
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  <option value="pass">Pass</option>
+                  <option value="fail">Fail</option>
+                  <option value="skipped">Skipped</option>
+                  <option value="info">Info</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Phase
+                <select
+                  value={filterPhase}
+                  onChange={(e) => setFilterPhase(e.target.value)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  {availablePhases.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Time
+                <select
+                  value={filterRange}
+                  onChange={(e) => setFilterRange(e.target.value as typeof filterRange)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All time</option>
+                  <option value="24h">Last 24h</option>
+                  <option value="7d">Last 7d</option>
+                  <option value="30d">Last 30d</option>
+                </select>
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Bundle id
+                <input
+                  type="text"
+                  value={filterBundle}
+                  onChange={(e) => setFilterBundle(e.target.value)}
+                  placeholder="substring match"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 font-mono text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Search
+                <input
+                  type="text"
+                  value={filterSearch}
+                  onChange={(e) => setFilterSearch(e.target.value)}
+                  placeholder="run id, commit, log text…"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <div className="flex items-center gap-3 pb-1 text-[11px] normal-case tracking-normal text-foreground/50">
+                <span>
+                  {runs.length}/{allRuns.length} runs
+                </span>
+                {filtersActive && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="rounded border border-border/60 px-2 py-0.5 uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
 
         {rows && rows.length === 0 && !error && (
           <div className="mt-8 rounded border border-border/50 bg-background/40 p-6 text-sm text-foreground/60">
