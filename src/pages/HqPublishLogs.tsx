@@ -468,6 +468,88 @@ export default function HqPublishLogs() {
           </div>
         )}
 
+        {rows && rows.length > 0 && (
+          <section className="mt-6 rounded border border-border/50 bg-background/40 p-3">
+            <div className="flex flex-wrap items-end gap-3 text-[11px] uppercase tracking-wider text-foreground/60">
+              <label className="flex flex-col gap-1">
+                Status
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  <option value="pass">Pass</option>
+                  <option value="fail">Fail</option>
+                  <option value="skipped">Skipped</option>
+                  <option value="info">Info</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Phase
+                <select
+                  value={filterPhase}
+                  onChange={(e) => setFilterPhase(e.target.value)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  {availablePhases.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Time
+                <select
+                  value={filterRange}
+                  onChange={(e) => setFilterRange(e.target.value as typeof filterRange)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All time</option>
+                  <option value="24h">Last 24h</option>
+                  <option value="7d">Last 7d</option>
+                  <option value="30d">Last 30d</option>
+                </select>
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Bundle id
+                <input
+                  type="text"
+                  value={filterBundle}
+                  onChange={(e) => setFilterBundle(e.target.value)}
+                  placeholder="substring match"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 font-mono text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Search
+                <input
+                  type="text"
+                  value={filterSearch}
+                  onChange={(e) => setFilterSearch(e.target.value)}
+                  placeholder="run id, commit, log text…"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <div className="flex items-center gap-3 pb-1 text-[11px] normal-case tracking-normal text-foreground/50">
+                <span>
+                  {runs.length}/{allRuns.length} runs
+                </span>
+                {filtersActive && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="rounded border border-border/60 px-2 py-0.5 uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+
         {rows && rows.length === 0 && !error && (
           <div className="mt-8 rounded border border-border/50 bg-background/40 p-6 text-sm text-foreground/60">
             No runs yet. Trigger a run with{" "}
