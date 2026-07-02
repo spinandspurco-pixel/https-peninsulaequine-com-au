@@ -2297,6 +2297,48 @@ export type Database = {
           },
         ]
       }
+      publish_logs: {
+        Row: {
+          actor: string | null
+          branch: string | null
+          commit_sha: string | null
+          created_at: string
+          duration_ms: number | null
+          id: string
+          kind: string
+          log: string
+          meta: Json
+          run_id: string
+          status: string
+        }
+        Insert: {
+          actor?: string | null
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind: string
+          log?: string
+          meta?: Json
+          run_id: string
+          status: string
+        }
+        Update: {
+          actor?: string | null
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind?: string
+          log?: string
+          meta?: Json
+          run_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       quote_follow_ups: {
         Row: {
           action_type: string
