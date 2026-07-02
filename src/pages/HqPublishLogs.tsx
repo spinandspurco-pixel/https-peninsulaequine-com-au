@@ -164,6 +164,8 @@ export default function HqPublishLogs() {
   const [reportSubmitting, setReportSubmitting] = useState(false);
   const [reportNotice, setReportNotice] = useState<string | null>(null);
   const [copyNotice, setCopyNotice] = useState<string | null>(null);
+  const [reportFiles, setReportFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -189,8 +191,28 @@ export default function HqPublishLogs() {
       setReportNotice("Add the error message before reporting.");
       return;
     }
+    const MAX_BYTES = 20 * 1024 * 1024;
+    const oversize = reportFiles.find((f) => f.size > MAX_BYTES);
+    if (oversize) {
+      setReportNotice(`"${oversize.name}" exceeds the 20MB per-file limit.`);
+      return;
+    }
     setReportSubmitting(true);
     try {
+      const folder = crypto.randomUUID();
+      const uploaded: Array<{ path: string; name: string; size: number; type: string }> = [];
+      for (let i = 0; i < reportFiles.length; i++) {
+        const f = reportFiles[i];
+        setUploadProgress(`Uploading ${i + 1}/${reportFiles.length}: ${f.name}`);
+        const safe = f.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 200);
+        const path = `${folder}/${Date.now()}-${safe}`;
+        const { error: upErr } = await supabase.storage
+          .from("publish-failure-attachments")
+          .upload(path, f, { contentType: f.type || "application/octet-stream", upsert: false });
+        if (upErr) throw new Error(`Upload failed for ${f.name}: ${upErr.message}`);
+        uploaded.push({ path, name: f.name, size: f.size, type: f.type || "" });
+      }
+      setUploadProgress(null);
       const { data, error } = await supabase.functions.invoke("report-publish-failure", {
         body: {
           bundle_id: reportBundleId.trim() || undefined,
@@ -198,6 +220,7 @@ export default function HqPublishLogs() {
           context: reportContext.trim() || undefined,
           occurred_at: new Date().toISOString(),
           user_agent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+          attachments: uploaded,
         },
       });
       if (error) throw error;
@@ -206,13 +229,26 @@ export default function HqPublishLogs() {
       setReportBundleId("");
       setReportMessage("");
       setReportContext("");
+      setReportFiles([]);
       await load();
     } catch (e) {
       setReportNotice(e instanceof Error ? e.message : "Failed to record report.");
     } finally {
+      setUploadProgress(null);
       setReportSubmitting(false);
     }
-  }, [reportBundleId, reportMessage, reportContext, load]);
+  }, [reportBundleId, reportMessage, reportContext, reportFiles, load]);
+
+  const openAttachment = useCallback(async (path: string) => {
+    const { data, error } = await supabase.storage
+      .from("publish-failure-attachments")
+      .createSignedUrl(path, 60 * 10);
+    if (error || !data?.signedUrl) {
+      alert(error?.message ?? "Could not create download link");
+      return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  }, []);
 
   const copyForSupport = useCallback(async (run: Run) => {
     try {
@@ -307,8 +343,36 @@ export default function HqPublishLogs() {
                 className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
               />
             </label>
+            <div className="mt-3">
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Attachments (optional · max 10 files · 20MB each)
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    const list = Array.from(e.target.files ?? []).slice(0, 10);
+                    setReportFiles(list);
+                  }}
+                  className="mt-1 block w-full text-xs text-foreground/70 file:mr-3 file:rounded file:border file:border-border/60 file:bg-background/60 file:px-3 file:py-1.5 file:text-xs file:uppercase file:tracking-wide file:text-foreground/80 hover:file:text-foreground"
+                />
+              </label>
+              {reportFiles.length > 0 && (
+                <ul className="mt-2 space-y-1 text-[11px] text-foreground/60">
+                  {reportFiles.map((f, i) => (
+                    <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2 font-mono">
+                      <span className="truncate">{f.name}</span>
+                      <span className="shrink-0 text-foreground/40">
+                        {(f.size / 1024).toFixed(1)}KB
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className="mt-3 flex items-center justify-between gap-3">
-              <span className="text-xs text-foreground/60">{reportNotice}</span>
+              <span className="text-xs text-foreground/60">
+                {uploadProgress ?? reportNotice}
+              </span>
               <button
                 type="button"
                 onClick={() => void submitReport()}
@@ -558,6 +622,36 @@ export default function HqPublishLogs() {
                                             .join("  ·  ")}
                                         </div>
                                       )}
+                                    </div>
+                                  );
+                                })()}
+                                {(() => {
+                                  const meta = (step.meta ?? {}) as {
+                                    attachments?: Array<{ path: string; name?: string | null; size?: number | null; type?: string | null }>;
+                                  };
+                                  const atts = Array.isArray(meta.attachments) ? meta.attachments : [];
+                                  if (atts.length === 0) return null;
+                                  return (
+                                    <div className="border-b border-border/40 bg-background/40 px-3 py-2 text-[11px]">
+                                      <div className="mb-1 uppercase tracking-wider text-foreground/50">
+                                        Attachments · {atts.length}
+                                      </div>
+                                      <ul className="space-y-1">
+                                        {atts.map((a) => (
+                                          <li key={a.path} className="flex items-center justify-between gap-2 font-mono">
+                                            <button
+                                              type="button"
+                                              onClick={() => void openAttachment(a.path)}
+                                              className="truncate text-left text-foreground/80 underline decoration-border/60 hover:text-foreground"
+                                            >
+                                              {a.name || a.path.split("/").pop()}
+                                            </button>
+                                            <span className="shrink-0 text-foreground/40">
+                                              {typeof a.size === "number" ? `${(a.size / 1024).toFixed(1)}KB` : ""}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
                                     </div>
                                   );
                                 })()}
