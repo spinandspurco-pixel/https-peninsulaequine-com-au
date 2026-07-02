@@ -80,6 +80,55 @@ function groupRuns(rows: Row[]): Run[] {
   );
 }
 
+type FailureCluster = {
+  key: string;
+  commit_sha: string | null;
+  bundle_id: string | null;
+  count: number;
+  first_seen: string;
+  last_seen: string;
+  run_ids: string[];
+  sample_message: string;
+};
+
+function clusterFailures(rows: Row[]): FailureCluster[] {
+  const map = new Map<string, FailureCluster>();
+  for (const r of rows) {
+    if (r.status !== "fail") continue;
+    const bundleId =
+      (r.meta && typeof r.meta === "object" && "bundle_id" in r.meta
+        ? ((r.meta as { bundle_id?: unknown }).bundle_id ?? null)
+        : null) as string | null;
+    const commit = r.commit_sha ?? null;
+    if (!commit && !bundleId) continue;
+    const key = `${commit ?? "—"}::${bundleId ?? "—"}`;
+    let c = map.get(key);
+    if (!c) {
+      c = {
+        key,
+        commit_sha: commit,
+        bundle_id: bundleId,
+        count: 0,
+        first_seen: r.created_at,
+        last_seen: r.created_at,
+        run_ids: [],
+        sample_message: (r.log ?? "").split("\n")[0]?.slice(0, 160) ?? "",
+      };
+      map.set(key, c);
+    }
+    c.count += 1;
+    if (new Date(r.created_at) > new Date(c.last_seen)) c.last_seen = r.created_at;
+    if (new Date(r.created_at) < new Date(c.first_seen)) c.first_seen = r.created_at;
+    if (!c.run_ids.includes(r.run_id)) c.run_ids.push(r.run_id);
+  }
+  return Array.from(map.values())
+    .filter((c) => c.count >= 1)
+    .sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime();
+    });
+}
+
 function buildSupportBundle(run: Run): string {
   return JSON.stringify(
     {
@@ -115,6 +164,8 @@ export default function HqPublishLogs() {
   const [reportSubmitting, setReportSubmitting] = useState(false);
   const [reportNotice, setReportNotice] = useState<string | null>(null);
   const [copyNotice, setCopyNotice] = useState<string | null>(null);
+  const [reportFiles, setReportFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -140,8 +191,28 @@ export default function HqPublishLogs() {
       setReportNotice("Add the error message before reporting.");
       return;
     }
+    const MAX_BYTES = 20 * 1024 * 1024;
+    const oversize = reportFiles.find((f) => f.size > MAX_BYTES);
+    if (oversize) {
+      setReportNotice(`"${oversize.name}" exceeds the 20MB per-file limit.`);
+      return;
+    }
     setReportSubmitting(true);
     try {
+      const folder = crypto.randomUUID();
+      const uploaded: Array<{ path: string; name: string; size: number; type: string }> = [];
+      for (let i = 0; i < reportFiles.length; i++) {
+        const f = reportFiles[i];
+        setUploadProgress(`Uploading ${i + 1}/${reportFiles.length}: ${f.name}`);
+        const safe = f.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 200);
+        const path = `${folder}/${Date.now()}-${safe}`;
+        const { error: upErr } = await supabase.storage
+          .from("publish-failure-attachments")
+          .upload(path, f, { contentType: f.type || "application/octet-stream", upsert: false });
+        if (upErr) throw new Error(`Upload failed for ${f.name}: ${upErr.message}`);
+        uploaded.push({ path, name: f.name, size: f.size, type: f.type || "" });
+      }
+      setUploadProgress(null);
       const { data, error } = await supabase.functions.invoke("report-publish-failure", {
         body: {
           bundle_id: reportBundleId.trim() || undefined,
@@ -149,6 +220,7 @@ export default function HqPublishLogs() {
           context: reportContext.trim() || undefined,
           occurred_at: new Date().toISOString(),
           user_agent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+          attachments: uploaded,
         },
       });
       if (error) throw error;
@@ -157,13 +229,26 @@ export default function HqPublishLogs() {
       setReportBundleId("");
       setReportMessage("");
       setReportContext("");
+      setReportFiles([]);
       await load();
     } catch (e) {
       setReportNotice(e instanceof Error ? e.message : "Failed to record report.");
     } finally {
+      setUploadProgress(null);
       setReportSubmitting(false);
     }
-  }, [reportBundleId, reportMessage, reportContext, load]);
+  }, [reportBundleId, reportMessage, reportContext, reportFiles, load]);
+
+  const openAttachment = useCallback(async (path: string) => {
+    const { data, error } = await supabase.storage
+      .from("publish-failure-attachments")
+      .createSignedUrl(path, 60 * 10);
+    if (error || !data?.signedUrl) {
+      alert(error?.message ?? "Could not create download link");
+      return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  }, []);
 
   const copyForSupport = useCallback(async (run: Run) => {
     try {
@@ -175,7 +260,126 @@ export default function HqPublishLogs() {
     }
   }, []);
 
-  const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
+  // ── Filters ──────────────────────────────────────────────────────────────
+  const [filterStatus, setFilterStatus] = useState<"all" | Row["status"]>("all");
+  const [filterPhase, setFilterPhase] = useState<string>("all");
+  const [filterBundle, setFilterBundle] = useState<string>("");
+  const [filterRange, setFilterRange] = useState<"24h" | "7d" | "30d" | "all">("all");
+  const [filterSearch, setFilterSearch] = useState<string>("");
+
+  const allRuns = useMemo(() => groupRuns(rows ?? []), [rows]);
+
+  const availablePhases = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of rows ?? []) {
+      const p = (r.meta as { phase?: unknown } | null)?.phase;
+      if (typeof p === "string" && p) set.add(p);
+    }
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const runs = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      filterRange === "24h" ? 24 * 3_600_000 :
+      filterRange === "7d"  ? 7  * 24 * 3_600_000 :
+      filterRange === "30d" ? 30 * 24 * 3_600_000 :
+      null;
+    const bundle = filterBundle.trim().toLowerCase();
+    const search = filterSearch.trim().toLowerCase();
+    return allRuns.filter((run) => {
+      if (filterStatus !== "all" && run.status !== filterStatus) return false;
+      if (rangeMs !== null && now - new Date(run.created_at).getTime() > rangeMs) return false;
+      if (filterPhase !== "all") {
+        const hit = run.steps.some(
+          (s) => (s.meta as { phase?: unknown } | null)?.phase === filterPhase,
+        );
+        if (!hit) return false;
+      }
+      if (bundle) {
+        const hit = run.steps.some((s) => {
+          const b = (s.meta as { bundle_id?: unknown } | null)?.bundle_id;
+          return typeof b === "string" && b.toLowerCase().includes(bundle);
+        });
+        if (!hit) return false;
+      }
+      if (search) {
+        const hay = [
+          run.run_id,
+          run.commit_sha ?? "",
+          run.branch ?? "",
+          run.actor ?? "",
+          ...run.steps.map((s) => s.log ?? ""),
+        ].join("\n").toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+  }, [allRuns, filterStatus, filterPhase, filterBundle, filterRange, filterSearch]);
+
+  const filteredRunIds = useMemo(() => new Set(runs.map((r) => r.run_id)), [runs]);
+  const filteredRows = useMemo(
+    () => (rows ?? []).filter((r) => filteredRunIds.has(r.run_id)),
+    [rows, filteredRunIds],
+  );
+
+  // ── Cluster-scoped filters (independent from the list filters above) ─────
+  const [clusterStatus, setClusterStatus] = useState<"all" | "fail">("all");
+  const [clusterPhase, setClusterPhase] = useState<string>("all");
+  const [clusterRange, setClusterRange] = useState<"24h" | "7d" | "30d" | "all">("all");
+
+  const clusterRows = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      clusterRange === "24h" ? 24 * 3_600_000 :
+      clusterRange === "7d"  ? 7  * 24 * 3_600_000 :
+      clusterRange === "30d" ? 30 * 24 * 3_600_000 :
+      null;
+    return filteredRows.filter((r) => {
+      if (clusterStatus !== "all" && r.status !== clusterStatus) return false;
+      if (rangeMs !== null && now - new Date(r.created_at).getTime() > rangeMs) return false;
+      if (clusterPhase !== "all") {
+        const p = (r.meta as { phase?: unknown } | null)?.phase;
+        if (p !== clusterPhase) return false;
+      }
+      return true;
+    });
+  }, [filteredRows, clusterStatus, clusterPhase, clusterRange]);
+
+  const clusters = useMemo(() => clusterFailures(clusterRows), [clusterRows]);
+
+  const clusterFiltersActive =
+    clusterStatus !== "all" || clusterPhase !== "all" || clusterRange !== "all";
+  const resetClusterFilters = useCallback(() => {
+    setClusterStatus("all");
+    setClusterPhase("all");
+    setClusterRange("all");
+  }, []);
+
+
+  const filtersActive =
+    filterStatus !== "all" ||
+    filterPhase !== "all" ||
+    filterRange !== "all" ||
+    filterBundle.trim() !== "" ||
+    filterSearch.trim() !== "";
+
+  const resetFilters = useCallback(() => {
+    setFilterStatus("all");
+    setFilterPhase("all");
+    setFilterBundle("");
+    setFilterRange("all");
+    setFilterSearch("");
+  }, []);
+
+  const jumpToRun = useCallback((runId: string) => {
+    setExpanded(runId);
+    setTimeout(() => {
+      const el = document.getElementById(`run-${runId}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 40);
+  }, []);
+
 
   return (
     <Layout>
@@ -249,8 +453,36 @@ export default function HqPublishLogs() {
                 className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
               />
             </label>
+            <div className="mt-3">
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Attachments (optional · max 10 files · 20MB each)
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    const list = Array.from(e.target.files ?? []).slice(0, 10);
+                    setReportFiles(list);
+                  }}
+                  className="mt-1 block w-full text-xs text-foreground/70 file:mr-3 file:rounded file:border file:border-border/60 file:bg-background/60 file:px-3 file:py-1.5 file:text-xs file:uppercase file:tracking-wide file:text-foreground/80 hover:file:text-foreground"
+                />
+              </label>
+              {reportFiles.length > 0 && (
+                <ul className="mt-2 space-y-1 text-[11px] text-foreground/60">
+                  {reportFiles.map((f, i) => (
+                    <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2 font-mono">
+                      <span className="truncate">{f.name}</span>
+                      <span className="shrink-0 text-foreground/40">
+                        {(f.size / 1024).toFixed(1)}KB
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className="mt-3 flex items-center justify-between gap-3">
-              <span className="text-xs text-foreground/60">{reportNotice}</span>
+              <span className="text-xs text-foreground/60">
+                {uploadProgress ?? reportNotice}
+              </span>
               <button
                 type="button"
                 onClick={() => void submitReport()}
@@ -269,6 +501,88 @@ export default function HqPublishLogs() {
           </div>
         )}
 
+        {rows && rows.length > 0 && (
+          <section className="mt-6 rounded border border-border/50 bg-background/40 p-3">
+            <div className="flex flex-wrap items-end gap-3 text-[11px] uppercase tracking-wider text-foreground/60">
+              <label className="flex flex-col gap-1">
+                Status
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  <option value="pass">Pass</option>
+                  <option value="fail">Fail</option>
+                  <option value="skipped">Skipped</option>
+                  <option value="info">Info</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Phase
+                <select
+                  value={filterPhase}
+                  onChange={(e) => setFilterPhase(e.target.value)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All</option>
+                  {availablePhases.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1">
+                Time
+                <select
+                  value={filterRange}
+                  onChange={(e) => setFilterRange(e.target.value as typeof filterRange)}
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                >
+                  <option value="all">All time</option>
+                  <option value="24h">Last 24h</option>
+                  <option value="7d">Last 7d</option>
+                  <option value="30d">Last 30d</option>
+                </select>
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Bundle id
+                <input
+                  type="text"
+                  value={filterBundle}
+                  onChange={(e) => setFilterBundle(e.target.value)}
+                  placeholder="substring match"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 font-mono text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <label className="flex flex-1 min-w-[180px] flex-col gap-1">
+                Search
+                <input
+                  type="text"
+                  value={filterSearch}
+                  onChange={(e) => setFilterSearch(e.target.value)}
+                  placeholder="run id, commit, log text…"
+                  className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                />
+              </label>
+              <div className="flex items-center gap-3 pb-1 text-[11px] normal-case tracking-normal text-foreground/50">
+                <span>
+                  {runs.length}/{allRuns.length} runs
+                </span>
+                {filtersActive && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="rounded border border-border/60 px-2 py-0.5 uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+
         {rows && rows.length === 0 && !error && (
           <div className="mt-8 rounded border border-border/50 bg-background/40 p-6 text-sm text-foreground/60">
             No runs yet. Trigger a run with{" "}
@@ -285,13 +599,131 @@ export default function HqPublishLogs() {
           </div>
         )}
 
+        {(clusters.length > 0 || clusterFiltersActive) && (
+          <section className="mt-8">
+            <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+              <h2 className="font-serif text-lg">Failure clusters</h2>
+              <div className="flex flex-wrap items-end gap-3 text-[11px] uppercase tracking-wider text-foreground/60">
+                <label className="flex flex-col gap-1">
+                  Status
+                  <select
+                    value={clusterStatus}
+                    onChange={(e) => setClusterStatus(e.target.value as typeof clusterStatus)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All</option>
+                    <option value="fail">Fail only</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1">
+                  Phase
+                  <select
+                    value={clusterPhase}
+                    onChange={(e) => setClusterPhase(e.target.value)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All</option>
+                    {availablePhases.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1">
+                  Time
+                  <select
+                    value={clusterRange}
+                    onChange={(e) => setClusterRange(e.target.value as typeof clusterRange)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All time</option>
+                    <option value="24h">Last 24h</option>
+                    <option value="7d">Last 7d</option>
+                    <option value="30d">Last 30d</option>
+                  </select>
+                </label>
+                <div className="flex items-center gap-2 pb-1 text-[11px] normal-case tracking-normal text-foreground/50">
+                  <span>{clusters.length} unique</span>
+                  {clusterFiltersActive && (
+                    <button
+                      type="button"
+                      onClick={resetClusterFilters}
+                      className="rounded border border-border/60 px-2 py-0.5 uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            {clusters.length === 0 && (
+              <p className="rounded border border-border/40 bg-background/40 p-4 text-xs text-foreground/60">
+                No clusters match the current filters.
+              </p>
+            )}
+            <ul className="space-y-2">
+              {clusters.map((c) => (
+
+                <li
+                  key={c.key}
+                  className="rounded border border-red-500/30 bg-red-500/5 px-4 py-3"
+                >
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                    <span
+                      className={cn(
+                        "rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-wider",
+                        c.count >= 3
+                          ? "border-red-500/60 bg-red-500/10 text-red-200"
+                          : "border-amber-500/40 bg-amber-500/5 text-amber-300",
+                      )}
+                    >
+                      {c.count}× {c.count >= 3 ? "recurring" : "seen"}
+                    </span>
+                    <span className="font-mono text-foreground/70">
+                      commit {c.commit_sha ? c.commit_sha.slice(0, 7) : "—"}
+                    </span>
+                    <span className="font-mono text-foreground/70">
+                      bundle {c.bundle_id ? c.bundle_id.slice(0, 24) : "—"}
+                    </span>
+                    <span className="text-foreground/50">
+                      last {new Date(c.last_seen).toLocaleString()}
+                    </span>
+                  </div>
+                  {c.sample_message && (
+                    <p className="mt-2 line-clamp-2 font-mono text-[11px] text-foreground/60">
+                      {c.sample_message}
+                    </p>
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2 text-[10px] uppercase tracking-wider">
+                    {c.run_ids.slice(0, 8).map((rid) => (
+                      <button
+                        key={rid}
+                        type="button"
+                        onClick={() => jumpToRun(rid)}
+                        className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-foreground/70 hover:text-foreground"
+                      >
+                        {rid.slice(0, 8)}
+                      </button>
+                    ))}
+                    {c.run_ids.length > 8 && (
+                      <span className="text-foreground/50">
+                        +{c.run_ids.length - 8} more
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <ul className="mt-6 space-y-3">
           {runs.map((run) => {
             const isOpen = expanded === run.run_id;
             return (
               <li
                 key={run.run_id}
-                className="rounded border border-border/50 bg-background/40"
+                id={`run-${run.run_id}`}
+                className="rounded border border-border/50 bg-background/40 scroll-mt-24"
               >
                 <button
                   type="button"
@@ -436,6 +868,36 @@ export default function HqPublishLogs() {
                                             .join("  ·  ")}
                                         </div>
                                       )}
+                                    </div>
+                                  );
+                                })()}
+                                {(() => {
+                                  const meta = (step.meta ?? {}) as {
+                                    attachments?: Array<{ path: string; name?: string | null; size?: number | null; type?: string | null }>;
+                                  };
+                                  const atts = Array.isArray(meta.attachments) ? meta.attachments : [];
+                                  if (atts.length === 0) return null;
+                                  return (
+                                    <div className="border-b border-border/40 bg-background/40 px-3 py-2 text-[11px]">
+                                      <div className="mb-1 uppercase tracking-wider text-foreground/50">
+                                        Attachments · {atts.length}
+                                      </div>
+                                      <ul className="space-y-1">
+                                        {atts.map((a) => (
+                                          <li key={a.path} className="flex items-center justify-between gap-2 font-mono">
+                                            <button
+                                              type="button"
+                                              onClick={() => void openAttachment(a.path)}
+                                              className="truncate text-left text-foreground/80 underline decoration-border/60 hover:text-foreground"
+                                            >
+                                              {a.name || a.path.split("/").pop()}
+                                            </button>
+                                            <span className="shrink-0 text-foreground/40">
+                                              {typeof a.size === "number" ? `${(a.size / 1024).toFixed(1)}KB` : ""}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
                                     </div>
                                   );
                                 })()}
