@@ -3,8 +3,17 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 import { getClientSupabaseKey } from '@/lib/clientSupabaseEnv';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ?? "https://example.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = getClientSupabaseKey() ?? "sb_publishable_placeholder";
+const rawSupabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const rawSupabaseKey = getClientSupabaseKey();
+
+if (!rawSupabaseUrl || !rawSupabaseKey) {
+  console.warn(
+    "[Peninsula Equine] Supabase client booted without VITE_SUPABASE_URL or a client key. Using inert placeholders so tests and static imports can load; real app boot remains guarded by validateSupabaseEnv().",
+  );
+}
+
+const SUPABASE_URL = rawSupabaseUrl ?? "https://example.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = rawSupabaseKey ?? "sb_publishable_placeholder";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
