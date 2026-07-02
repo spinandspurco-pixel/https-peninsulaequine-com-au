@@ -213,17 +213,17 @@ export function HQLoginForm() {
 // STEP 6: Layout Shift Prevention
 // ═══════════════════════════════════════════════════════════════════════════
 
-/**
+/*
  * To prevent "jumping" during animation reveal:
  *
  * 1. Set min-height on reveal containers:
  *    <div className="pe-reveal" style={{ "--reveal-min-height": "200px" }}>
- *      {/* content */}
+ *      {content}
  *    </div>
  *
  * 2. Or use data attribute (update CSS if needed):
  *    <div className="pe-reveal" data-min-height="200px">
- *      {/* content */}
+ *      {content}
  *    </div>
  *
  * 3. Best practice: Calculate min-height based on content:
