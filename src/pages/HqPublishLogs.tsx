@@ -260,8 +260,84 @@ export default function HqPublishLogs() {
     }
   }, []);
 
-  const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
-  const clusters = useMemo(() => clusterFailures(rows ?? []), [rows]);
+  // ── Filters ──────────────────────────────────────────────────────────────
+  const [filterStatus, setFilterStatus] = useState<"all" | Row["status"]>("all");
+  const [filterPhase, setFilterPhase] = useState<string>("all");
+  const [filterBundle, setFilterBundle] = useState<string>("");
+  const [filterRange, setFilterRange] = useState<"24h" | "7d" | "30d" | "all">("all");
+  const [filterSearch, setFilterSearch] = useState<string>("");
+
+  const allRuns = useMemo(() => groupRuns(rows ?? []), [rows]);
+
+  const availablePhases = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of rows ?? []) {
+      const p = (r.meta as { phase?: unknown } | null)?.phase;
+      if (typeof p === "string" && p) set.add(p);
+    }
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const runs = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      filterRange === "24h" ? 24 * 3_600_000 :
+      filterRange === "7d"  ? 7  * 24 * 3_600_000 :
+      filterRange === "30d" ? 30 * 24 * 3_600_000 :
+      null;
+    const bundle = filterBundle.trim().toLowerCase();
+    const search = filterSearch.trim().toLowerCase();
+    return allRuns.filter((run) => {
+      if (filterStatus !== "all" && run.status !== filterStatus) return false;
+      if (rangeMs !== null && now - new Date(run.created_at).getTime() > rangeMs) return false;
+      if (filterPhase !== "all") {
+        const hit = run.steps.some(
+          (s) => (s.meta as { phase?: unknown } | null)?.phase === filterPhase,
+        );
+        if (!hit) return false;
+      }
+      if (bundle) {
+        const hit = run.steps.some((s) => {
+          const b = (s.meta as { bundle_id?: unknown } | null)?.bundle_id;
+          return typeof b === "string" && b.toLowerCase().includes(bundle);
+        });
+        if (!hit) return false;
+      }
+      if (search) {
+        const hay = [
+          run.run_id,
+          run.commit_sha ?? "",
+          run.branch ?? "",
+          run.actor ?? "",
+          ...run.steps.map((s) => s.log ?? ""),
+        ].join("\n").toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+  }, [allRuns, filterStatus, filterPhase, filterBundle, filterRange, filterSearch]);
+
+  const filteredRunIds = useMemo(() => new Set(runs.map((r) => r.run_id)), [runs]);
+  const filteredRows = useMemo(
+    () => (rows ?? []).filter((r) => filteredRunIds.has(r.run_id)),
+    [rows, filteredRunIds],
+  );
+  const clusters = useMemo(() => clusterFailures(filteredRows), [filteredRows]);
+
+  const filtersActive =
+    filterStatus !== "all" ||
+    filterPhase !== "all" ||
+    filterRange !== "all" ||
+    filterBundle.trim() !== "" ||
+    filterSearch.trim() !== "";
+
+  const resetFilters = useCallback(() => {
+    setFilterStatus("all");
+    setFilterPhase("all");
+    setFilterBundle("");
+    setFilterRange("all");
+    setFilterSearch("");
+  }, []);
 
   const jumpToRun = useCallback((runId: string) => {
     setExpanded(runId);
@@ -270,6 +346,7 @@ export default function HqPublishLogs() {
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 40);
   }, []);
+
 
   return (
     <Layout>
