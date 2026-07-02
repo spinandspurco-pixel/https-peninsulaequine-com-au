@@ -139,6 +139,135 @@ These **must never** be committed to `.env` or source code:
 3. Add/update each secret by key name
 4. Secrets are automatically injected into edge functions
 
+### @supabase/server SDK
+
+The `@supabase/server` package provides type-safe request handlers with built-in Supabase authentication and client management for Edge Functions.
+
+**Installation:**
+```bash
+npm install @supabase/server
+```
+
+**Environment Variables for @supabase/server:**
+
+In addition to the secrets above, @supabase/server requires these environment variables (auto-injected in Supabase Edge Functions):
+
+| Variable | Purpose | Format |
+|---|---|---|
+| `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
+| `SUPABASE_PUBLISHABLE_KEY` | Public API key (published/anon key) | `sb_publishable_*` or `eyJ...` (legacy) |
+| `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
+| `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
+
+**⚠️ Important:**
+- **NEVER** commit `SUPABASE_SECRET_KEY` or `SUPABASE_JWKS_URL` to `.env` or source code
+- Manage these only through Lovable Cloud → Backend → Secrets
+- The SDK automatically injects these when running on Supabase Edge Functions
+- For local development, copy the values from Supabase dashboard's "Connect" dialog (only for testing)
+
+**Usage: Creating Request Handlers with `withSupabase`**
+
+The `withSupabase` middleware validates authentication and provides scoped Supabase clients:
+
+```typescript
+// supabase/functions/example-handler/index.ts
+import { withSupabase } from "@supabase/server"
+
+export default {
+  fetch: withSupabase({ auth: "user" }, async (_req, ctx) => {
+    // ctx.supabase is an RLS-scoped client (respects user permissions)
+    const { data: todos } = await ctx.supabase
+      .from("todos")
+      .select()
+    
+    // ctx.supabaseAdmin bypasses RLS (full access)
+    const { data: allData } = await ctx.supabaseAdmin
+      .from("todos")
+      .select()
+    
+    return Response.json({ todos, allData })
+  }),
+}
+```
+
+**Auth Modes:**
+
+The `auth` parameter controls how the handler validates requests:
+
+| Mode | Requires | Use Case | config.toml Setting |
+|---|---|---|---|
+| `"user"` | Valid JWT from authenticated user | User-specific data access | `verify_jwt = true` |
+| `"publishable"` | Valid publishable/anon key | Public, anonymous access | `verify_jwt = false` |
+| `"secret"` | Valid secret key | Admin/backend-only operations | `verify_jwt = false` + custom guard |
+| `"none"` | No auth required | Public endpoints | `verify_jwt = false` |
+
+**Config.toml Settings:**
+
+For each function using `withSupabase`, update `supabase/config.toml`:
+
+```toml
+[functions.example-handler]
+# If auth mode is "user", keep verify_jwt = true (default)
+verify_jwt = true
+
+[functions.public-form-handler]
+# For "publishable" or "none" modes, set verify_jwt = false
+# @supabase/server will handle auth via the middleware
+verify_jwt = false
+```
+
+**Complete Example: User Todos Handler**
+
+```typescript
+// supabase/functions/user-todos/index.ts
+import { withSupabase } from "@supabase/server"
+
+interface TodoRequest {
+  title: string;
+  completed?: boolean;
+}
+
+export default {
+  fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
+    // User is authenticated; req.context.user contains user data
+    const user = ctx.user
+    
+    if (req.method === "GET") {
+      // Fetch user's todos (RLS-scoped to their data)
+      const { data, error } = await ctx.supabase
+        .from("todos")
+        .select()
+        .eq("user_id", user.id)
+      
+      return Response.json({ data, error })
+    }
+    
+    if (req.method === "POST") {
+      const body = await req.json() as TodoRequest
+      
+      // Create todo for authenticated user
+      const { data, error } = await ctx.supabase
+        .from("todos")
+        .insert([{
+          user_id: user.id,
+          title: body.title,
+          completed: body.completed || false
+        }])
+      
+      return Response.json({ data, error }, { status: error ? 400 : 201 })
+    }
+    
+    return Response.json({ error: "Method not allowed" }, { status: 405 })
+  }),
+}
+```
+
+In `supabase/config.toml`:
+```toml
+[functions.user-todos]
+verify_jwt = true
+```
+
 ---
 
 ## 5. Edge Functions
