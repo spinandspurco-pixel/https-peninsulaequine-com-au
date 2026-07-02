@@ -343,13 +343,77 @@ export default function HqPublishLogs() {
           </div>
         )}
 
+        {clusters.length > 0 && (
+          <section className="mt-8">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 className="font-serif text-lg">Failure clusters</h2>
+              <span className="text-xs text-foreground/50">
+                Grouped by commit &amp; bundle · {clusters.length} unique
+              </span>
+            </div>
+            <ul className="space-y-2">
+              {clusters.map((c) => (
+                <li
+                  key={c.key}
+                  className="rounded border border-red-500/30 bg-red-500/5 px-4 py-3"
+                >
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                    <span
+                      className={cn(
+                        "rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-wider",
+                        c.count >= 3
+                          ? "border-red-500/60 bg-red-500/10 text-red-200"
+                          : "border-amber-500/40 bg-amber-500/5 text-amber-300",
+                      )}
+                    >
+                      {c.count}× {c.count >= 3 ? "recurring" : "seen"}
+                    </span>
+                    <span className="font-mono text-foreground/70">
+                      commit {c.commit_sha ? c.commit_sha.slice(0, 7) : "—"}
+                    </span>
+                    <span className="font-mono text-foreground/70">
+                      bundle {c.bundle_id ? c.bundle_id.slice(0, 24) : "—"}
+                    </span>
+                    <span className="text-foreground/50">
+                      last {new Date(c.last_seen).toLocaleString()}
+                    </span>
+                  </div>
+                  {c.sample_message && (
+                    <p className="mt-2 line-clamp-2 font-mono text-[11px] text-foreground/60">
+                      {c.sample_message}
+                    </p>
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2 text-[10px] uppercase tracking-wider">
+                    {c.run_ids.slice(0, 8).map((rid) => (
+                      <button
+                        key={rid}
+                        type="button"
+                        onClick={() => jumpToRun(rid)}
+                        className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-foreground/70 hover:text-foreground"
+                      >
+                        {rid.slice(0, 8)}
+                      </button>
+                    ))}
+                    {c.run_ids.length > 8 && (
+                      <span className="text-foreground/50">
+                        +{c.run_ids.length - 8} more
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <ul className="mt-6 space-y-3">
           {runs.map((run) => {
             const isOpen = expanded === run.run_id;
             return (
               <li
                 key={run.run_id}
-                className="rounded border border-border/50 bg-background/40"
+                id={`run-${run.run_id}`}
+                className="rounded border border-border/50 bg-background/40 scroll-mt-24"
               >
                 <button
                   type="button"
