@@ -599,15 +599,68 @@ export default function HqPublishLogs() {
           </div>
         )}
 
-        {clusters.length > 0 && (
+        {(clusters.length > 0 || clusterFiltersActive) && (
           <section className="mt-8">
-            <div className="mb-3 flex items-baseline justify-between">
+            <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
               <h2 className="font-serif text-lg">Failure clusters</h2>
-              <span className="text-xs text-foreground/50">
-                Grouped by commit &amp; bundle · {clusters.length} unique
-              </span>
+              <div className="flex flex-wrap items-end gap-3 text-[11px] uppercase tracking-wider text-foreground/60">
+                <label className="flex flex-col gap-1">
+                  Status
+                  <select
+                    value={clusterStatus}
+                    onChange={(e) => setClusterStatus(e.target.value as typeof clusterStatus)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All</option>
+                    <option value="fail">Fail only</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1">
+                  Phase
+                  <select
+                    value={clusterPhase}
+                    onChange={(e) => setClusterPhase(e.target.value)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All</option>
+                    {availablePhases.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1">
+                  Time
+                  <select
+                    value={clusterRange}
+                    onChange={(e) => setClusterRange(e.target.value as typeof clusterRange)}
+                    className="rounded border border-border/60 bg-background/60 px-2 py-1 text-xs normal-case tracking-normal text-foreground"
+                  >
+                    <option value="all">All time</option>
+                    <option value="24h">Last 24h</option>
+                    <option value="7d">Last 7d</option>
+                    <option value="30d">Last 30d</option>
+                  </select>
+                </label>
+                <div className="flex items-center gap-2 pb-1 text-[11px] normal-case tracking-normal text-foreground/50">
+                  <span>{clusters.length} unique</span>
+                  {clusterFiltersActive && (
+                    <button
+                      type="button"
+                      onClick={resetClusterFilters}
+                      className="rounded border border-border/60 px-2 py-0.5 uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-            <ul className="space-y-2">
+            {clusters.length === 0 && (
+              <p className="rounded border border-border/40 bg-background/40 p-4 text-xs text-foreground/60">
+                No clusters match the current filters.
+              </p>
+            )}
+
               {clusters.map((c) => (
                 <li
                   key={c.key}
