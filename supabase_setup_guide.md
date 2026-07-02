@@ -155,7 +155,7 @@ In addition to the secrets above, @supabase/server requires these environment va
 | Variable | Purpose | Format |
 |---|---|---|
 | `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` (newer) or `eyJ...` (legacy JWT format); both are valid |
+| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` or `eyJ...` |
 | `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
 
@@ -240,13 +240,15 @@ interface TodoRequest {
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-    // User is authenticated. ctx.userClaims contains user identity (id, email, role). Use ctx.jwtClaims for raw JWT access.
+    // User is authenticated
     const { supabase, supabaseAdmin, userClaims, jwtClaims } = ctx
+    // userClaims: user identity (id, email, role)
+    // jwtClaims: raw JWT claims for advanced use cases
     
     if (req.method === "GET") {
       // Fetch user's todos
-      // The RLS-scoped client automatically restricts results to this user's data
-      // based on the authenticated user's JWT — no need for an explicit user_id filter
+      // The RLS-scoped client automatically restricts results based on the authenticated user's JWT
+      // (requires appropriate RLS policies configured in your database)
       const { data, error } = await supabase
         .from("todos")
         .select()
