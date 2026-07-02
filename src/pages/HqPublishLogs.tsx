@@ -239,14 +239,68 @@ export default function HqPublishLogs() {
                                   </span>
                                 )}
                               </div>
-                              <span className="text-xs text-foreground/50">
-                                {stepOpen ? "hide log" : "view log"}
-                              </span>
+                              <div className="flex items-center gap-3">
+                                {(() => {
+                                  const meta = (step.meta ?? {}) as {
+                                    phase?: string | null;
+                                    phase_hint?: string | null;
+                                    attempts?: unknown[];
+                                  };
+                                  const attempts = Array.isArray(meta.attempts) ? meta.attempts.length : 0;
+                                  return (
+                                    <>
+                                      {meta.phase && (
+                                        <span
+                                          className="rounded border border-amber-500/40 bg-amber-500/5 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-300"
+                                          title={meta.phase_hint ?? undefined}
+                                        >
+                                          phase: {meta.phase}
+                                        </span>
+                                      )}
+                                      {attempts > 1 && (
+                                        <span className="text-[11px] text-foreground/50">
+                                          {attempts} attempts
+                                        </span>
+                                      )}
+                                      <span className="text-xs text-foreground/50">
+                                        {stepOpen ? "hide log" : "view log"}
+                                      </span>
+                                    </>
+                                  );
+                                })()}
+                              </div>
                             </button>
                             {stepOpen && (
-                              <pre className="max-h-[480px] overflow-auto whitespace-pre-wrap border-t border-border/40 bg-background/60 p-3 font-mono text-[11px] leading-relaxed text-foreground/80">
-                                {step.log || "(no output captured)"}
-                              </pre>
+                              <div className="border-t border-border/40">
+                                {(() => {
+                                  const meta = (step.meta ?? {}) as {
+                                    phase_hint?: string | null;
+                                    attempts?: Array<{ attempt: number; status: string; duration_ms: number; exit_code: number | null }>;
+                                  };
+                                  const attempts = Array.isArray(meta.attempts) ? meta.attempts : [];
+                                  if (!meta.phase_hint && attempts.length <= 1) return null;
+                                  return (
+                                    <div className="border-b border-border/40 bg-background/40 px-3 py-2 text-[11px] text-foreground/70">
+                                      {meta.phase_hint && (
+                                        <div className="font-mono text-amber-300/90">
+                                          ↳ {meta.phase_hint}
+                                        </div>
+                                      )}
+                                      {attempts.length > 1 && (
+                                        <div className="mt-1 font-mono text-foreground/60">
+                                          attempts:{" "}
+                                          {attempts
+                                            .map((a) => `#${a.attempt} ${a.status} (${a.duration_ms}ms)`)
+                                            .join("  ·  ")}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
+                                <pre className="max-h-[480px] overflow-auto whitespace-pre-wrap bg-background/60 p-3 font-mono text-[11px] leading-relaxed text-foreground/80">
+                                  {step.log || "(no output captured)"}
+                                </pre>
+                              </div>
                             )}
                           </li>
                         );
