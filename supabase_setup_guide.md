@@ -155,15 +155,15 @@ In addition to the secrets above, @supabase/server requires these environment va
 | Variable | Purpose | Format |
 |---|---|---|
 | `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Public API key (publishable/anon key) | `sb_publishable_*` or `eyJ...` (legacy) |
+| `SUPABASE_PUBLISHABLE_KEY` | Public API key (anon key) | `sb_publishable_*` or `eyJ...` (older format) |
 | `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
 
 **Key Format Notes:**
-- Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon/public key (recommended)
-- Older projects may still use the JWT format `eyJ...` which is considered legacy and deprecated
-- Both formats work with @supabase/server, but newer projects should use `sb_publishable_*`
-- If you see 401 errors, verify you have the latest key format from Lovable Cloud → Backend → API keys
+- Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon key (recommended)
+- Older projects may still use the JWT format `eyJ...` which is the older key format
+- Both formats work with @supabase/server, but newer projects use `sb_publishable_*`
+- If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys
 
 **⚠️ Important:**
 - **NEVER** commit `SUPABASE_SECRET_KEY` or `SUPABASE_JWKS_URL` to `.env` or source code
@@ -241,11 +241,12 @@ export default {
     const { supabase, supabaseAdmin, userClaims } = ctx
     
     if (req.method === "GET") {
-      // Fetch user's todos (RLS-scoped to their data)
+      // Fetch user's todos
+      // The RLS-scoped client automatically restricts results to this user's data
+      // based on the authenticated user's JWT — no need for an explicit user_id filter
       const { data, error } = await supabase
         .from("todos")
         .select()
-        .eq("user_id", userClaims.id)
       
       return Response.json({ data, error })
     }
