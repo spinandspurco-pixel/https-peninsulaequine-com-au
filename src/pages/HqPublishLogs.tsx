@@ -343,8 +343,36 @@ export default function HqPublishLogs() {
                 className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
               />
             </label>
+            <div className="mt-3">
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Attachments (optional · max 10 files · 20MB each)
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    const list = Array.from(e.target.files ?? []).slice(0, 10);
+                    setReportFiles(list);
+                  }}
+                  className="mt-1 block w-full text-xs text-foreground/70 file:mr-3 file:rounded file:border file:border-border/60 file:bg-background/60 file:px-3 file:py-1.5 file:text-xs file:uppercase file:tracking-wide file:text-foreground/80 hover:file:text-foreground"
+                />
+              </label>
+              {reportFiles.length > 0 && (
+                <ul className="mt-2 space-y-1 text-[11px] text-foreground/60">
+                  {reportFiles.map((f, i) => (
+                    <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2 font-mono">
+                      <span className="truncate">{f.name}</span>
+                      <span className="shrink-0 text-foreground/40">
+                        {(f.size / 1024).toFixed(1)}KB
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className="mt-3 flex items-center justify-between gap-3">
-              <span className="text-xs text-foreground/60">{reportNotice}</span>
+              <span className="text-xs text-foreground/60">
+                {uploadProgress ?? reportNotice}
+              </span>
               <button
                 type="button"
                 onClick={() => void submitReport()}
