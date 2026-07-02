@@ -164,6 +164,8 @@ export default function HqPublishLogs() {
   const [reportSubmitting, setReportSubmitting] = useState(false);
   const [reportNotice, setReportNotice] = useState<string | null>(null);
   const [copyNotice, setCopyNotice] = useState<string | null>(null);
+  const [reportFiles, setReportFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
