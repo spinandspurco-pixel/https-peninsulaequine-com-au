@@ -155,9 +155,11 @@ In addition to the secrets above, @supabase/server requires these environment va
 | Variable | Purpose | Format |
 |---|---|---|
 | `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` or `eyJ...` |
-| `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
+| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` or JWT `eyJ...` (both valid) |
+| `SUPABASE_SECRET_KEY` | Secret service role key (bypasses RLS) | `sb_sa_*` or JWT `eyJ...` |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
+
+> ⚠️ **SUPABASE_SECRET_KEY Security:** Never expose this key to the frontend. Only inject into backend functions via `supabase/config.toml` `env` section.
 
 **Note on Environment Variable Names:**
 The @supabase/server SDK uses `SUPABASE_PUBLISHABLE_KEY`, which is different from the older `SUPABASE_ANON_KEY` used in supabase-js. Both refer to the same public/anonymous API key, but @supabase/server renamed it for clarity about what the key can do.
@@ -260,6 +262,9 @@ export default {
       const body = await req.json() as TodoRequest
       
       // Create todo for authenticated user
+      // Note: The 'todos' table should have an RLS policy:
+      // CREATE POLICY "users can insert own todos" ON todos
+      //   FOR INSERT WITH CHECK (user_id = auth.uid());
       const { data, error } = await supabase
         .from("todos")
         .insert([{
