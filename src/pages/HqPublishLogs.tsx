@@ -80,12 +80,41 @@ function groupRuns(rows: Row[]): Run[] {
   );
 }
 
+function buildSupportBundle(run: Run): string {
+  return JSON.stringify(
+    {
+      run_id: run.run_id,
+      created_at: run.created_at,
+      status: run.status,
+      branch: run.branch,
+      commit_sha: run.commit_sha,
+      actor: run.actor,
+      steps: run.steps.map((s) => ({
+        kind: s.kind,
+        status: s.status,
+        duration_ms: s.duration_ms,
+        meta: s.meta ?? {},
+        log_tail: (s.log ?? "").slice(-4000),
+      })),
+    },
+    null,
+    2,
+  );
+}
+
 export default function HqPublishLogs() {
   const [rows, setRows] = useState<Row[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportBundleId, setReportBundleId] = useState("");
+  const [reportMessage, setReportMessage] = useState("");
+  const [reportContext, setReportContext] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportNotice, setReportNotice] = useState<string | null>(null);
+  const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,6 +132,48 @@ export default function HqPublishLogs() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const submitReport = useCallback(async () => {
+    setReportNotice(null);
+    const message = reportMessage.trim();
+    if (!message) {
+      setReportNotice("Add the error message before reporting.");
+      return;
+    }
+    setReportSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("report-publish-failure", {
+        body: {
+          bundle_id: reportBundleId.trim() || undefined,
+          error_message: message,
+          context: reportContext.trim() || undefined,
+          occurred_at: new Date().toISOString(),
+          user_agent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+        },
+      });
+      if (error) throw error;
+      const runId = (data as { run_id?: string } | null)?.run_id ?? "";
+      setReportNotice(`Recorded. Run ${runId.slice(0, 8)} saved.`);
+      setReportBundleId("");
+      setReportMessage("");
+      setReportContext("");
+      await load();
+    } catch (e) {
+      setReportNotice(e instanceof Error ? e.message : "Failed to record report.");
+    } finally {
+      setReportSubmitting(false);
+    }
+  }, [reportBundleId, reportMessage, reportContext, load]);
+
+  const copyForSupport = useCallback(async (run: Run) => {
+    try {
+      await navigator.clipboard.writeText(buildSupportBundle(run));
+      setCopyNotice(run.run_id);
+      setTimeout(() => setCopyNotice((c) => (c === run.run_id ? null : c)), 1500);
+    } catch {
+      setCopyNotice("error");
+    }
+  }, []);
 
   const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
 
