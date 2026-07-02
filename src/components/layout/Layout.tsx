@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { HqHeader } from "./HqHeader";
 import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
 import { DeployHealthBanner } from "@/components/hq/DeployHealthBanner";
+import { DeployStatusBanner } from "@/components/hq/DeployStatusBanner";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
