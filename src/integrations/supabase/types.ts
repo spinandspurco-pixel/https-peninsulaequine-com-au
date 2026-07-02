@@ -2931,6 +2931,20 @@ export type Database = {
           waitlisted_guests: number
         }[]
       }
+      get_latest_deploy_status: {
+        Args: never
+        Returns: {
+          branch: string
+          commit_short: string
+          duration_ms: number
+          failing_hint: string
+          failing_phase: string
+          failing_step: string
+          finished_at: string
+          run_id: string
+          status: string
+        }[]
+      }
       get_quote_by_share_token: { Args: { p_token: string }; Returns: Json }
       has_role: {
         Args: {
