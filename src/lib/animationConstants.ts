@@ -28,7 +28,7 @@ export const ANIMATION_TIMING = {
     /** Settle easing — gentle final approach. Use for settle-in animations. */
     settle: "cubic-bezier(0.25, 0.1, 0.2, 1)",
 
-    /** Cinematic ease-in-out for scene transitions */
+    /** Alias to draw easing for scene transitions (same curve, semantic naming). */
     cinematic: "cubic-bezier(0.45, 0, 0.15, 1)",
 
     /** Slightly snappier for interactive feedback (hover, active states) */

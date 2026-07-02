@@ -81,7 +81,11 @@ export function HQAuthBridge() {
   };
 
   return (
-    <div className="pe-reveal" style={{ "--reveal-min-height": "400px" } as React.CSSProperties}>
+    <section 
+      className="pe-reveal" 
+      aria-label="HQ Command Centre Login"
+      style={{ "--reveal-min-height": "400px" } as React.CSSProperties}
+    >
       <form onSubmit={handleSubmit} className="space-y-6">
         <h2 className="heading-editorial">HQ Command Centre</h2>
 
@@ -272,7 +276,7 @@ export function HQAuthBridge() {
           line-height: 1.6;
         }
       `}</style>
-    </div>
+    </section>
   );
 }
 

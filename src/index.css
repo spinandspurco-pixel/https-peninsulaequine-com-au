@@ -926,18 +926,24 @@
    Uses CSS specificity to override legacy inline styles.
  */
 
-[class*="error"],
 [class*="alert"],
 [class*="warning"],
 [class*="danger"],
 [class*="invalid"],
 .legacy-red-text,
 .alert-danger,
-.text-error,
 .text-alert {
   color: hsl(var(--bp-alert-danger)) !important;
   border-color: hsl(var(--bp-alert-danger)) !important;
   background-color: transparent !important;
+}
+
+/* Error elements get subtle background for emphasis */
+[class*="error"],
+.text-error {
+  color: hsl(var(--bp-alert-danger)) !important;
+  border-color: hsl(var(--bp-alert-danger)) !important;
+  background-color: hsl(var(--card) / 0.5) !important;
 }
 
 /* Override inline style="color: red" patterns */
@@ -949,15 +955,11 @@
   color: hsl(var(--bp-alert-danger)) !important;
 }
 
-/* Preserve alert background styling when intentional, but tone down jarring reds */
-[class*="error"] {
-  background-color: hsl(var(--card) / 0.5) !important;
-}
-
 /* High-contrast mode — ensure alert text remains readable */
 @media (prefers-contrast: more) {
   [class*="error"],
   [class*="alert"],
+  [class*="warning"],
   [class*="danger"] {
     color: hsl(35 50% 58%) !important;
   }

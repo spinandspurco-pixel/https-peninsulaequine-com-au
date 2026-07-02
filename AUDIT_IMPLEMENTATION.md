@@ -153,7 +153,7 @@ if (response.ok) {
 
 1. Right-click on any error/alert element → Inspect
 2. Check Styles tab — should see override from `/src/index.css`
-3. Computed tab — color should be `hsl(35, 42%, 48%)` (muted amber)
+3. Computed tab — color should be `hsl(35 42% 48%)` (muted amber)
 
 ### Step 4: Use Animation Constants
 
