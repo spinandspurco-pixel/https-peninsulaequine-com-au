@@ -56,6 +56,7 @@ const HqDiagnostics = lazy(() => import("./pages/HqDiagnostics"));
 const HqDeployHealth = lazy(() => import("./pages/HqDeployHealth"));
 const HqDbLints = lazy(() => import("./pages/HqDbLints"));
 const HqPublishLogs = lazy(() => import("./pages/HqPublishLogs"));
+const Status = lazy(() => import("./pages/Status"));
 
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
@@ -140,6 +141,7 @@ function AppContent() {
             <Route path="/privacy" element={<LegalPrivacy />} />
             <Route path="/terms" element={<LegalTerms />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/status" element={<Status />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/v1/callback" element={<AuthCallback />} />
             {/* Staff Command Centre — /hq/* requires authenticated staff role.

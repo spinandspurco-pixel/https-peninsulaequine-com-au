@@ -70,6 +70,7 @@ export function Layout({ children }: LayoutProps) {
       </a>
       {showSiteRail ? null : isPrivate ? <HqHeader /> : <Header />}
       {isPrivate && !showSiteRail && <HqPreviewBanner />}
+      {isPrivate && !showSiteRail && <DeployStatusBanner />}
       {isPrivate && !showSiteRail && <DeployHealthBanner />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
