@@ -80,12 +80,41 @@ function groupRuns(rows: Row[]): Run[] {
   );
 }
 
+function buildSupportBundle(run: Run): string {
+  return JSON.stringify(
+    {
+      run_id: run.run_id,
+      created_at: run.created_at,
+      status: run.status,
+      branch: run.branch,
+      commit_sha: run.commit_sha,
+      actor: run.actor,
+      steps: run.steps.map((s) => ({
+        kind: s.kind,
+        status: s.status,
+        duration_ms: s.duration_ms,
+        meta: s.meta ?? {},
+        log_tail: (s.log ?? "").slice(-4000),
+      })),
+    },
+    null,
+    2,
+  );
+}
+
 export default function HqPublishLogs() {
   const [rows, setRows] = useState<Row[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportBundleId, setReportBundleId] = useState("");
+  const [reportMessage, setReportMessage] = useState("");
+  const [reportContext, setReportContext] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportNotice, setReportNotice] = useState<string | null>(null);
+  const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -104,6 +133,48 @@ export default function HqPublishLogs() {
     void load();
   }, [load]);
 
+  const submitReport = useCallback(async () => {
+    setReportNotice(null);
+    const message = reportMessage.trim();
+    if (!message) {
+      setReportNotice("Add the error message before reporting.");
+      return;
+    }
+    setReportSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("report-publish-failure", {
+        body: {
+          bundle_id: reportBundleId.trim() || undefined,
+          error_message: message,
+          context: reportContext.trim() || undefined,
+          occurred_at: new Date().toISOString(),
+          user_agent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+        },
+      });
+      if (error) throw error;
+      const runId = (data as { run_id?: string } | null)?.run_id ?? "";
+      setReportNotice(`Recorded. Run ${runId.slice(0, 8)} saved.`);
+      setReportBundleId("");
+      setReportMessage("");
+      setReportContext("");
+      await load();
+    } catch (e) {
+      setReportNotice(e instanceof Error ? e.message : "Failed to record report.");
+    } finally {
+      setReportSubmitting(false);
+    }
+  }, [reportBundleId, reportMessage, reportContext, load]);
+
+  const copyForSupport = useCallback(async (run: Run) => {
+    try {
+      await navigator.clipboard.writeText(buildSupportBundle(run));
+      setCopyNotice(run.run_id);
+      setTimeout(() => setCopyNotice((c) => (c === run.run_id ? null : c)), 1500);
+    } catch {
+      setCopyNotice("error");
+    }
+  }, []);
+
   const runs = useMemo(() => groupRuns(rows ?? []), [rows]);
 
   return (
@@ -120,15 +191,77 @@ export default function HqPublishLogs() {
               publish attempt that streamed a log. Latest 500 rows, grouped by run.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => void load()}
-            className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
-            disabled={loading}
-          >
-            {loading ? "Refreshing…" : "Refresh"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setReportOpen((v) => !v)}
+              className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
+            >
+              {reportOpen ? "Cancel report" : "Report a failure"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void load()}
+              className="rounded border border-border/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/70 hover:text-foreground"
+              disabled={loading}
+            >
+              {loading ? "Refreshing…" : "Refresh"}
+            </button>
+          </div>
         </header>
+
+        {reportOpen && (
+          <section className="mt-6 rounded border border-border/50 bg-background/40 p-4">
+            <h2 className="font-serif text-lg">Record a publishing failure</h2>
+            <p className="mt-1 text-xs text-foreground/60">
+              Captures timestamp, bundle id, and the exact error message so it can be reviewed
+              later or shared with support if it repeats.
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Bundle id
+                <input
+                  type="text"
+                  value={reportBundleId}
+                  onChange={(e) => setReportBundleId(e.target.value)}
+                  placeholder="e.g. deploy_abc123 or bundle hash"
+                  className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
+                />
+              </label>
+              <label className="text-xs uppercase tracking-wide text-foreground/60">
+                Context (optional)
+                <input
+                  type="text"
+                  value={reportContext}
+                  onChange={(e) => setReportContext(e.target.value)}
+                  placeholder="What you were doing when it failed"
+                  className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 text-xs text-foreground normal-case tracking-normal"
+                />
+              </label>
+            </div>
+            <label className="mt-3 block text-xs uppercase tracking-wide text-foreground/60">
+              Error message *
+              <textarea
+                value={reportMessage}
+                onChange={(e) => setReportMessage(e.target.value)}
+                rows={5}
+                placeholder="Paste the exact error text shown in the publish dialog"
+                className="mt-1 w-full rounded border border-border/60 bg-background/60 px-3 py-2 font-mono text-xs text-foreground normal-case tracking-normal"
+              />
+            </label>
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <span className="text-xs text-foreground/60">{reportNotice}</span>
+              <button
+                type="button"
+                onClick={() => void submitReport()}
+                disabled={reportSubmitting}
+                className="rounded border border-border/60 bg-background/60 px-3 py-1.5 text-xs uppercase tracking-wide text-foreground/80 hover:text-foreground disabled:opacity-50"
+              >
+                {reportSubmitting ? "Saving…" : "Save report"}
+              </button>
+            </div>
+          </section>
+        )}
 
         {error && (
           <div className="mt-6 rounded border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-300">
@@ -212,6 +345,15 @@ export default function HqPublishLogs() {
 
                 {isOpen && (
                   <div className="border-t border-border/40 px-4 py-3">
+                    <div className="mb-3 flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void copyForSupport(run)}
+                        className="rounded border border-border/60 px-2.5 py-1 text-[10px] uppercase tracking-wider text-foreground/70 hover:text-foreground"
+                      >
+                        {copyNotice === run.run_id ? "Copied" : "Copy for support"}
+                      </button>
+                    </div>
                     <ul className="space-y-2">
                       {run.steps.map((step) => {
                         const key = `${run.run_id}:${step.kind}`;
