@@ -625,6 +625,36 @@ export default function HqPublishLogs() {
                                     </div>
                                   );
                                 })()}
+                                {(() => {
+                                  const meta = (step.meta ?? {}) as {
+                                    attachments?: Array<{ path: string; name?: string | null; size?: number | null; type?: string | null }>;
+                                  };
+                                  const atts = Array.isArray(meta.attachments) ? meta.attachments : [];
+                                  if (atts.length === 0) return null;
+                                  return (
+                                    <div className="border-b border-border/40 bg-background/40 px-3 py-2 text-[11px]">
+                                      <div className="mb-1 uppercase tracking-wider text-foreground/50">
+                                        Attachments · {atts.length}
+                                      </div>
+                                      <ul className="space-y-1">
+                                        {atts.map((a) => (
+                                          <li key={a.path} className="flex items-center justify-between gap-2 font-mono">
+                                            <button
+                                              type="button"
+                                              onClick={() => void openAttachment(a.path)}
+                                              className="truncate text-left text-foreground/80 underline decoration-border/60 hover:text-foreground"
+                                            >
+                                              {a.name || a.path.split("/").pop()}
+                                            </button>
+                                            <span className="shrink-0 text-foreground/40">
+                                              {typeof a.size === "number" ? `${(a.size / 1024).toFixed(1)}KB` : ""}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  );
+                                })()}
                                 <pre className="max-h-[480px] overflow-auto whitespace-pre-wrap bg-background/60 p-3 font-mono text-[11px] leading-relaxed text-foreground/80">
                                   {step.log || "(no output captured)"}
                                 </pre>
