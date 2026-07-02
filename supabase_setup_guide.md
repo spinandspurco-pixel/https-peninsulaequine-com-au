@@ -116,7 +116,7 @@ SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
 
 **Important:** These are safe to expose in frontend code (publishable key is read-only by design).
 
-⚠️ **Legacy JWT Warning:** If you see an `eyJ...` key (JWT format), it may be from the legacy anon key family that has been disabled. Supabase now uses `sb_publishable_*` key format. If you're experiencing 401 authentication errors, update the key through Lovable Cloud → Backend → API keys to the current `sb_publishable_*` key.
+⚠️ **Legacy JWT Warning:** Supabase has two key formats for the publishable/anon key: older JWT format (`eyJ...`) and newer `sb_publishable_*` format. Both are valid keys, but the JWT format may encounter rotation issues. If you're experiencing 401 authentication errors (especially "invalid_grant"), update from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key format.
 
 ### Backend Secrets (Lovable Secrets Dashboard Only)
 
@@ -231,10 +231,10 @@ verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization: ****** request header
-- `verify_jwt = false`: Public endpoint; custom auth logic (if needed) is in the function code itself
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization: ****** header
+- `verify_jwt = false`: Disables automatic JWT verification; however, this **does NOT mean no authentication**. Authentication is instead handled by custom logic within the function code (e.g., custom guards in `mgmtApiGuard.ts` for admin functions)
 
-Most functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify admin/management tokens.
+Most admin/protected functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify management tokens, providing more flexible authentication than the automatic JWT check.
 
 ### Example: Simple Email Function
 
@@ -285,8 +285,10 @@ serve(async (req) => {
 ```
 
 **Key points:**
-- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected by Supabase at runtime (these internal environment variable names are distinct from the public API key format used in `.env`)
-- These should NOT be hardcoded in `.env` — they're managed through Lovable Cloud → Backend Secrets
+- **Runtime environment variables**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected into edge functions at execution time (these are different from `.env` frontend variables)
+  - Frontend uses: `VITE_SUPABASE_PUBLISHABLE_KEY` (from `.env`)
+  - Backend runtime uses: `SUPABASE_ANON_KEY` (injected by Supabase, same value as publishable key)
+- These backend secrets should NOT be hardcoded in `.env` — they're managed through Lovable Cloud → Backend Secrets
 - Each function runs in a Deno runtime with full access to environment secrets
 
 ### Deployment
@@ -368,7 +370,7 @@ supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database at `postgresql://localhost:54322/postgres`
+- Local PostgreSQL database at `******localhost:54322/postgres` (default credentials from `supabase status` output)
 - Supabase Auth emulator
 - Edge functions emulator on `http://localhost:54321`
 - Storage emulator
