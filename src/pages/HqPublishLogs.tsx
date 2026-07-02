@@ -191,8 +191,28 @@ export default function HqPublishLogs() {
       setReportNotice("Add the error message before reporting.");
       return;
     }
+    const MAX_BYTES = 20 * 1024 * 1024;
+    const oversize = reportFiles.find((f) => f.size > MAX_BYTES);
+    if (oversize) {
+      setReportNotice(`"${oversize.name}" exceeds the 20MB per-file limit.`);
+      return;
+    }
     setReportSubmitting(true);
     try {
+      const folder = crypto.randomUUID();
+      const uploaded: Array<{ path: string; name: string; size: number; type: string }> = [];
+      for (let i = 0; i < reportFiles.length; i++) {
+        const f = reportFiles[i];
+        setUploadProgress(`Uploading ${i + 1}/${reportFiles.length}: ${f.name}`);
+        const safe = f.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 200);
+        const path = `${folder}/${Date.now()}-${safe}`;
+        const { error: upErr } = await supabase.storage
+          .from("publish-failure-attachments")
+          .upload(path, f, { contentType: f.type || "application/octet-stream", upsert: false });
+        if (upErr) throw new Error(`Upload failed for ${f.name}: ${upErr.message}`);
+        uploaded.push({ path, name: f.name, size: f.size, type: f.type || "" });
+      }
+      setUploadProgress(null);
       const { data, error } = await supabase.functions.invoke("report-publish-failure", {
         body: {
           bundle_id: reportBundleId.trim() || undefined,
@@ -200,6 +220,7 @@ export default function HqPublishLogs() {
           context: reportContext.trim() || undefined,
           occurred_at: new Date().toISOString(),
           user_agent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+          attachments: uploaded,
         },
       });
       if (error) throw error;
@@ -208,13 +229,26 @@ export default function HqPublishLogs() {
       setReportBundleId("");
       setReportMessage("");
       setReportContext("");
+      setReportFiles([]);
       await load();
     } catch (e) {
       setReportNotice(e instanceof Error ? e.message : "Failed to record report.");
     } finally {
+      setUploadProgress(null);
       setReportSubmitting(false);
     }
-  }, [reportBundleId, reportMessage, reportContext, load]);
+  }, [reportBundleId, reportMessage, reportContext, reportFiles, load]);
+
+  const openAttachment = useCallback(async (path: string) => {
+    const { data, error } = await supabase.storage
+      .from("publish-failure-attachments")
+      .createSignedUrl(path, 60 * 10);
+    if (error || !data?.signedUrl) {
+      alert(error?.message ?? "Could not create download link");
+      return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  }, []);
 
   const copyForSupport = useCallback(async (run: Run) => {
     try {
