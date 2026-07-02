@@ -155,7 +155,7 @@ In addition to the secrets above, @supabase/server requires these environment va
 | Variable | Purpose | Format |
 |---|---|---|
 | `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` or `eyJ...` (older format) |
+| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` (newer) or `eyJ...` (legacy JWT format); both are valid |
 | `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
 
@@ -240,9 +240,7 @@ interface TodoRequest {
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-    // User is authenticated; ctx.userClaims contains user identity from the JWT
-    // (typically: id, email, role per @supabase/server documentation)
-    // For raw JWT claim access, use ctx.jwtClaims
+    // User is authenticated. ctx.userClaims contains user identity (id, email, role). Use ctx.jwtClaims for raw JWT access.
     const { supabase, supabaseAdmin, userClaims, jwtClaims } = ctx
     
     if (req.method === "GET") {
