@@ -21,6 +21,13 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+type AttachmentInput = {
+  path?: string;
+  name?: string;
+  size?: number;
+  type?: string;
+};
+
 type Payload = {
   bundle_id?: string;
   error_message?: string;
@@ -29,6 +36,7 @@ type Payload = {
   commit_sha?: string;
   branch?: string;
   user_agent?: string;
+  attachments?: AttachmentInput[];
 };
 
 const MAX_LOG = 20_000;
