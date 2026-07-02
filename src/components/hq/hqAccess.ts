@@ -169,6 +169,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     sections: ["clients"],
     note: "Detect stuck production promotions; prepare escalation payload",
   },
+  {
+    key: "publish-logs",
+    label: "Publish Logs",
+    to: "/hq/publish-logs",
+    roles: ["admin"],
+    sections: ["clients"],
+    note: "Prepublish gate output (typecheck, lint, tests, build) + publish diagnostics",
+  },
 ];
 
 /** Items the user can reach in any section's sub-row. */
