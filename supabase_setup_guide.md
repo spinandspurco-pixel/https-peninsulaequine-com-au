@@ -159,6 +159,12 @@ In addition to the secrets above, @supabase/server requires these environment va
 | `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
 
+**Key Format Notes:**
+- Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon/public key (recommended)
+- Older projects may still use the JWT format `eyJ...` which is considered legacy and deprecated
+- Both formats work with @supabase/server, but newer projects should use `sb_publishable_*`
+- If you see 401 errors, verify you have the latest key format from Lovable Cloud → Backend → API keys
+
 **⚠️ Important:**
 - **NEVER** commit `SUPABASE_SECRET_KEY` or `SUPABASE_JWKS_URL` to `.env` or source code
 - Manage these only through Lovable Cloud → Backend → Secrets
@@ -233,14 +239,13 @@ export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
     // User is authenticated; ctx.userClaims contains user identity (id, email, role)
     const { supabase, supabaseAdmin, userClaims } = ctx
-    const user = userClaims
     
     if (req.method === "GET") {
       // Fetch user's todos (RLS-scoped to their data)
       const { data, error } = await supabase
         .from("todos")
         .select()
-        .eq("user_id", user.id)
+        .eq("user_id", userClaims.id)
       
       return Response.json({ data, error })
     }
@@ -252,7 +257,7 @@ export default {
       const { data, error } = await supabase
         .from("todos")
         .insert([{
-          user_id: user.id,
+          user_id: userClaims.id,
           title: body.title,
           completed: body.completed || false
         }])
