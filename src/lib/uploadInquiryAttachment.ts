@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 
 /**
  * Client-side mirror of the edge function's allow-list. Kept in sync with
@@ -309,7 +310,7 @@ export async function uploadInquiryAttachment(
   body.append("folder", folder);
 
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-inquiry-upload`;
-  const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+  const anon = getClientSupabaseKey() as string;
   const { data: sessionData } = await supabase.auth.getSession();
   const bearer = sessionData?.session?.access_token || anon;
 
@@ -468,5 +469,4 @@ export async function linkAttachmentsToInquiry(
     _inquiry_id: inquiryId,
   });
 }
-
 

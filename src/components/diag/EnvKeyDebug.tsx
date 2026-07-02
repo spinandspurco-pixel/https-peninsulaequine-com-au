@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 import { classifyClientSupabaseKey } from "@/lib/supabaseKeyIndicator";
 
 /**
@@ -16,7 +17,7 @@ import { classifyClientSupabaseKey } from "@/lib/supabaseKeyIndicator";
 export function EnvKeyDebug() {
   const [open, setOpen] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "error">("idle");
-  const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
+  const key = getClientSupabaseKey() ?? "";
   const info = useMemo(() => classifyClientSupabaseKey(key), [key]);
 
   // Hide completely in production. Vite replaces import.meta.env.PROD at

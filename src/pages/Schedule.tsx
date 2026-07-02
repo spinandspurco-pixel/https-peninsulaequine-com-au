@@ -11,6 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { siteConfig, services as allServices } from "@/data/content";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 import { cn } from "@/lib/utils";
 import { trackConversion, trackFormError } from "@/lib/analytics";
 
@@ -289,8 +290,8 @@ export default function Schedule() {
             keepalive: true,
             headers: {
               "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              apikey: getClientSupabaseKey() ?? "",
+              Authorization: `****** ?? ""}`,
             },
             body,
           });

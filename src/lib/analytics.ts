@@ -1,10 +1,13 @@
 // Google Analytics 4 — Consent Mode v2 + lightweight event helpers.
 //
-// Set your GA4 Measurement ID below (or via VITE_GA_MEASUREMENT_ID).
+// Set your GA4 Measurement ID below (or via VITE_GA_MEASUREMENT_ID /
+// VITE_GOOGLE_ANALYTICS_ID).
 // While the ID is the placeholder, all GA calls are silent no-ops.
 const PLACEHOLDER = "G-XXXXXXXXXX";
 export const GA_MEASUREMENT_ID: string =
-  (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) || PLACEHOLDER;
+  (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) ||
+  (import.meta.env.VITE_GOOGLE_ANALYTICS_ID as string | undefined) ||
+  PLACEHOLDER;
 
 declare global {
   interface Window {
@@ -168,4 +171,3 @@ export function trackFormStart(form: string, params: Record<string, unknown> = {
 export function trackFormError(form: string, reason: string, params: Record<string, unknown> = {}) {
   trackEvent("form_error", { form_id: form, reason, ...params });
 }
-
