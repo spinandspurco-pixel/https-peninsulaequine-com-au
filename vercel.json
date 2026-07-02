@@ -1,4 +1,18 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.peninsulaequine.com.au" }],
+      "destination": "https://peninsulaequine.systems/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "peninsulaequine.com.au" }],
+      "destination": "https://peninsulaequine.systems/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/__l5e/:path*", "destination": "https://peninsulaequine.systems/__l5e/:path*" },
     { "source": "/auth/v1/callback", "destination": "/index.html" },

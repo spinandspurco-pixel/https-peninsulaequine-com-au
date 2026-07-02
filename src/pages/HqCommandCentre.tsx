@@ -59,11 +59,11 @@ export default function HqCommandCentre() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background" data-bp-armed="true">
         {/* Masthead */}
         <header className="pt-24 sm:pt-28 pb-4 sm:pb-6">
           <div className="max-w-5xl mx-auto px-6">
-            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55">
+            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55 bp-mark bp-delay-1">
               Peninsula Equine · Command Centre
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function HqCommandCentre() {
           <div className="max-w-5xl mx-auto px-6 py-12 sm:py-16">
             <h2
               id="brief-heading"
-              className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 mb-6"
+              className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 mb-6 bp-mark bp-delay-1"
             >
               Today
             </h2>
@@ -97,17 +97,17 @@ export default function HqCommandCentre() {
               <div>
                 <h2
                   id="priority-heading"
-                  className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55"
+                  className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 bp-mark bp-delay-2"
                 >
                   Priorities
                 </h2>
-                <p className="mt-2 text-[11px] text-muted-foreground/50 italic">
+                <p className="mt-2 text-[11px] text-muted-foreground/50 italic bp-mark bp-delay-3">
                   What should I do first?
                 </p>
               </div>
               <a
                 href="/hq/inquiries"
-                className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors"
+                className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors bp-mark bp-delay-3"
               >
                 View all →
               </a>
@@ -128,12 +128,12 @@ export default function HqCommandCentre() {
             <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
               <div>
                 <div className="flex items-baseline justify-between mb-6">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 bp-mark bp-delay-2">
                     Activity
                   </p>
                   <a
                     href="/hq/activity"
-                    className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors"
+                    className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors bp-mark bp-delay-3"
                   >
                     View all →
                   </a>
@@ -143,7 +143,7 @@ export default function HqCommandCentre() {
               {hasWidget(view, "watchlist") && (
                 <div>
                   <div className="flex items-baseline justify-between mb-6">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 bp-mark bp-delay-3">
                       Watchlist
                     </p>
                     <a

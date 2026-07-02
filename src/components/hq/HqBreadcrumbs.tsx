@@ -7,6 +7,7 @@ import {
   HQ_SECTIONS,
   type HqSection,
 } from "@/components/hq/hqAccess";
+import { getBreadcrumbDelayClass, BLUEPRINT_MARK_ANIM } from "@/lib/blueprintAnimations";
 import { cn } from "@/lib/utils";
 
 type Crumb = { label: string; to?: string };
@@ -83,6 +84,7 @@ export function HqBreadcrumbs({
         "max-w-5xl mx-auto px-6 pt-6 pb-2",
         className,
       )}
+      data-bp-armed="true"
     >
       <ol className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-foreground/50">
         {crumbs.map((c, i) => {
@@ -93,9 +95,9 @@ export function HqBreadcrumbs({
           return (
             <Fragment key={`${c.label}-${i}`}>
               {i > 0 && (
-                <li aria-hidden className="text-foreground/25">/</li>
+                <li aria-hidden className={`text-foreground/25 ${BLUEPRINT_MARK_ANIM} bp-delay-1`}>/</li>
               )}
-              <li>
+              <li className={`${BLUEPRINT_MARK_ANIM} ${getBreadcrumbDelayClass(i)}`}>
                 {isLast || !c.to ? (
                   <span
                     aria-current={isLast ? "page" : undefined}
