@@ -42,7 +42,8 @@ The redirect rules are already configured in `vercel.json` using Vercel's `has`-
 
 ### Step 1 — Add `.com.au` domains to your Vercel project
 
-1. Open [vercel.com](https://vercel.com) and go to your project (`https-peninsulaequine-com-au`).
+1. Open [vercel.com](https://vercel.com) and go to your project.
+   > The Vercel project is named **`https-peninsulaequine-com-au`** — this is the GitHub repository name and was set before the `.systems` domain was established. The name is cosmetic only; the primary domain served is `peninsulaequine.systems`.
 2. Navigate to **Settings → Domains**.
 3. Click **Add** and enter `peninsulaequine.com.au`.
 4. Click **Add** again and enter `www.peninsulaequine.com.au`.
