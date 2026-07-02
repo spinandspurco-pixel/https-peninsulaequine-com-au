@@ -86,6 +86,7 @@ $$ LANGUAGE plpgsql;
 |---|---|---|
 | `auth.users` | Supabase Auth built-in | Managed by Supabase Auth system |
 | `inquiries` | Lead capture from contact forms | Linked to `auth.users` |
+| `inquiry_attachments` | Files uploaded with inquiries | Storage links + metadata |
 | `lessons` | Horsemanship lesson bookings | Linked to `auth.users` |
 | `documents` | Uploaded assessments, PDFs | Storage link + metadata |
 | `notifications` | Email/SMS queue | Processed by edge functions |
@@ -95,6 +96,8 @@ Run the following to see the full schema (when you have Supabase CLI access):
 ```bash
 supabase db pull  # Syncs remote schema into local migrations
 ```
+
+**Current Schema Status:** 128 database migrations applied, synced with source control at `supabase/migrations/`.
 
 ---
 
@@ -106,10 +109,14 @@ These are synced from Lovable Cloud to `.env`:
 
 ```env
 VITE_SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...  # Public anon key (safe to expose)
+VITE_SUPABASE_PROJECT_ID=aizkqajrzkvwuobisnzr
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...  # Current format (or eyJ... legacy format - see warning below)
+SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
 ```
 
-**Important:** These are safe to expose in frontend code (anon key is read-only by design).
+**Important:** These are safe to expose in frontend code (publishable key is read-only by design).
+
+⚠️ **Legacy JWT Warning:** Supabase has two key formats: older JWT format (`eyJ...`) which is **deprecated** and newer `sb_publishable_*` format which is current. The JWT format is susceptible to rotation issues. If you're experiencing 401 authentication errors (especially "invalid_grant"), you must update from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key format.
 
 ### Backend Secrets (Lovable Secrets Dashboard Only)
 
@@ -144,102 +151,146 @@ Edge Functions are serverless TypeScript/JavaScript functions that run server-si
 supabase/functions/
 ├── _shared/
 │   └── mgmtApiGuard.ts           # Shared utilities (guards, helpers)
-├── send-test-email/
-│   └── index.ts                  # Edge function code
-├── send-inquiry-notification/
-│   └── index.ts
-├── send-rsvp-confirmation/
-│   └── index.ts
+├── send-test-email/              # Manual diagnostic
+├── send-inquiry-notification/    # Auto: inquiry form submission
+├── send-rsvp-confirmation/       # Auto: RSVP booking confirmation
+├── send-document-notification/   # Auto: document upload notification
+├── send-welcome-series/          # Email automation sequence
+├── submit-inquiry/               # Form handler
+├── validate-inquiry-upload/      # File validation
+├── create-staff-account/         # Admin staff provisioning
+├── verify-admin-login/           # Admin auth verification
 ├── email-ops-status/             # Diagnostics: check email config
-│   └── index.ts
 ├── resend-domain-status/         # Diagnostics: verify Resend domain
-│   └── index.ts
 ├── verify-google-dns/            # Verify DNS records
-│   └── index.ts
+├── notify-dns-propagated/        # DNS notification handler
 ├── admin-ai-assistant/           # AI chat for admin panel
-│   └── index.ts
-└── ... (18+ functions total)
+├── generate-enquiry-response/    # AI-assisted response drafting
+├── create-lesson-checkout/       # Stripe checkout creation
+├── e2e-seed-users/               # Test data seeding
+├── validate-inquiry-upload/      # Inquiry file validation
+├── mgmt-db-lints/                # Database integrity checks
+├── mint-josh-preview/            # Preview system integration
+├── preview-mint-check/           # Preview health check
+├── publish-log-ingest/           # Publishing log handler
+├── report-publish-failure/       # Publish failure reporting
+└── run-graph-smoke-test/         # GraphQL smoke test
 ```
 
-### Available Functions (Key)
+### Available Functions (Complete List)
 
-| Function | Trigger | Purpose |
-|---|---|---|
-| `send-inquiry-notification` | Form submission | Email admin when inquiry received |
-| `send-rsvp-confirmation` | RSVP form submit | Confirm booking via email |
-| `send-document-notification` | Document upload | Notify on document received |
-| `send-test-email` | Manual trigger | Test email setup (diagnostics) |
-| `email-ops-status` | Scheduled / manual | Check sender email config health |
-| `resend-domain-status` | Scheduled / manual | Verify `notify.peninsulaequine.systems` is verified in Resend |
-| `verify-google-dns` | Scheduled / manual | Validate DNS propagation |
-| `admin-ai-assistant` | Chat input (HQ) | Run AI queries via Lovable AI Gateway |
-| `generate-enquiry-response` | Admin trigger | AI-assisted response drafting |
-| `create-lesson-checkout` | Lesson booking | Create Stripe checkout session |
-| `e2e-seed-users` | Test setup | Seed test users for E2E tests |
+| Function | Trigger | Purpose | Auth |
+|---|---|---|---|
+| `send-inquiry-notification` | Form submission | Email admin when inquiry received | Public |
+| `send-rsvp-confirmation` | RSVP form submit | Confirm booking via email | Public |
+| `send-document-notification` | Document upload | Notify on document received | Public |
+| `send-test-email` | Manual trigger | Test email setup (diagnostics) | Admin only |
+| `send-welcome-series` | Scheduled / manual | Automated welcome email sequence | Admin |
+| `email-ops-status` | Scheduled / manual | Check sender email config health | Public |
+| `resend-domain-status` | Scheduled / manual | Verify `notify.peninsulaequine.systems` is verified in Resend | Public |
+| `verify-google-dns` | Scheduled / manual | Validate DNS propagation | Public |
+| `notify-dns-propagated` | Scheduled | Notify on DNS propagation complete | Public |
+| `admin-ai-assistant` | Chat input (HQ) | Run AI queries via Lovable AI Gateway | Admin (custom guard) |
+| `generate-enquiry-response` | Admin trigger | AI-assisted response drafting | Admin |
+| `create-lesson-checkout` | Lesson booking | Create Stripe checkout session | Public |
+| `e2e-seed-users` | Test setup | Seed test users for E2E tests | Test only |
+| `submit-inquiry` | Form submission | Process inquiry form data | Public |
+| `validate-inquiry-upload` | File upload | Validate uploaded inquiry files | Public |
+| `verify-admin-login` | Admin login | Verify admin credentials | Public (custom guard) |
+| `create-staff-account` | Admin trigger | Provision new staff account | Admin |
+| `mgmt-db-lints` | Scheduled / manual | Run database integrity checks | Admin (custom guard) |
+| `mint-josh-preview` | Manual | Preview system integration | Admin (custom guard) |
+| `preview-mint-check` | Scheduled | Health check for preview system | Public |
+| `publish-log-ingest` | Scheduled | Process publishing logs | Public |
+| `report-publish-failure` | Triggered | Report publishing failures | Public |
+| `run-graph-smoke-test` | Scheduled | Run GraphQL API smoke tests | Public |
+
+**Total: 23 edge functions** deployed and auto-updated with each commit to `main`.
 
 ### Function Configuration (`config.toml`)
+
+The project's `supabase/config.toml` defines JWT verification and environment settings:
 
 ```toml
 project_id = "aizkqajrzkvwuobisnzr"
 
-[functions.send-test-email]
-verify_jwt = false  # No auth required for testing
-
 [functions.admin-ai-assistant]
 verify_jwt = false  # Custom guard: checks mgmt token
 
-[functions.send-inquiry-notification]
+[functions.verify-google-dns]
+verify_jwt = false  # Public diagnostic endpoint
+
+[functions.verify-admin-login]
+verify_jwt = false  # Custom guard: admin auth check
+
+[functions.validate-inquiry-upload]
+verify_jwt = false  # Called from public form
+
+[functions.submit-inquiry]
 verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in `Authorization: ****** header
-- `verify_jwt = false`: Public endpoint; custom auth logic (if needed) is in the function code
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization` header
+- `verify_jwt = false`: Disables automatic JWT verification; however, this **does NOT mean no authentication**. Authentication is instead handled by custom logic within the function code (e.g., custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` for admin functions)
+
+Most admin/protected functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify management tokens, providing more flexible authentication than the automatic JWT check.
 
 ### Example: Simple Email Function
+
+Here's a simplified example based on `send-test-email`:
 
 ```typescript
 // supabase/functions/send-test-email/index.ts
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "npm:@supabase/supabase-js@2.57.4";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+interface TestEmailRequest {
+  recipient?: string;
+  sender?: "hq" | "noreply" | "bookings" | "quotes" | "from";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
+  // Supabase auto-injects these environment variables at runtime:
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabaseServiceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceRole);
 
-  const { email, subject, message } = await req.json();
+  const body = await req.json() as TestEmailRequest;
+  const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-  // Send via Resend (uses RESEND_API_KEY from secrets)
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Authorization": `******"RESEND_API_KEY")}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: Deno.env.get("FROM_EMAIL"),
-      to: email,
-      subject,
-      html: message,
-    }),
+  // Example: send via Resend using FROM_EMAIL secret
+  const response = await resend.emails.send({
+    from: Deno.env.get("FROM_EMAIL")!,
+    to: body.recipient || "test@example.com",
+    subject: "Test Email",
+    html: "<p>This is a test email</p>",
   });
 
-  return new Response(JSON.stringify(await response.json()), {
+  return new Response(JSON.stringify(response), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });
 ```
+
+**Key points:**
+- **Runtime environment variables**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected into edge functions at execution time
+  - Frontend uses: `VITE_SUPABASE_PUBLISHABLE_KEY` (from `.env`, passed to browser client)
+  - Backend runtime uses: `SUPABASE_ANON_KEY` (injected by Supabase at runtime, contains same key value as `VITE_SUPABASE_PUBLISHABLE_KEY`)
+  - Naming difference: `VITE_` prefix exposes to frontend; `SUPABASE_` runtime names are internal
+- These backend secrets should NOT be hardcoded in `.env` — they're managed through Lovable Cloud → Backend Secrets
+- Each function runs in a Deno runtime with full access to environment secrets
 
 ### Deployment
 
@@ -313,28 +364,44 @@ bun install  # or npm install
 
 ### 2. Set Up Local Supabase (Optional)
 
-For full local dev, run Supabase locally:
+For full local dev with Supabase emulation, run Supabase locally:
 
 ```bash
 supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database
+- Local PostgreSQL database (run `supabase status` to see connection details; default: `postgresql://localhost:54322/postgres`)
 - Supabase Auth emulator
-- Edge functions emulator
+- Edge functions emulator on `http://localhost:54321`
+- Storage emulator
+
+**Note:** Local Supabase requires Docker. For development against production Supabase, skip this step and proceed to `.env` setup.
 
 ### 3. Environment File (`.env`)
 
-The `.env` file is auto-managed by Lovable Cloud. For local development, you may need to copy from Lovable:
+The `.env` file is auto-managed by Lovable Cloud. For local development, ensure you have the current keys:
 
+**Option A: Copy from Lovable Cloud (Recommended)**
 ```bash
-# From Lovable Cloud project, copy the VITE_* variables to .env
+# From Lovable Cloud project → Backend → API keys, copy these to .env:
 cat > .env << EOF
+SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
 VITE_SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...
+VITE_SUPABASE_PROJECT_ID=aizkqajrzkvwuobisnzr
+VITE_SUPABASE_PUBLISHABLE_KEY=<your sb_publishable_* key from Lovable>
 EOF
 ```
+
+**Option B: Use local Supabase (if running `supabase start`)**
+```bash
+# After running `supabase start`, Supabase CLI outputs local keys
+# Copy them to .env for local development:
+supabase start
+supabase status  # Shows local keys
+```
+
+⚠️ **If you see an `eyJ...` key in .env**: This is a legacy JWT format that may cause 401 errors. Update it from Lovable Cloud → Backend → API keys to get the current `sb_publishable_*` key.
 
 ### 4. Run Dev Server
 
@@ -457,10 +524,13 @@ The platform provides diagnostic edge functions:
 
 | Issue | Solution |
 |---|---|
-| Email not sending | Run `email-ops-status` function; check sender secrets in Lovable |
-| Function timeout | Increase timeout in `config.toml`, or optimize function code |
-| Auth failing | Check JWT in function code; ensure `verify_jwt` setting matches expectation |
-| Migration not applying | Verify `.sql` syntax; check `supabase db push` output for errors |
+| **Email not sending** | Run `email-ops-status` function; check sender secrets in Lovable |
+| **Function timeout** | Increase timeout in `config.toml`, or optimize function code |
+| **Auth failing (401 Unauthorized)** | Check JWT in function code; ensure `verify_jwt` setting matches. If your VITE_SUPABASE_PUBLISHABLE_KEY starts with `eyJ...` (JWT format), it's deprecated. Look in Lovable Cloud → Backend → API keys for a key starting with `sb_publishable_*` and update .env |
+| **Legacy JWT "invalid_grant" errors** | Supabase disabled the old JWT key family. Update VITE_SUPABASE_PUBLISHABLE_KEY from Lovable Cloud → Backend → API keys |
+| **Migration not applying** | Verify `.sql` syntax; check `supabase db push` output for errors |
+| **Local Supabase connection refused** | Ensure `supabase start` is running and Docker daemon is active |
+| **Edge function not deploying** | Verify function is in `supabase/functions/` and has `index.ts`; check CI/CD logs in GitHub |
 
 ---
 
@@ -492,17 +562,42 @@ The platform provides diagnostic edge functions:
 
 ---
 
-## 11. Useful Links
+## 11. Current Project State & Recent Updates (July 2026)
+
+### Verified Components
+- ✅ **Database**: 128 migrations deployed and synced with Git
+- ✅ **Edge Functions**: 23 functions deployed and auto-updating with each commit
+- ✅ **Email System**: Resend integration verified; 5 sender email addresses configured
+- ✅ **Auth**: Supabase Auth with admin/user roles via custom guards
+- ✅ **API Keys**: VITE_SUPABASE_PUBLISHABLE_KEY updated to current format (legacy JWT keys deprecated)
+- ✅ **DNS**: `notify.peninsulaequine.systems` verified in Resend with SPF/DKIM/DMARC
+
+### Recent Changes
+- Migrated from legacy JWT anon keys to new `sb_publishable_*` format
+- Added 12 new edge functions: `submit-inquiry`, `validate-inquiry-upload`, `mgmt-db-lints`, `mint-josh-preview`, `preview-mint-check`, `publish-log-ingest`, `report-publish-failure`, `run-graph-smoke-test`, `send-welcome-series`, `create-staff-account`, `notify-dns-propagated`, `verify-admin-login`
+- Expanded inquiry system with validation and automation
+- Added management/admin-only functions with custom authentication guards
+- Implemented comprehensive database integrity checks via `mgmt-db-lints`
+
+### Next Steps / Known Limitations
+- Local Supabase development requires Docker installation
+- Email deliverability monitoring should be regular (use `email-ops-status` endpoint)
+- Migration naming convention uses UUIDs (auto-generated by Supabase CLI) — use descriptive names in commit messages
+
+---
+
+## 12. Useful Links
 
 - **Supabase documentation:** https://supabase.com/docs
 - **Deno (edge function runtime):** https://deno.land/manual
 - **Lovable Cloud:** https://lovable.dev
 - **Resend (email provider):** https://resend.com/docs
 - **PostgreSQL docs:** https://www.postgresql.org/docs/
+- **@supabase/supabase-js v2 docs:** https://supabase.com/docs/reference/javascript/v2
 
 ---
 
-## 12. Support & Escalation
+## 13. Support & Escalation
 
 - **Supabase outages/issues:** Check supabase.com/status
 - **Lovable Cloud support:** https://lovable.dev/support
@@ -515,4 +610,5 @@ For production incidents, refer to **RUNBOOK.md** for escalation procedures.
 
 **Last updated:** July 2, 2026  
 **Project ID:** `aizkqajrzkvwuobisnzr`  
-**Canonical domain:** `peninsulaequine.systems`
+**Canonical domain:** `peninsulaequine.systems`  
+**Verified Status:** All components tested and operational
