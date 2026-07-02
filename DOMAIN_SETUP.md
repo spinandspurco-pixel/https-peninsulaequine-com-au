@@ -9,7 +9,7 @@ The redirect rules already live in `vercel.json`. They only activate once both `
 
 ## Vercel steps
 
-1. Open the Vercel project for `https-peninsulaequine-com-au`.
+1. Open the Vercel project currently connected to this repository in your Vercel dashboard.
 2. Go to **Settings → Domains**.
 3. Add:
    - `peninsulaequine.com.au`

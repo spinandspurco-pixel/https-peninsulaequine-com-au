@@ -11,6 +11,6 @@ describe("resolveLandingPath", () => {
   });
 
   it("rejects external redirect targets", () => {
-    expect(resolveLandingPath(["user"], "//evil.example")).toBe("/portal");
+    expect(resolveLandingPath(["user"], "//external.example.com")).toBe("/portal");
   });
 });
