@@ -108,6 +108,18 @@ Deno.serve(async (req) => {
   const runId = crypto.randomUUID();
   const occurredAt = payload.occurred_at ?? new Date().toISOString();
 
+  const attachments = Array.isArray(payload.attachments)
+    ? payload.attachments
+        .filter((a) => a && typeof a.path === "string" && a.path.length > 0)
+        .slice(0, 10)
+        .map((a) => ({
+          path: clip(a.path, 512),
+          name: clip(a.name, 255) || null,
+          size: typeof a.size === "number" && a.size >= 0 ? a.size : null,
+          type: clip(a.type, 128) || null,
+        }))
+    : [];
+
   const row = {
     run_id: runId,
     kind: "publish" as const,
@@ -125,6 +137,7 @@ Deno.serve(async (req) => {
       reporter_email: user.email ?? null,
       reporter_id: user.id,
       occurred_at: occurredAt,
+      attachments,
     },
   };
 
