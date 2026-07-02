@@ -35,7 +35,13 @@ export default function HqWhoAmI() {
     setBusy(true);
     setBootstrapResult(null);
     try {
-      const { data, error } = await (supabase as any).rpc("bootstrap_user_role");
+      // bootstrap_user_role is a stored procedure that returns role information
+      const result = await supabase.rpc("bootstrap_user_role", {}, {
+        headers: {
+          "x-client-info": "supabase-js/web",
+        },
+      });
+      const { data, error } = result;
       if (error) {
         setBootstrapResult(`error: ${error.message}`);
       } else {
@@ -43,6 +49,8 @@ export default function HqWhoAmI() {
       }
       await runDirectQuery();
       refetchRoles();
+    } catch (err) {
+      setBootstrapResult(`error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setBusy(false);
     }

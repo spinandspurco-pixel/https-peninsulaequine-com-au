@@ -66,16 +66,17 @@ export function HqNav({ className }: HqNavProps) {
         "border-y border-border/10 bg-background/60 backdrop-blur-sm",
         className,
       )}
+      data-bp-armed="true"
     >
       {/* ─── Primary row ──────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 pt-3 pb-2 flex flex-wrap items-center gap-x-10 gap-y-2">
         {hasAnySection ? (
           <ul className="flex items-center gap-x-8 sm:gap-x-10 flex-wrap">
-            {visibleSections.map((section) => {
+            {visibleSections.map((section, idx) => {
               const active = isSectionActive(section.key);
               const to = section.defaultPath;
               return (
-                <li key={section.key}>
+                <li key={section.key} className={`bp-mark bp-delay-${Math.min(idx + 1, 4)}`}>
                   <NavLink
                     to={`${to}${previewSuffix(to)}`}
                     state={{ hqSection: section.key }}
@@ -96,7 +97,7 @@ export function HqNav({ className }: HqNavProps) {
         ) : (
           <NavLink
             to={`/hq${previewSuffix("/hq")}`}
-            className="text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-foreground"
+            className="text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-foreground bp-mark"
           >
             Overview
           </NavLink>
@@ -110,7 +111,7 @@ export function HqNav({ className }: HqNavProps) {
             <NavLink
               to={`/hq${previewSuffix("/hq")}`}
               className={cn(
-                "text-[10px] uppercase tracking-[0.22em] transition-colors whitespace-nowrap",
+                "text-[10px] uppercase tracking-[0.22em] transition-colors whitespace-nowrap bp-mark bp-delay-1",
                 overviewActive
                   ? "text-accent"
                   : "text-muted-foreground/55 hover:text-foreground/85",
@@ -120,10 +121,10 @@ export function HqNav({ className }: HqNavProps) {
               Overview
             </NavLink>
             <ul className="flex items-center gap-x-6 gap-y-2 flex-wrap">
-              {subItems.map((item) => {
+              {subItems.map((item, idx) => {
                 const active = isItemActive(item.to);
                 return (
-                  <li key={item.key}>
+                  <li key={item.key} className={`bp-mark bp-delay-${Math.min(idx + 2, 4)}`}>
                     <NavLink
                       to={`${item.to}${previewSuffix(item.to)}`}
                       className={cn(
