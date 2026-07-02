@@ -40,10 +40,6 @@ export function ProtectedRoute({
   const { user, ready, roles, authLoading, rolesLoading, rolesError, refetchRoles, signOut } = useAuth();
   const location = useLocation();
 
-  // TEMP: HQ login-hang investigation
-   
-  console.log("[auth:guard:render]", { path: location.pathname, ready, authLoading, rolesLoading, hasUser: !!user, roles, rolesError, allowedRoles });
-
   if (!ready) {
     authLog("guard:wait", { path: location.pathname, authLoading, rolesLoading });
     return (

@@ -98,7 +98,7 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 | `/site-assessment`, `/estimate`, `/client-quote` | Paid qualification + quoting flow |
 | `/lessons`, `/book-lesson`, `/group-booking`, `/schedule` | Horsemanship sessions |
 | `/events` | Public events |
-| `/client-portal`, `/client-portal-login` | Magic-link client portal |
+| `/portal`, `/portal/login` | Magic-link client portal |
 | `/privacy`, `/terms`, `/thank-you`, `/404` | Utility |
 
 ### HQ (auth-gated, role-based via `ProtectedRoute`)
