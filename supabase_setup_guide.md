@@ -240,8 +240,10 @@ interface TodoRequest {
 
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-    // User is authenticated; ctx.userClaims contains user identity (id, email, role)
-    const { supabase, supabaseAdmin, userClaims } = ctx
+    // User is authenticated; ctx.userClaims contains user identity from the JWT
+    // (typically: id, email, role per @supabase/server documentation)
+    // For raw JWT claim access, use ctx.jwtClaims
+    const { supabase, supabaseAdmin, userClaims, jwtClaims } = ctx
     
     if (req.method === "GET") {
       // Fetch user's todos
