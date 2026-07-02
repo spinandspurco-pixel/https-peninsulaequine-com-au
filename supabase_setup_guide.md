@@ -159,11 +159,14 @@ In addition to the secrets above, @supabase/server requires these environment va
 | `SUPABASE_SECRET_KEY` | Secret service role key (full privileges) | NOT exposed in frontend; injected into functions only |
 | `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
 
+**Note on Environment Variable Names:**
+The @supabase/server SDK uses `SUPABASE_PUBLISHABLE_KEY`, which is different from the older `SUPABASE_ANON_KEY` used in supabase-js. Both refer to the same public/anonymous API key, but @supabase/server renamed it for clarity about what the key can do.
+
 **Key Format Notes:**
 - Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon key (recommended)
 - Older projects may still use the JWT format `eyJ...`
 - Both formats work with @supabase/server, but newer projects use `sb_publishable_*`
-- If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys
+- If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys (or directly from Supabase Dashboard → Settings → API)
 
 **⚠️ Important:**
 - **NEVER** commit `SUPABASE_SECRET_KEY` or `SUPABASE_JWKS_URL` to `.env` or source code
