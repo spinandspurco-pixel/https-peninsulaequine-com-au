@@ -55,6 +55,7 @@ const HqGraphSmoke = lazy(() => import("./pages/HqGraphSmoke"));
 const HqDiagnostics = lazy(() => import("./pages/HqDiagnostics"));
 const HqDeployHealth = lazy(() => import("./pages/HqDeployHealth"));
 const HqDbLints = lazy(() => import("./pages/HqDbLints"));
+const HqPublishLogs = lazy(() => import("./pages/HqPublishLogs"));
 
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
@@ -170,6 +171,7 @@ function AppContent() {
           <Route path="/hq/deploy-health" element={<ProtectedRoute allowedRoles={["admin"]}><HqDeployHealth /></ProtectedRoute>} />
           <Route path="/hq/diagnostics" element={<ProtectedRoute allowedRoles={["admin"]}><HqDiagnostics /></ProtectedRoute>} />
           <Route path="/hq/db-lints" element={<ProtectedRoute allowedRoles={["admin"]}><HqDbLints /></ProtectedRoute>} />
+          <Route path="/hq/publish-logs" element={<ProtectedRoute allowedRoles={["admin"]}><HqPublishLogs /></ProtectedRoute>} />
 
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
             <Route path="/hq/dns-publish" element={<ProtectedRoute allowedRoles={["admin"]}><DnsPublish /></ProtectedRoute>} />
