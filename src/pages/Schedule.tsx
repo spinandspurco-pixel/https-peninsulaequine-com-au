@@ -291,7 +291,7 @@ export default function Schedule() {
             headers: {
               "Content-Type": "application/json",
               apikey: getClientSupabaseKey() ?? "",
-              Authorization: `****** ?? ""}`,
+              Authorization: `Bearer ${getClientSupabaseKey() ?? ""}`,
             },
             body,
           });
