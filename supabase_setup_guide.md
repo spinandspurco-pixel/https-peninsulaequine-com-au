@@ -231,7 +231,7 @@ verify_jwt = false  # Called from public form
 ```
 
 **JWT verification:**
-- `verify_jwt = true`: Requires valid Supabase auth JWT in `Authorization: ****** header
+- `verify_jwt = true`: Requires valid Supabase auth JWT in the `Authorization: ****** request header
 - `verify_jwt = false`: Public endpoint; custom auth logic (if needed) is in the function code itself
 
 Most functions use custom guards in `supabase/functions/_shared/mgmtApiGuard.ts` to verify admin/management tokens.
@@ -285,7 +285,7 @@ serve(async (req) => {
 ```
 
 **Key points:**
-- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected by Supabase at runtime
+- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `RESEND_API_KEY` are auto-injected by Supabase at runtime (these internal environment variable names are distinct from the public API key format used in `.env`)
 - These should NOT be hardcoded in `.env` — they're managed through Lovable Cloud → Backend Secrets
 - Each function runs in a Deno runtime with full access to environment secrets
 
@@ -368,7 +368,7 @@ supabase start  # Starts local Postgres, Auth, Storage, edge function emulator
 ```
 
 This creates:
-- Local PostgreSQL database at `******localhost:54322/postgres`
+- Local PostgreSQL database at `postgresql://localhost:54322/postgres`
 - Supabase Auth emulator
 - Edge functions emulator on `http://localhost:54321`
 - Storage emulator
