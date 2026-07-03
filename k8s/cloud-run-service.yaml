@@ -1,0 +1,73 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: peninsula-equine-web
+  namespace: default
+  labels:
+    app: peninsula-equine
+    environment: production
+spec:
+  template:
+    metadata:
+      labels:
+        app: peninsula-equine
+      annotations:
+        autoscaling.knative.dev/minScale: '2'
+        autoscaling.knative.dev/maxScale: '10'
+        autoscaling.knative.dev/targetCPUUtilization: '70'
+    spec:
+      serviceAccountName: peninsula-equine-sa
+      containers:
+        - name: web
+          image: gcr.io/PROJECT_ID/peninsula-equine:latest
+          ports:
+            - name: http1
+              containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: VITE_SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-config
+                  key: url
+            - name: VITE_SUPABASE_ANON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-config
+                  key: anon-key
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 2
+      timeoutSeconds: 3600
+  traffic:
+    - percent: 100
+      latestRevision: true
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: peninsula-equine-sa
+  namespace: default
+  labels:
+    app: peninsula-equine

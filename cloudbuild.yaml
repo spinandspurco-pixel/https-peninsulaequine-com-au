@@ -1,0 +1,72 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-image'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/peninsula-equine:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/peninsula-equine:latest'
+      - '-f'
+      - 'Dockerfile'
+      - '.'
+
+  # Step 2: Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-image'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/peninsula-equine:$SHORT_SHA'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: 'deploy-cloud-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'peninsula-equine-web'
+      - '--image=gcr.io/$PROJECT_ID/peninsula-equine:$SHORT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--timeout=3600'
+      - '--max-instances=10'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=NODE_ENV=production,VITE_SUPABASE_URL=${_VITE_SUPABASE_URL},VITE_SUPABASE_ANON_KEY=${_VITE_SUPABASE_ANON_KEY}'
+
+  # Step 4: Run smoke tests
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: 'smoke-test'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        SERVICE_URL=$(gcloud run services describe peninsula-equine-web \
+          --region=us-central1 --format='value(status.url)')
+        echo "Testing $SERVICE_URL"
+        curl -f $SERVICE_URL/ || exit 1
+        curl -f $SERVICE_URL/hq/login || exit 1
+        echo "✓ Smoke tests passed"
+
+images:
+  - 'gcr.io/$PROJECT_ID/peninsula-equine:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/peninsula-equine:latest'
+
+# Build timeout
+timeout: '3600s'
+
+# Options
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+  
+# Substitutions for sensitive data
+substitutions:
+  _VITE_SUPABASE_URL: '${_VITE_SUPABASE_URL}'
+  _VITE_SUPABASE_ANON_KEY: '${_VITE_SUPABASE_ANON_KEY}'
+
+# Only run on main branch
+onFailure:
+  - 'gcloud builds log $BUILD_ID'
