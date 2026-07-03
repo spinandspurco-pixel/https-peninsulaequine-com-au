@@ -14,6 +14,7 @@ const ROLE_LANDING: Array<{ role: AppRole; path: string }> = [
   { role: "employee", path: "/employee" },
   { role: "trainer", path: "/schedule" },
   { role: "preview", path: "/hq" },
+  { role: "user", path: "/portal" },
 ];
 
 /**
@@ -105,4 +106,3 @@ export function authLog(scope: string, payload: Record<string, unknown>): void {
    
   console.log(`[auth:${scope}]`, payload);
 }
-

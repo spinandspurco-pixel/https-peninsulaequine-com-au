@@ -139,6 +139,12 @@ These **must never** be committed to `.env` or source code:
 3. Add/update each secret by key name
 4. Secrets are automatically injected into edge functions
 
+### Current public key naming
+
+For browser-side auth, this codebase prefers `VITE_SUPABASE_PUBLISHABLE_KEY` and still accepts `VITE_SUPABASE_ANON_KEY` as a compatibility fallback. Both refer to the same public client key, but the publishable-key name is the canonical one used across the current production setup.
+
+Use the current `sb_publishable_*` key from Supabase or Lovable, not an old rotated value copied from a retired environment.
+
 ---
 
 ## 5. Edge Functions

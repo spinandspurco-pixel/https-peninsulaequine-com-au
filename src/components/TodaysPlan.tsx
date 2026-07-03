@@ -7,6 +7,7 @@ import { Zap, RefreshCw, Clock, Sun, Sunset } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
 
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 import { useHqMount } from "@/lib/hqDiagnostics";
 export function TodaysPlan() {
   useHqMount("TodaysPlan");
@@ -32,7 +33,7 @@ export function TodaysPlan() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            apikey: getClientSupabaseKey() ?? "",
           },
           body: JSON.stringify({ action: "daily_plan" }),
         }

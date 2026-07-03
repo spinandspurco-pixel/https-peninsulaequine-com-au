@@ -28,6 +28,7 @@ import {
   type E2eHistoryEntry,
 } from "@/lib/e2eHistory";
 import { trackAuthE2e } from "@/lib/authFunnel";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 
 
 
@@ -101,7 +102,7 @@ function buildE2eTraceReport(input: {
 export default function HqDiagnostics() {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const key = getClientSupabaseKey();
   const mode = import.meta.env.MODE;
 
   const [pingStatus, setPingStatus] = useState<CheckStatus>("info");

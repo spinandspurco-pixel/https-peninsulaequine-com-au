@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 import type { BuildInfo, DiagResponse, HealthResponse } from "@/types/health";
 
 type ServerBuildState =
@@ -510,7 +511,7 @@ export function ClientDiagPanel() {
   }
 
   const supaUrl = (import.meta as any).env?.VITE_SUPABASE_URL as string | undefined;
-  const supaKey = (import.meta as any).env?.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const supaKey = getClientSupabaseKey();
   const supaUrlValid = !!supaUrl && /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(supaUrl);
   // Safe key format detection — never render the secret value itself.
   // We only report: format family, total length, and the non-secret prefix
@@ -1623,7 +1624,7 @@ export function ClientDiagPanel() {
                   : family === "secret"
                     ? { bg: "rgba(239,68,68,0.18)", border: "#ef4444", fg: "#fecaca", label: "DANGER", msg: "sb_secret_* is a SERVER key. It must never ship to the client. Replace with sb_publishable_*." }
                     : family === "missing"
-                      ? { bg: "rgba(239,68,68,0.10)", border: "#ef4444", fg: "#fca5a5", label: "MISSING", msg: "VITE_SUPABASE_PUBLISHABLE_KEY is not defined in the build." }
+                      ? { bg: "rgba(239,68,68,0.10)", border: "#ef4444", fg: "#fca5a5", label: "MISSING", msg: "No client Supabase key is defined in the build." }
                       : { bg: "rgba(234,179,8,0.10)", border: "#eab308", fg: "#fde68a", label: "UNKNOWN", msg: "Key prefix is not recognised. Expected sb_publishable_*." };
             return (
               <div
@@ -1722,7 +1723,7 @@ export function ClientDiagPanel() {
                       : family === "secret"
                         ? "sb_secret_ (SERVER-ONLY — must not ship to client)"
                         : family === "missing"
-                          ? "missing (VITE_SUPABASE_PUBLISHABLE_KEY undefined)"
+                          ? "missing (no client Supabase key defined)"
                           : "unknown (unrecognised prefix)",
                 )}
                 {row("masked", supaKeyMasked)}

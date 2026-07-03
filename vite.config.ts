@@ -106,8 +106,12 @@ function buildInfoPlugin(supabaseUrl: string | null, supabaseKey: string | null)
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const supabaseUrl = env.VITE_SUPABASE_URL ?? null;
-  const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY ?? null;
+  const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY ?? env.VITE_SUPABASE_ANON_KEY ?? null;
   return {
+  base: "/",
+  build: {
+    outDir: "dist",
+  },
   server: {
     host: "::",
     port: 8080,

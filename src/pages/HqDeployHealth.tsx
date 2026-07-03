@@ -5,6 +5,7 @@ import { HqNav } from "@/components/hq/HqNav";
 import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
 import { RetryOutcomeRows } from "@/components/hq/RetryOutcomeRows";
 import { trackEvent } from "@/lib/analytics";
+import { getClientSupabaseKey } from "@/lib/clientSupabaseEnv";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
@@ -609,7 +610,7 @@ export default function HqDeployHealth() {
   const anyStuck = results.some(isStuck);
 
   const keyFormatDiff = useMemo(() => {
-    const raw = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
+    const raw = getClientSupabaseKey() ?? "";
     const trimmed = raw.trim();
     const length = trimmed.length;
     const prefix = trimmed.slice(0, 16);
