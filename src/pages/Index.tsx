@@ -18,7 +18,7 @@ import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symme
 import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 import muddyBootsCraftAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
-import mainRidgeLegacyAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import mainRidgeLegacyAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json;
 
 
 const steelFront = steelFrontAsset.url;
@@ -87,13 +87,13 @@ export default function Index() {
       setHeaderReady(true);
       // Two-beat arrival: headline (with support line) → CTA after a hold.
       at(260, () => setHeadlineReady(true));
-      at(1100, () => setCtaReady(true));
+      at(1000, () => setCtaReady(true)); // Reduced from 1100ms
     } else {
-      // Three deliberate tracks: backdrop → headline → CTA. No mid-stagger.
-      at(1700, () => setImageReady(true));
-      at(2200, () => setHeadlineReady(true));
-      at(3100, () => setCtaReady(true));
-      at(2400, () => setHeaderReady(true));
+      // Three deliberate tracks: backdrop → headline → CTA. Faster entrance.
+      at(1400, () => setImageReady(true)); // Reduced from 1700ms
+      at(1900, () => setHeadlineReady(true)); // Reduced from 2200ms
+      at(2700, () => setCtaReady(true)); // Reduced from 3100ms
+      at(2000, () => setHeaderReady(true)); // Reduced from 2400ms
     }
 
     return () => timers.forEach(clearTimeout);
@@ -113,10 +113,7 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Cinematic hero parallax: scale the loaded hero image from 1 → 1.06 and
-  // translate 0 → 36px over the first viewport. RAF-driven, CSS variables —
-  // no React state per frame. Honours prefers-reduced-motion. Defers until
-  // after the entrance transform completes so the two animations don't fight.
+  // Enhanced parallax with better warmth
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!heroImgLoaded) return;
@@ -138,14 +135,14 @@ export default function Index() {
       if (raf) return;
       raf = requestAnimationFrame(update);
     };
-    // Wait for the entrance transition (~2400ms) to finish before taking over.
+    // Wait for entrance to finish before parallax
     const t = window.setTimeout(() => {
       const img = heroImgRef.current;
       if (img) img.style.transition = "transform 80ms linear, opacity 1600ms cubic-bezier(0.45,0,0.15,1)";
       window.addEventListener("scroll", onScroll, { passive: true });
       attached = true;
       update();
-    }, 2500);
+    }, 1900); // Synced to new entrance time
     return () => {
       window.clearTimeout(t);
       if (attached) window.removeEventListener("scroll", onScroll);
@@ -197,8 +194,8 @@ export default function Index() {
                     transform: imageReady && heroImgLoaded ? "scale(1)" : "scale(1.04)",
                     transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
                     willChange: "opacity, transform",
-                    // Subtle clarity lift — keeps blueprint grading, sharpens horse/footing texture.
-                    filter: "contrast(1.08) saturate(1.05) brightness(0.97)",
+                    // Enhanced warmth and clarity - horses feel warmer, footing more textured
+                    filter: "contrast(1.12) saturate(1.10) brightness(0.96) hue-rotate(2deg)",
                   }}
                 />
 
@@ -296,36 +293,34 @@ export default function Index() {
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(10px)",
                       transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
-                      textShadow: "0 14px 48px rgba(0,0,0,0.45)",
+                      textShadow: "0 8px 32px rgba(0,0,0,0.65)", // Stronger, warmer shadow
                     }}
                   >
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-serif italic text-foreground/85 leading-[1.45] text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)]"
+                    className="max-w-xl font-serif italic text-foreground/88 leading-[1.45] text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)]"
                     style={{
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(8px)",
                       transition: `opacity 1100ms ${EASE} 180ms, transform 1100ms ${EASE} 180ms`,
-                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
+                      textShadow: "0 4px 16px rgba(0,0,0,0.65)",
                     }}
                   >
-                    Built by riders. Designed for horses. Crafted for generations.
+                    <strong>Built by riders.</strong> Designed for horses. <strong>Crafted for generations.</strong>
                   </p>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/65 leading-[1.7] text-[14px]"
+                    className="max-w-xl font-sans font-light text-foreground/70 leading-[1.7] text-[14px]"
                     style={{
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(8px)",
                       transition: `opacity 1100ms ${EASE} 260ms, transform 1100ms ${EASE} 260ms`,
-                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
+                      textShadow: "0 2px 18px rgba(0,0,0,0.65)",
                     }}
                   >
                     Covered arenas, stables and equine environments built by horse people. Trusted across Australia.
                   </p>
                 </div>
-
-
 
                 <div
                   className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
@@ -337,7 +332,7 @@ export default function Index() {
                 >
                   <Link
                     to="/selected-works"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-accent transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
                     style={{ transition: "transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 500ms ease" }}
                     onPointerMove={(e) => {
                       const el = e.currentTarget;
@@ -351,12 +346,12 @@ export default function Index() {
                     }}
                     onPointerLeave={(e) => { e.currentTarget.style.transform = "translate3d(0,0,0)"; }}
                   >
-                    <span className="w-10 h-[2px] bg-accent transition-all duration-700 group-hover:w-16" style={{ boxShadow: "0 0 12px hsl(var(--accent) / 0.45)" }} />
-                    Explore Selected Works
+                    <span className="w-10 h-[2px] bg-accent transition-all duration-700 group-hover:w-16" style={{ boxShadow: "0 0 16px hsl(var(--accent) / 0.60)" }} />
+                    View Our Work
                   </Link>
                   <Link
                     to="/services"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/65 hover:text-foreground transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
                     style={{ transition: "transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 500ms ease" }}
                     onPointerMove={(e) => {
                       const el = e.currentTarget;
@@ -371,7 +366,7 @@ export default function Index() {
                     onPointerLeave={(e) => { e.currentTarget.style.transform = "translate3d(0,0,0)"; }}
                   >
                     <span className="w-9 h-px bg-foreground/35 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
-                    View Services
+                    What We Do
                   </Link>
                 </div>
 
