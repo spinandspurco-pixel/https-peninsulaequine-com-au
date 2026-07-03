@@ -29,9 +29,6 @@ function useAuthState() {
     mounted.current = true;
 
     const dbg = (scope: string, payload: Record<string, unknown>) => {
-      // TEMP: unconditional trace for HQ login-hang investigation
-       
-      console.log(`[auth:${scope}]`, payload);
       authLog(scope, payload);
     };
 

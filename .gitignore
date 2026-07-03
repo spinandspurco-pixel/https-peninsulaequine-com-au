@@ -10,6 +10,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# Environment variables — never commit real secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
 *.local
 
 # Editor directories and files
@@ -35,3 +41,4 @@ scripts/live-smoke-test/.env
 # Vitest coverage output
 coverage/
 smoke-summary.json
+.vercel

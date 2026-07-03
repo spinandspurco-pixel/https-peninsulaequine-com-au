@@ -50,8 +50,17 @@ function renderAt(path: string, allowedRoles?: string[]) {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/whoami"
+          element={
+            <ProtectedRoute>
+              <div>WHOAMI</div>
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<div>LOGIN PAGE</div>} />
         <Route path="/employee" element={<div>EMPLOYEE LANDING</div>} />
+        <Route path="/portal" element={<div>CLIENT PORTAL</div>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -85,6 +94,15 @@ describe("ProtectedRoute — HQ guard", () => {
     });
     renderAt("/hq", ["admin"]);
     expect(screen.getByText("HQ DASHBOARD")).toBeInTheDocument();
+  });
+
+  it("allows authenticated users through when no role restriction is provided", () => {
+    setAuth({
+      user: { id: "u1", email: "worker@example.com" },
+      roles: [],
+    });
+    renderAt("/whoami");
+    expect(screen.getByText("WHOAMI")).toBeInTheDocument();
   });
 
   it("shows inline error card with Retry + Sign out when rolesError is set", () => {
@@ -123,6 +141,16 @@ describe("ProtectedRoute — HQ guard", () => {
     expect(screen.getByText("EMPLOYEE LANDING")).toBeInTheDocument();
     expect(screen.queryByText("HQ DASHBOARD")).toBeNull();
     expect(screen.queryByText("LOGIN PAGE")).toBeNull();
+  });
+
+  it("redirects a client-role user away from staff HQ to the client portal", () => {
+    setAuth({
+      user: { id: "u4", email: "client@example.com" },
+      roles: ["user"],
+    });
+    renderAt("/hq", ["admin"]);
+    expect(screen.getByText("CLIENT PORTAL")).toBeInTheDocument();
+    expect(screen.queryByText("HQ DASHBOARD")).toBeNull();
   });
 
   it("falls back to /login when the user's landing path equals the failed route (loop guard)", () => {
