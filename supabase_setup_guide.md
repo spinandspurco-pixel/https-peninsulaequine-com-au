@@ -156,19 +156,19 @@ npm install @supabase/server
 
 **Environment Variables for @supabase/server:**
 
-In addition to the secrets above, @supabase/server requires these environment variables (auto-injected in Supabase Edge Functions):
+In addition to the secrets above, @supabase/server expects these runtime environment variables (provided by Supabase/Lovable in Edge Functions):
 
 | Variable | Purpose | Format |
 |---|---|---|
 | `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | Publishable/anonymous API key | `sb_publishable_*` or JWT `eyJ...` (both valid) |
-| `SUPABASE_SECRET_KEY` | Secret service role key (bypasses RLS) | `sb_sa_*` or JWT `eyJ...` |
-| `SUPABASE_JWKS_URL` | URL to download JWT signing keys for verification | `https://[projectid].supabase.co/auth/v1/jwks` |
+| `SUPABASE_ANON_KEY` | Publishable/anonymous API key | `sb_publishable_*` or JWT `eyJ...` (both valid) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret service role key (bypasses RLS) | `sb_secret_*` or JWT `eyJ...` |
+| `SUPABASE_JWKS_URL` (optional) | Public JWT signing-key endpoint (derivable from `SUPABASE_URL`) | `https://[projectid].supabase.co/auth/v1/jwks` |
 
-> ⚠️ **SUPABASE_SECRET_KEY Security:** Never expose this key to the frontend. Only inject into backend functions via `supabase/config.toml` `env` section.
+> ⚠️ **SUPABASE_SERVICE_ROLE_KEY Security:** Never expose this key to the frontend. Only inject into backend functions via `supabase/config.toml` `env` section.
 
 **Note on Environment Variable Names:**
-The @supabase/server SDK uses `SUPABASE_PUBLISHABLE_KEY`, which is different from the older `SUPABASE_ANON_KEY` used in supabase-js. Both refer to the same public/anonymous API key, but @supabase/server renamed it for clarity about what the key can do.
+Some @supabase/server examples use `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_SECRET_KEY`; in this repo and Supabase Edge Functions we standardize on `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY`.
 
 **Key Format Notes:**
 - Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon key (recommended)
@@ -177,9 +177,10 @@ The @supabase/server SDK uses `SUPABASE_PUBLISHABLE_KEY`, which is different fro
 - If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys (or directly from Supabase Dashboard → Settings → API)
 
 **⚠️ Important:**
-- **NEVER** commit `SUPABASE_SECRET_KEY` or `SUPABASE_JWKS_URL` to `.env` or source code
+- **NEVER** commit `SUPABASE_SERVICE_ROLE_KEY` to `.env` or source code
 - Manage these only through Lovable Cloud → Backend → Secrets
-- The SDK automatically injects these when running on Supabase Edge Functions
+- `SUPABASE_JWKS_URL` is public and may be derived from `SUPABASE_URL` when needed
+- Supabase/Lovable injects runtime variables in Edge Functions; the SDK reads them
 - For local development, copy the values from Supabase dashboard's "Connect" dialog (only for testing)
 
 **Usage: Creating Request Handlers with `withSupabase`**
@@ -217,8 +218,10 @@ The `auth` parameter controls how the handler validates requests:
 |---|---|---|---|
 | `"user"` | Valid JWT from authenticated user | User-specific data access | `verify_jwt = true` |
 | `"publishable"` | Valid publishable/anon key | Public, anonymous access | `verify_jwt = false` |
-| `"secret"` | Valid secret key | Admin/backend-only operations | `verify_jwt = false` + custom guard |
+| `"secret"` | Service role key in function environment + custom caller auth/authorization guard | Admin/backend-only operations | `verify_jwt = false` + custom guard |
 | `"none"` | No auth required | Public endpoints | `verify_jwt = false` |
+
+For `auth: "secret"` handlers, treat the service role key as server-only infrastructure and separately authenticate/authorize callers (for example: read a bearer token from the `Authorization` header, validate the token against Supabase Auth, then enforce an explicit allowlist/role check before executing admin actions).
 
 **Config.toml Settings:**
 
@@ -265,7 +268,21 @@ export default {
     }
     
     if (req.method === "POST") {
-      const body = await req.json() as TodoRequest
+      const rawBody = await req.json().catch(() => null)
+      if (
+        !rawBody ||
+        typeof rawBody !== "object" ||
+        typeof (rawBody as Record<string, unknown>).title !== "string" ||
+        ((rawBody as Record<string, unknown>).completed !== undefined &&
+          typeof (rawBody as Record<string, unknown>).completed !== "boolean")
+      ) {
+        return Response.json({ error: "Invalid request body" }, { status: 400 })
+      }
+
+      const body: TodoRequest = {
+        title: (rawBody as { title: string }).title,
+        completed: (rawBody as { completed?: boolean }).completed ?? false
+      }
       
       // Create todo for authenticated user
       // Note: The 'todos' table should have an RLS policy:
@@ -276,10 +293,14 @@ export default {
         .insert([{
           user_id: userClaims.id,
           title: body.title,
-          completed: body.completed || false
+          completed: body.completed
         }])
-      
-      return Response.json({ data, error }, { status: error ? 400 : 201 })
+
+      if (error) {
+        return Response.json({ error: "Failed to create todo" }, { status: 400 })
+      }
+
+      return Response.json({ data }, { status: 201 })
     }
     
     return Response.json({ error: "Method not allowed" }, { status: 405 })
