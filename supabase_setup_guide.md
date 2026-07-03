@@ -145,6 +145,175 @@ For browser-side auth, this codebase prefers `VITE_SUPABASE_PUBLISHABLE_KEY` and
 
 Use the current `sb_publishable_*` key from Supabase or Lovable, not an old rotated value copied from a retired environment.
 
+### @supabase/server SDK
+
+The `@supabase/server` package provides type-safe request handlers with built-in Supabase authentication and client management for Edge Functions.
+
+**Installation:**
+```bash
+npm install @supabase/server
+```
+
+**Environment Variables for @supabase/server:**
+
+In addition to the secrets above, @supabase/server expects these runtime environment variables (provided by Supabase/Lovable in Edge Functions):
+
+| Variable | Purpose | Format |
+|---|---|---|
+| `SUPABASE_URL` | Supabase project URL | `https://[projectid].supabase.co` |
+| `SUPABASE_ANON_KEY` | Publishable/anonymous API key | `sb_publishable_*` or JWT `eyJ...` (both valid) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret service role key (bypasses RLS) | `sb_secret_*` or JWT `eyJ...` |
+| `SUPABASE_JWKS_URL` (optional) | Public JWT signing-key endpoint (derivable from `SUPABASE_URL`) | `https://[projectid].supabase.co/auth/v1/jwks` |
+
+> ⚠️ **SUPABASE_SERVICE_ROLE_KEY Security:** Never expose this key to the frontend. Only inject into backend functions via `supabase/config.toml` `env` section.
+
+**Note on Environment Variable Names:**
+Some @supabase/server examples use `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_SECRET_KEY`; in this repo and Supabase Edge Functions we standardize on `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY`.
+
+**Key Format Notes:**
+- Supabase projects created after mid-2024 use the `sb_publishable_*` format for the anon key (recommended)
+- Older projects may still use the JWT format `eyJ...`
+- Both formats work with @supabase/server, but newer projects use `sb_publishable_*`
+- If you see 401 errors, verify you have the current key format from Lovable Cloud → Backend → API keys (or directly from Supabase Dashboard → Settings → API)
+
+**⚠️ Important:**
+- **NEVER** commit `SUPABASE_SERVICE_ROLE_KEY` to `.env` or source code
+- Manage these only through Lovable Cloud → Backend → Secrets
+- `SUPABASE_JWKS_URL` is public and may be derived from `SUPABASE_URL` when needed
+- Supabase/Lovable injects runtime variables in Edge Functions; the SDK reads them
+- For local development, copy the values from Supabase dashboard's "Connect" dialog (only for testing)
+
+**Usage: Creating Request Handlers with `withSupabase`**
+
+The `withSupabase` middleware validates authentication and provides scoped Supabase clients:
+
+```typescript
+// supabase/functions/example-handler/index.ts
+import { withSupabase } from "@supabase/server"
+
+export default {
+  fetch: withSupabase({ auth: "user" }, async (_req, ctx) => {
+    const { supabase, supabaseAdmin, userClaims } = ctx
+    
+    // supabase is an RLS-scoped client (respects user permissions)
+    const { data: todos } = await supabase
+      .from("todos")
+      .select()
+    
+    // supabaseAdmin bypasses RLS (full access)
+    const { data: allData } = await supabaseAdmin
+      .from("todos")
+      .select()
+    
+    return Response.json({ todos, allData })
+  }),
+}
+```
+
+**Auth Modes:**
+
+The `auth` parameter controls how the handler validates requests:
+
+| Mode | Requires | Use Case | config.toml Setting |
+|---|---|---|---|
+| `"user"` | Valid JWT from authenticated user | User-specific data access | `verify_jwt = true` |
+| `"publishable"` | Valid publishable/anon key | Public, anonymous access | `verify_jwt = false` |
+| `"secret"` | Service role key in function environment + custom caller auth/authorization guard | Admin/backend-only operations | `verify_jwt = false` + custom guard |
+| `"none"` | No auth required | Public endpoints | `verify_jwt = false` |
+
+For `auth: "secret"` handlers, treat the service role key as server-only infrastructure and separately authenticate/authorize callers (for example: read a bearer token from the `Authorization` header, validate the token against Supabase Auth, then enforce an explicit allowlist/role check before executing admin actions).
+
+**Config.toml Settings:**
+
+For each function using `withSupabase`, update `supabase/config.toml`:
+
+```toml
+[functions.example-handler]
+# If auth mode is "user", keep verify_jwt = true (default)
+verify_jwt = true
+
+[functions.public-form-handler]
+# For "publishable" or "none" modes, set verify_jwt = false
+# @supabase/server will handle auth via the middleware
+verify_jwt = false
+```
+
+**Complete Example: User Todos Handler**
+
+```typescript
+// supabase/functions/user-todos/index.ts
+import { withSupabase } from "@supabase/server"
+
+interface TodoRequest {
+  title: string;
+  completed?: boolean;
+}
+
+export default {
+  fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
+    // User is authenticated
+    const { supabase, supabaseAdmin, userClaims, jwtClaims } = ctx
+    // userClaims: user identity (id, email, role)
+    // jwtClaims: raw JWT claims for advanced use cases
+    
+    if (req.method === "GET") {
+      // Fetch user's todos
+      // The RLS-scoped client automatically restricts results based on the authenticated user's JWT
+      // (requires appropriate RLS policies configured in your database)
+      const { data, error } = await supabase
+        .from("todos")
+        .select()
+      
+      return Response.json({ data, error })
+    }
+    
+    if (req.method === "POST") {
+      const rawBody = await req.json().catch(() => null)
+      if (
+        !rawBody ||
+        typeof rawBody !== "object" ||
+        typeof (rawBody as Record<string, unknown>).title !== "string" ||
+        ((rawBody as Record<string, unknown>).completed !== undefined &&
+          typeof (rawBody as Record<string, unknown>).completed !== "boolean")
+      ) {
+        return Response.json({ error: "Invalid request body" }, { status: 400 })
+      }
+
+      const body: TodoRequest = {
+        title: (rawBody as { title: string }).title,
+        completed: (rawBody as { completed?: boolean }).completed ?? false
+      }
+      
+      // Create todo for authenticated user
+      // Note: The 'todos' table should have an RLS policy:
+      // CREATE POLICY "users can insert own todos" ON todos
+      //   FOR INSERT WITH CHECK (user_id = auth.uid());
+      const { data, error } = await supabase
+        .from("todos")
+        .insert([{
+          user_id: userClaims.id,
+          title: body.title,
+          completed: body.completed
+        }])
+
+      if (error) {
+        return Response.json({ error: "Failed to create todo" }, { status: 400 })
+      }
+
+      return Response.json({ data }, { status: 201 })
+    }
+    
+    return Response.json({ error: "Method not allowed" }, { status: 405 })
+  }),
+}
+```
+
+In `supabase/config.toml`:
+```toml
+[functions.user-todos]
+verify_jwt = true
+```
+
 ---
 
 ## 5. Edge Functions
