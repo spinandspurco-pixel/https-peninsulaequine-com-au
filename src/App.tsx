@@ -152,7 +152,7 @@ function AppContent() {
             <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqCommandCentre /></ProtectedRoute>} />
             <Route path="/hq/legacy" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
             {/* Diagnostic: any signed-in user can see their own role mapping */}
-            <Route path="/hq/whoami" element={<HqWhoAmI />} />
+            <Route path="/hq/whoami" element={<ProtectedRoute><HqWhoAmI /></ProtectedRoute>} />
             <Route path="/hq/services" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminServices /></ProtectedRoute>} />
             <Route path="/hq/cms" element={<ProtectedRoute allowedRoles={["admin"]}><AdminCMS /></ProtectedRoute>} />
             <Route path="/hq/testimonials" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminTestimonials /></ProtectedRoute>} />
@@ -226,7 +226,7 @@ function AppContent() {
             <Route path="/visualise" element={<Navigate to="/services" replace />} />
             <Route path="/the-standard" element={<Navigate to="/about" replace />} />
             <Route path="/why" element={<Navigate to="/about" replace />} />
-            <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
+            <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login" allowedRoles={["user"]}><ClientPortal /></ProtectedRoute>} />
             <Route path="/portal/login" element={<ClientPortalLogin />} />
             <Route path="/field-notes" element={<FieldNotes />} />
             <Route path="/field-notes/covered-arena-stables-build" element={<CoveredArenaStablesBuild />} />

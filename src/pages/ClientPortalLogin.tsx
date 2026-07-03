@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { cn } from "@/lib/utils";
+import { resolveLandingPath } from "@/lib/authRouting";
 
 export default function ClientPortalLogin() {
-  const { user, loading } = useAuth();
+  const { user, loading, roles } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
@@ -16,9 +17,9 @@ export default function ClientPortalLogin() {
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
-      navigate("/portal", { replace: true });
+      navigate(resolveLandingPath(roles), { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, roles]);
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();

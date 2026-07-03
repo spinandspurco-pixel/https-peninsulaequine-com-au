@@ -1,13 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-
-const hiddenPrefixes = ["/admin", "/employee", "/bookings", "/staff", "/trainer"];
 
 /**
  * Architectural backdrop — blueprint grid with subtle scroll parallax + grain.
  */
 export function GlobalCinematicBackdrop() {
-  const { pathname } = useLocation();
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,10 +24,6 @@ export function GlobalCinematicBackdrop() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  if (hiddenPrefixes.some((prefix) => pathname.startsWith(prefix))) {
-    return null;
-  }
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
