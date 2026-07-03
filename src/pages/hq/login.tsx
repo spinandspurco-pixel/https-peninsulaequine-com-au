@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { logClientEvent } from "@/lib/clientLog";
 import { usePageMeta } from "@/lib/usePageMeta";
+import "@/styles/hq.css";
 
 type AuthMode = "signin" | "signup" | "forgot";
 
@@ -217,21 +218,8 @@ export default function HQLogin() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 flex items-center justify-center px-4 py-12">
       {/* Ambient background elements */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, hsl(var(--accent) / 0.08) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="absolute top-0 right-1/4 w-96 h-96 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, hsl(var(--accent) / 0.06) 0%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none hq-ambient-backdrop" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 pointer-events-none hq-ambient-circle" />
 
       <div className="relative w-full max-w-md">
         {/* Logo / Branding */}
@@ -245,12 +233,7 @@ export default function HQLogin() {
         </div>
 
         {/* Auth Card */}
-        <div
-          className="relative backdrop-blur-sm bg-background/80 border border-accent/20 rounded-lg p-8 shadow-lg"
-          style={{
-            boxShadow: "0 8px 32px hsl(var(--accent) / 0.12)",
-          }}
-        >
+        <div className="relative backdrop-blur-sm bg-background/80 border border-accent/20 rounded-lg p-8 shadow-lg hq-card-glow">
           {/* Mode Tabs */}
           <div className="flex gap-1 mb-8 p-1 bg-background/50 rounded-md border border-accent/10">
             {(["signin", "signup", "forgot"] as const).map((m) => (
@@ -384,10 +367,7 @@ export default function HQLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-accent/80 hover:bg-accent disabled:bg-accent/50 text-background font-mono uppercase text-[11px] tracking-[0.3em] rounded-lg transition-all duration-300 mt-6"
-              style={{
-                boxShadow: "0 4px 16px hsl(var(--accent) / 0.3)",
-              }}
+              className="w-full py-3 bg-accent/80 hover:bg-accent disabled:bg-accent/50 text-background font-mono uppercase text-[11px] tracking-[0.3em] rounded-lg transition-all duration-300 mt-6 hq-card-glow"
             >
               {loading ? "Processing..." : mode === "signin" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Email"}
             </button>

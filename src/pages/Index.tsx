@@ -17,7 +17,7 @@ import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symme
 import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 import muddyBootsCraftAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
-import mainRidgeLegacyAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json;
+import mainRidgeLegacyAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;

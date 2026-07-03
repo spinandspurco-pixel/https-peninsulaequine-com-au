@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { logClientEvent } from "@/lib/clientLog";
 import { usePageMeta } from "@/lib/usePageMeta";
+import "@/styles/hq.css";
+import type { User } from "@supabase/supabase-js";
 
 interface ClientProject {
   id: string;
@@ -25,6 +27,8 @@ interface ClientAccount {
   joinedDate: string;
 }
 
+type ClientTabType = "projects" | "gallery" | "documents" | "account";
+
 export default function ClientPortal() {
   usePageMeta({
     title: "Client Portal — Peninsula Equine",
@@ -33,9 +37,9 @@ export default function ClientPortal() {
   });
 
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"projects" | "gallery" | "documents" | "account">("projects");
+  const [activeTab, setActiveTab] = useState<ClientTabType>("projects");
   const [projects, setProjects] = useState<ClientProject[]>([]);
   const [selectedProject, setSelectedProject] = useState<ClientProject | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -152,15 +156,17 @@ export default function ClientPortal() {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-2">
-            {[
-              { id: "projects", label: "My Projects", icon: "🏗️" },
-              { id: "gallery", label: "Gallery", icon: "📸" },
-              { id: "documents", label: "Documents", icon: "📄" },
-              { id: "account", label: "Account", icon: "👤" },
-            ].map((item) => (
+            {(
+              [
+                { id: "projects", label: "My Projects", icon: "🏗️" },
+                { id: "gallery", label: "Gallery", icon: "📸" },
+                { id: "documents", label: "Documents", icon: "📄" },
+                { id: "account", label: "Account", icon: "👤" },
+              ] as const
+            ).map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id as any)}
+                onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                   activeTab === item.id
                     ? "bg-accent/20 text-foreground border border-accent/30"
@@ -275,10 +281,13 @@ export default function ClientPortal() {
                         <span className="text-[11px] text-foreground/50 font-mono">Overall Progress</span>
                         <span className="font-mono text-[11px] text-foreground/70">{project.progress}%</span>
                       </div>
-                      <div className="w-full h-2 bg-background rounded-full overflow-hidden">
+                      <div 
+                        className="hq-progress-bar w-full" 
+                        title={`${project.name} progress: ${project.progress}%`}
+                      >
                         <div
-                          className="h-full bg-accent transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
+                          className="hq-progress-fill"
+                          style={{ width: `${project.progress}%` } as React.CSSProperties}
                         />
                       </div>
                     </div>
@@ -415,6 +424,8 @@ export default function ClientPortal() {
                       type="email"
                       value={user?.email}
                       disabled
+                      title="Email address"
+                      aria-label="Email address"
                       className="w-full px-4 py-2 bg-background/50 border border-accent/10 rounded-lg text-foreground/60 font-light text-[13px]"
                     />
                   </div>
@@ -435,6 +446,8 @@ export default function ClientPortal() {
                         type="checkbox"
                         checked={notif.enabled}
                         disabled
+                        title={`${notif.label} notification`}
+                        aria-label={`${notif.label} notification`}
                         className="w-4 h-4 rounded"
                       />
                     </div>

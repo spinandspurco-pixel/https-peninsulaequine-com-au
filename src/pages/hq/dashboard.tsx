@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { logClientEvent } from "@/lib/clientLog";
 import { usePageMeta } from "@/lib/usePageMeta";
+import "@/styles/hq.css";
+import type { User } from "@supabase/supabase-js";
 
 interface Project {
   id: string;
@@ -21,6 +23,14 @@ interface DashboardStats {
   teamMembers: number;
 }
 
+type TabType = "overview" | "projects" | "team" | "settings";
+
+interface NavItem {
+  id: TabType;
+  label: string;
+  icon: string;
+}
+
 export default function AdminDashboard() {
   usePageMeta({
     title: "HQ Dashboard — Peninsula Equine",
@@ -29,9 +39,9 @@ export default function AdminDashboard() {
   });
 
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "projects" | "team" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     totalProjects: 0,
@@ -161,15 +171,17 @@ export default function AdminDashboard() {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-2">
-            {[
-              { id: "overview", label: "Overview", icon: "📊" },
-              { id: "projects", label: "Projects", icon: "🏗️" },
-              { id: "team", label: "Team", icon: "👥" },
-              { id: "settings", label: "Settings", icon: "⚙️" },
-            ].map((item) => (
+            {(
+              [
+                { id: "overview", label: "Overview", icon: "📊" },
+                { id: "projects", label: "Projects", icon: "🏗️" },
+                { id: "team", label: "Team", icon: "👥" },
+                { id: "settings", label: "Settings", icon: "⚙️" },
+              ] as const
+            ).map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id as any)}
+                onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                   activeTab === item.id
                     ? "bg-accent/20 text-foreground border border-accent/30"
@@ -288,12 +300,15 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className="w-32 h-2 bg-background rounded-full overflow-hidden">
+                        <div className="hq-progress-bar w-32" title={`Progress: ${project.progress}%`}>
                           <div
-                            className="h-full bg-accent transition-all duration-300"
-                            style={{ width: `${project.progress}%` }}
+                            className="hq-progress-fill"
+                            style={{ width: `${project.progress}%` } as React.CSSProperties}
                           />
                         </div>
+                        <span className="font-mono text-[11px] text-foreground/60 w-10 text-right">
+                          {project.progress}%
+                        </span>
                         <span className="font-mono text-[11px] text-foreground/60 w-10 text-right">
                           {project.progress}%
                         </span>
@@ -355,10 +370,13 @@ export default function AdminDashboard() {
                         <span className="text-[11px] text-foreground/50 font-mono">Progress</span>
                         <span className="font-mono text-[11px] text-foreground/70">{project.progress}%</span>
                       </div>
-                      <div className="w-full h-2 bg-background rounded-full overflow-hidden">
+                      <div 
+                        className="hq-progress-bar w-full" 
+                        title={`${project.name} progress: ${project.progress}%`}
+                      >
                         <div
-                          className="h-full bg-accent transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
+                          className="hq-progress-fill"
+                          style={{ width: `${project.progress}%` } as React.CSSProperties}
                         />
                       </div>
                     </div>
@@ -416,6 +434,8 @@ export default function AdminDashboard() {
                       type="email"
                       value={user?.email}
                       disabled
+                      title="Email address"
+                      aria-label="Email address"
                       className="w-full px-4 py-2 bg-background/50 border border-accent/10 rounded-lg text-foreground/60 font-light text-[13px]"
                     />
                   </div>
@@ -427,6 +447,8 @@ export default function AdminDashboard() {
                       type="text"
                       value="Administrator"
                       disabled
+                      title="User role"
+                      aria-label="User role"
                       className="w-full px-4 py-2 bg-background/50 border border-accent/10 rounded-lg text-foreground/60 font-light text-[13px]"
                     />
                   </div>
