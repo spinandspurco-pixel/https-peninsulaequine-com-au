@@ -5,7 +5,7 @@ import { logClientEvent } from "@/lib/clientLog";
 import { usePageMeta } from "@/lib/usePageMeta";
 import "@/styles/hq.css";
 
-type AuthMode = "signin" | "signup" | "forgot";
+type AuthMode = "signin" | "signup" | "forgot" | "otp" | "verify-otp";
 
 interface AuthError {
   message: string;
@@ -25,6 +25,7 @@ export default function HQLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AuthError | null>(null);
   const [success, setSuccess] = useState("");
@@ -215,6 +216,93 @@ export default function HQLogin() {
     }
   };
 
+  const handleSendOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/hq/auth/callback`,
+        },
+      });
+
+      if (otpError) {
+        logClientEvent("hq_otp_send_error", {
+          error_code: otpError.status,
+          error_message: otpError.message,
+        });
+        setError({
+          message: otpError.message || "Failed to send login link. Try again.",
+          code: otpError.status?.toString(),
+        });
+        setLoading(false);
+        return;
+      }
+
+      logClientEvent("hq_otp_sent", { email });
+      setSuccess("Check your email for the secure login link!");
+      setMode("verify-otp");
+      setOtp("");
+    } catch (err) {
+      logClientEvent("hq_otp_exception", {
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+      setError({
+        message: "An unexpected error occurred. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    if (!otp.trim()) {
+      setError({ message: "Please enter the code from your email." });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: "email",
+      });
+
+      if (verifyError) {
+        logClientEvent("hq_otp_verify_error", {
+          error_code: verifyError.status,
+          error_message: verifyError.message,
+        });
+        setError({
+          message: verifyError.message || "Invalid or expired code. Try again.",
+          code: verifyError.status?.toString(),
+        });
+        setLoading(false);
+        return;
+      }
+
+      logClientEvent("hq_otp_verified", { email });
+      navigate("/hq/dashboard", { replace: true });
+    } catch (err) {
+      logClientEvent("hq_otp_verify_exception", {
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+      setError({
+        message: "An unexpected error occurred. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 flex items-center justify-center px-4 py-12">
       {/* Ambient background elements */}
@@ -235,23 +323,25 @@ export default function HQLogin() {
         {/* Auth Card */}
         <div className="relative backdrop-blur-sm bg-background/80 border border-accent/20 rounded-lg p-8 shadow-lg hq-card-glow">
           {/* Mode Tabs */}
-          <div className="flex gap-1 mb-8 p-1 bg-background/50 rounded-md border border-accent/10">
-            {(["signin", "signup", "forgot"] as const).map((m) => (
+          <div className="flex gap-1 mb-8 p-1 bg-background/50 rounded-md border border-accent/10 flex-wrap">
+            {(["signin", "otp", "signup", "forgot"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
                 disabled={loading}
-                className={`flex-1 py-2 px-3 text-[11px] font-mono uppercase tracking-[0.3em] rounded transition-all duration-300 ${
+                className={`py-2 px-2 text-[10px] font-mono uppercase tracking-[0.3em] rounded transition-all duration-300 ${
                   mode === m
                     ? "bg-accent/20 text-foreground border border-accent/30"
                     : "text-foreground/50 hover:text-foreground/70"
                 }`}
               >
                 {m === "signin"
-                  ? "Sign In"
-                  : m === "signup"
-                    ? "Sign Up"
-                    : "Reset"}
+                  ? "Password"
+                  : m === "otp"
+                    ? "Link"
+                    : m === "signup"
+                      ? "Sign Up"
+                      : "Reset"}
               </button>
             ))}
           </div>
@@ -279,9 +369,13 @@ export default function HQLogin() {
             onSubmit={
               mode === "signin"
                 ? handleSignIn
-                : mode === "signup"
-                  ? handleSignUp
-                  : handleForgotPassword
+                : mode === "otp"
+                  ? handleSendOTP
+                  : mode === "verify-otp"
+                    ? handleVerifyOTP
+                    : mode === "signup"
+                      ? handleSignUp
+                      : handleForgotPassword
             }
             className="space-y-5"
           >
@@ -302,7 +396,7 @@ export default function HQLogin() {
             </div>
 
             {/* Password Input (Sign In & Sign Up) */}
-            {mode !== "forgot" && (
+            {mode === "signin" && (
               <div className="space-y-2">
                 <label className="block font-mono text-foreground/70 text-[10px] uppercase tracking-[0.3em]">
                   Password
@@ -329,6 +423,29 @@ export default function HQLogin() {
                     )}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* OTP Input (Magic Link Verification) */}
+            {mode === "verify-otp" && (
+              <div className="space-y-2">
+                <label className="block font-mono text-foreground/70 text-[10px] uppercase tracking-[0.3em]">
+                  Verification Code
+                </label>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  disabled={loading}
+                  required
+                  maxLength={6}
+                  className="w-full px-4 py-3 bg-background/50 border border-accent/20 rounded-lg text-foreground placeholder-foreground/40 focus:outline-none focus:border-accent/50 focus:bg-background/70 transition-all duration-300 text-[14px] tracking-[0.3em] text-center text-xl font-mono"
+                  placeholder="000000"
+                  autoComplete="off"
+                />
+                <p className="text-[12px] text-foreground/50 text-center">
+                  Enter the 6-digit code from your email
+                </p>
               </div>
             )}
 
@@ -363,13 +480,36 @@ export default function HQLogin() {
               </div>
             )}
 
+            {/* Back to OTP (Verify Mode) */}
+            {mode === "verify-otp" && (
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => setMode("otp")}
+                  className="text-accent/70 hover:text-accent transition-colors text-[11px] font-mono uppercase tracking-[0.3em]"
+                >
+                  ← Back
+                </button>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
               className="w-full py-3 bg-accent/80 hover:bg-accent disabled:bg-accent/50 text-background font-mono uppercase text-[11px] tracking-[0.3em] rounded-lg transition-all duration-300 mt-6 hq-card-glow"
             >
-              {loading ? "Processing..." : mode === "signin" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Email"}
+              {loading
+                ? "Processing..."
+                : mode === "signin"
+                  ? "Sign In"
+                  : mode === "otp"
+                    ? "Send Login Link"
+                    : mode === "verify-otp"
+                      ? "Verify Code"
+                      : mode === "signup"
+                        ? "Create Account"
+                        : "Send Reset Email"}
             </button>
           </form>
 
