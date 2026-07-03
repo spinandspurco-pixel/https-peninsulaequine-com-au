@@ -42,12 +42,7 @@ export default function Admin() {
     const key = t.to.replace("/hq/", "");
     return canSeeHqItem(effectiveRoles, key);
   });
-  
 
-  // TEMP HQ-load diagnostics
-  useHqMount("Admin");
-  // Log key state on every render so we can see what gate is being held.
-   
   hqLog("Admin:render", {
     loading,
     ready: !loading,
