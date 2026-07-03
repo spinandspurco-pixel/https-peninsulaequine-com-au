@@ -6,7 +6,6 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { HomeTestimonialsStrip } from "@/components/home/HomeTestimonialsStrip";
 import { HomeEventsStrip } from "@/components/home/HomeEventsStrip";
-// MagneticLink is exposed in src/components/motion for future use.
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 import { usePageMeta } from "@/lib/usePageMeta";
