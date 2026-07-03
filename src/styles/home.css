@@ -1,0 +1,265 @@
+/* Peninsula Equine - Homepage Styling */
+
+/* Hero Section */
+.home-hero-image-wrapper {
+  position: absolute;
+  inset: 0;
+  background-color: hsl(222 20% 6%);
+}
+
+.home-hero-image {
+  opacity: var(--image-opacity, 0);
+  transform: var(--image-scale, scale(1.04));
+  transition: opacity 1600ms cubic-bezier(0.45, 0, 0.15, 1),
+              transform 2400ms cubic-bezier(0.45, 0, 0.15, 1);
+  will-change: opacity, transform;
+  filter: contrast(1.12) saturate(1.10) brightness(0.96) hue-rotate(2deg);
+}
+
+.home-hero-failed-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: hsl(222 20% 6%);
+  background-image: radial-gradient(
+    ellipse 70% 60% at 62% 50%,
+    hsl(28 35% 14% / 0.45) 0%,
+    transparent 70%
+  );
+}
+
+/* Cinematic spotlight */
+.home-hero-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background: radial-gradient(
+    ellipse 30% 38% at 64% 46%,
+    hsl(34 55% 72% / 0.55) 0%,
+    hsl(28 40% 50% / 0.18) 45%,
+    transparent 72%
+  );
+  opacity: var(--image-opacity, 0);
+  transition: opacity 1800ms cubic-bezier(0.45, 0, 0.15, 1) 200ms;
+}
+
+.home-hero-spotlight-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 28% 34% at 64% 46%,
+    hsl(36 50% 78% / 0.10) 0%,
+    transparent 65%
+  );
+  opacity: var(--image-opacity, 0);
+  transition: opacity 1800ms cubic-bezier(0.45, 0, 0.15, 1) 200ms;
+}
+
+/* Desktop readability scrim */
+.home-hero-scrim-desktop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--background) / 0.92) 0%,
+    hsl(var(--background) / 0.72) 28%,
+    hsl(var(--background) / 0.08) 58%,
+    hsl(var(--background) / 0.22) 100%
+  );
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .home-hero-scrim-desktop {
+    display: block;
+  }
+}
+
+/* Mobile scrim */
+.home-hero-scrim-mobile {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background) / 0.45) 0%,
+    hsl(var(--background) / 0.15) 30%,
+    hsl(var(--background) / 0.55) 60%,
+    hsl(var(--background) / 0.92) 100%
+  );
+}
+
+@media (min-width: 640px) {
+  .home-hero-scrim-mobile {
+    display: none;
+  }
+}
+
+/* Section gradients */
+.home-section-bg-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--accent) / 0.40) 50%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+.home-section-bg-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 600px;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% -50%,
+    hsl(var(--accent) / 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Project cards */
+.home-project-card {
+  position: relative;
+  background: hsl(var(--background) / 0.4);
+  border: 1px solid hsl(var(--accent) / 0.10);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: all 300ms ease;
+}
+
+.home-project-card:hover {
+  background: hsl(var(--background) / 0.55);
+  border-color: hsl(var(--accent) / 0.25);
+  box-shadow: 0 0 40px hsl(var(--accent) / 0.15);
+}
+
+.home-project-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Testimonial styling */
+.home-testimonial-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-testimonial-card {
+  background: hsl(var(--background) / 0.5);
+  border-left: 2px solid hsl(var(--accent) / 0.30);
+  padding: 1.5rem;
+  border-radius: 0.25rem;
+  transition: all 300ms ease;
+}
+
+.home-testimonial-card:hover {
+  background: hsl(var(--background) / 0.7);
+  border-left-color: hsl(var(--accent) / 0.60);
+  box-shadow: 0 0 30px hsl(var(--accent) / 0.10);
+}
+
+/* Event strip */
+.home-event-item {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  background: hsl(var(--background) / 0.4);
+  transition: all 200ms ease;
+}
+
+.home-event-item:hover {
+  background: hsl(var(--background) / 0.6);
+}
+
+/* Call-to-action buttons */
+.home-cta-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: hsl(var(--accent));
+  color: hsl(var(--background));
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(0.45, 0, 0.15, 1);
+  cursor: pointer;
+  border: none;
+}
+
+.home-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px hsl(var(--accent) / 0.40);
+  background: hsl(var(--accent) / 0.95);
+}
+
+.home-cta-button:active {
+  transform: translateY(0);
+}
+
+/* Secondary button */
+.home-secondary-button {
+  background: transparent;
+  color: hsl(var(--accent));
+  border: 1px solid hsl(var(--accent) / 0.40);
+}
+
+.home-secondary-button:hover {
+  background: hsl(var(--accent) / 0.08);
+  border-color: hsl(var(--accent) / 0.80);
+  box-shadow: none;
+}
+
+/* Image glow effect for UI elements */
+.home-image-glow {
+  box-shadow: 0 0 20px hsl(var(--accent) / 0.30);
+}
+
+/* Section dividers */
+.home-section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--accent) / 0.20) 50%,
+    transparent 100%
+  );
+  margin: 4rem 0;
+}
+
+/* Content wrapper for text overlays on images */
+.home-content-overlay {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+/* Accent underline for headings */
+.home-accent-underline {
+  display: inline-block;
+  height: 2px;
+  background-color: hsl(var(--accent));
+  width: 3rem;
+  transition: width 300ms ease;
+}
+
+.home-accent-underline:hover {
+  width: 4rem;
+}

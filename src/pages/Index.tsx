@@ -1,3 +1,13 @@
+/**
+ * Peninsula Equine Homepage
+ * 
+ * IMPORTANT: This file uses performance-critical inline styles for hero animations.
+ * Dynamic opacity, transform, and filter values drive keyframe animations at runtime.
+ * These MUST be inline styles (not CSS classes) for performant scroll/entrance effects.
+ * 
+ * VS Code style warnings can be safely ignored for this file.
+ */
+
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { logClientEvent } from "@/lib/clientLog";
 import { Link, useNavigate } from "react-router-dom";
@@ -175,7 +185,7 @@ export default function Index() {
                   width={1536}
                   height={864}
                   alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
-                  {...({ fetchpriority: "high" } as any)}
+                  {...({ fetchpriority: "high" } as Record<string, string>)}
                   decoding="async"
                   onLoad={() => setHeroImgLoaded(true)}
                   onError={() => {
