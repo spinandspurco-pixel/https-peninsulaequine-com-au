@@ -1,0 +1,224 @@
+/* HQ Authentication and Dashboard Styles */
+
+/* ──────────── Ambient Background Elements ──────────── */
+.hq-ambient-backdrop {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    hsl(var(--accent) / 0.08) 0%,
+    transparent 70%
+  );
+}
+
+.hq-ambient-circle {
+  background: radial-gradient(
+    circle,
+    hsl(var(--accent) / 0.06) 0%,
+    transparent 70%
+  );
+  filter: blur(80px);
+}
+
+/* ──────────── Auth Card Styling ──────────── */
+.hq-card-glow {
+  box-shadow: 0 0 60px hsl(var(--accent) / 0.08);
+}
+
+.hq-success-state {
+  box-shadow: 0 0 40px hsl(var(--accent) / 0.12);
+}
+
+/* ──────────── Tab Navigation ──────────── */
+.hq-tab-active {
+  border-bottom-color: hsl(var(--accent));
+  color: hsl(var(--foreground));
+}
+
+.hq-tab-inactive {
+  border-bottom-color: transparent;
+  color: hsl(var(--foreground) / 0.5);
+}
+
+.hq-tab-hover {
+  color: hsl(var(--foreground) / 0.7);
+}
+
+/* ──────────── Form Elements ──────────── */
+.hq-input-base {
+  background-color: hsl(var(--background) / 0.5);
+  border-color: hsl(var(--accent) / 0.1);
+  border-radius: 0.5rem;
+  color: hsl(var(--foreground) / 0.6);
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.hq-input-focus {
+  border-color: hsl(var(--accent) / 0.3);
+  background-color: hsl(var(--background) / 0.7);
+  color: hsl(var(--foreground));
+}
+
+.hq-input-disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background-color: hsl(var(--background) / 0.3);
+}
+
+/* ──────────── Button States ──────────── */
+.hq-button-primary {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--background));
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 200ms ease-out;
+}
+
+.hq-button-primary:hover {
+  background-color: hsl(var(--accent) / 0.9);
+  box-shadow: 0 0 20px hsl(var(--accent) / 0.3);
+}
+
+.hq-button-primary:active {
+  transform: scale(0.98);
+}
+
+.hq-button-secondary {
+  background-color: transparent;
+  border: 1px solid hsl(var(--accent) / 0.2);
+  color: hsl(var(--foreground) / 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 200ms ease-out;
+}
+
+.hq-button-secondary:hover {
+  background-color: hsl(var(--accent) / 0.05);
+  border-color: hsl(var(--accent) / 0.4);
+  color: hsl(var(--foreground));
+}
+
+/* ──────────── Stats Cards ──────────── */
+.hq-stat-card {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background) / 0.8) 0%,
+    hsl(var(--background) / 0.5) 100%
+  );
+  border: 1px solid hsl(var(--accent) / 0.1);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 200ms ease-out;
+}
+
+.hq-stat-card:hover {
+  border-color: hsl(var(--accent) / 0.2);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background) / 0.9) 0%,
+    hsl(var(--background) / 0.6) 100%
+  );
+  box-shadow: 0 8px 24px hsl(var(--accent) / 0.08);
+}
+
+/* ──────────── Project Status Indicators ──────────── */
+.hq-status-completed {
+  color: hsl(142 72% 29%);
+  background-color: hsl(142 71% 45% / 0.1);
+}
+
+.hq-status-in-progress {
+  color: hsl(217 91% 60%);
+  background-color: hsl(217 91% 60% / 0.1);
+}
+
+.hq-status-planning {
+  color: hsl(38 92% 50%);
+  background-color: hsl(38 92% 50% / 0.1);
+}
+
+/* ──────────── Progress Bar ──────────── */
+.hq-progress-bar {
+  background-color: hsl(var(--accent) / 0.1);
+  border-radius: 9999px;
+  height: 0.25rem;
+  overflow: hidden;
+}
+
+.hq-progress-fill {
+  background-color: hsl(var(--accent));
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Width is controlled via inline style for dynamic values */
+}
+
+/* ──────────── Sidebar ──────────── */
+.hq-sidebar-item {
+  padding: 0.75rem 1rem;
+  border-left: 2px solid transparent;
+  color: hsl(var(--foreground) / 0.6);
+  cursor: pointer;
+  transition: all 200ms ease-out;
+}
+
+.hq-sidebar-item:hover {
+  color: hsl(var(--foreground) / 0.8);
+  background-color: hsl(var(--accent) / 0.05);
+}
+
+.hq-sidebar-item-active {
+  border-left-color: hsl(var(--accent));
+  color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.08);
+  font-weight: 500;
+}
+
+/* ──────────── Error States ──────────── */
+.hq-error-message {
+  background-color: hsl(0 84% 60% / 0.1);
+  border: 1px solid hsl(0 84% 60% / 0.3);
+  border-radius: 0.375rem;
+  color: hsl(0 84% 60%);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* ──────────── Success States ──────────── */
+.hq-success-message {
+  background-color: hsl(142 72% 29% / 0.1);
+  border: 1px solid hsl(142 72% 29% / 0.3);
+  border-radius: 0.375rem;
+  color: hsl(142 71% 45%);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* ──────────── Loading State ──────────── */
+.hq-loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid hsl(var(--accent) / 0.2);
+  border-top-color: hsl(var(--accent));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ──────────── Responsive ──────────── */
+@media (max-width: 768px) {
+  .hq-stat-card {
+    padding: 1rem;
+  }
+
+  .hq-sidebar-item {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
