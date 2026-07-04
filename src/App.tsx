@@ -38,6 +38,7 @@ const LegalTerms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Te
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const Admin = lazy(() => import("./pages/Admin"));
 const HqCommandCentre = lazy(() => import("./pages/HqCommandCentre"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
@@ -146,6 +147,7 @@ function AppContent() {
             <Route path="/status" element={<Status />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/v1/callback" element={<AuthCallback />} />
+            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             {/* Staff Command Centre — /hq/* requires authenticated staff role.
                 Preview role is allowed on read-only HQ surfaces (DB trigger
                 block_preview_writes enforces read-only at the data layer). */}
