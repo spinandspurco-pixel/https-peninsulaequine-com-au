@@ -20,7 +20,7 @@
 export const MGMT_API_HOST = ["api", "supabase", "com"].join(".");
 
 export const MGMT_ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
-  "/v1/projects/{ref}/database/lints": ["GET"],
+  "/v1/projects/{ref}/advisors/security": ["GET"],
 };
 
 const KNOWN_PROJECT_REFS: readonly string[] = ["aizkqajrzkvwuobisnzr"];
