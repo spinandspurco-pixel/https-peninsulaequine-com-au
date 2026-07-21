@@ -49,16 +49,22 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Verify SB_MGMT_ACCESS_TOKEN is configured
+      - name: Check security scanner configuration
+        id: config
         env:
           SB_MGMT_ACCESS_TOKEN: ${{ secrets.SB_MGMT_ACCESS_TOKEN }}
         run: |
           if [ -z "$SB_MGMT_ACCESS_TOKEN" ]; then
-            echo "::error::SB_MGMT_ACCESS_TOKEN secret is missing."
-            exit 1
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Security scan skipped: SB_MGMT_ACCESS_TOKEN is not configured."
+            echo "## Nightly security scan — configuration required" >> "$GITHUB_STEP_SUMMARY"
+            echo "Add the read-only repository secret \`SB_MGMT_ACCESS_TOKEN\` to enable scanning." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run security gate
+        if: steps.config.outputs.configured == 'true'
         id: gate
         env:
           SB_MGMT_ACCESS_TOKEN: ${{ secrets.SB_MGMT_ACCESS_TOKEN }}
@@ -73,6 +79,7 @@ jobs:
         continue-on-error: true
 
       - name: Run anon Data API regression suite
+        if: steps.config.outputs.configured == 'true'
         id: regression
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
