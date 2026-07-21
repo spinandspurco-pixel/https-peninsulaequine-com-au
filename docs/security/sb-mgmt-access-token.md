@@ -11,7 +11,7 @@ Only **one** endpoint is called with this token today:
 
 | Method | Endpoint                                                         | Caller                     | Purpose                                       |
 | ------ | ---------------------------------------------------------------- | -------------------------- | --------------------------------------------- |
-| `GET`  | `https://api.supabase.com/v1/projects/{ref}/database/lints`      | `scripts/security-gate.ts` | Nightly + PR security gate — reads DB linter. |
+| `GET`  | `https://api.supabase.com/v1/projects/{ref}/advisors/security`      | `scripts/security-gate.ts` | Nightly + PR security gate — reads DB linter. |
 
 Project ref: `aizkqajrzkvwuobisnzr` (production). No `POST`, `PATCH`, `PUT`, or
 `DELETE` call is made against `api.supabase.com` anywhere in `scripts/`, `src/`,
@@ -24,8 +24,7 @@ imported by browser code — this is enforced by
 
 When minting the token in Supabase → Account → Access Tokens, tick **only**:
 
-- **Projects → Read** — needed to resolve `{ref}` and hit project-scoped routes.
-- **Database → Read** — needed for `GET /v1/projects/{ref}/database/lints`.
+- **Advisors → Read** (`advisors_read`) — needed to read the security-advisor result.
 
 Restrict the token to a **single organisation** and, if the UI offers it, a
 **single project** (`aizkqajrzkvwuobisnzr`). Do **not** grant any of the
@@ -65,4 +64,4 @@ following — none are used and each expands blast radius materially:
       `scripts/security-gate.ts`.
 - [ ] `bun run vitest run src/test/mgmt-token-guard.test.ts` passes.
 - [ ] `scripts/security-gate.ts` exits 0 against production with the newly
-      minted token (proves Projects+Database read scopes are sufficient).
+      minted token (proves the `advisors_read` permission is sufficient).

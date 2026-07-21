@@ -20,7 +20,7 @@ memory) or genuinely resolved, regenerate the baseline locally and commit
 it in the same PR that explains the change:
 
 ```bash
-SUPABASE_ACCESS_TOKEN=... bun scripts/security-gate.ts --update-baseline
+SB_MGMT_ACCESS_TOKEN=... bun scripts/security-gate.ts --update-baseline
 git add .security/baseline.json
 ```
 
@@ -29,7 +29,7 @@ the baseline should be challenged in code review.
 
 ## Required secret
 
-`SUPABASE_ACCESS_TOKEN` — a personal access token with read access to the
+`SB_MGMT_ACCESS_TOKEN` — a personal access token with read access to the
 project's lint endpoint, stored as a GitHub Actions repository secret.
 The workflow fails fast with a clear message if it is missing.
 

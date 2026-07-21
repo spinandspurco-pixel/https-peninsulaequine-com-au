@@ -11,8 +11,8 @@
  *     probe reflects the newly required capability.
  *   - If the new call is unintended → remove it from the source.
  *
- * The scope-prober itself (verifyMgmtTokenScopes.ts) is exempted because its
- * whole purpose is to probe over-scope endpoints — it never runs in prod
+ * The token verifier itself (verifyMgmtTokenScopes.ts) is exempted because it
+ * independently checks the same read-only endpoint and never runs in production
  * code paths.
  */
 
@@ -29,7 +29,7 @@ const SCAN_ROOTS = ["scripts", "supabase/functions", "src"];
 // future edit cannot quietly upgrade a read to a write against the
 // same URL (which would require broader token scopes).
 const ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
-  "/v1/projects/{ref}/database/lints": ["GET"],
+  "/v1/projects/{ref}/advisors/security": ["GET"],
 };
 const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
 
@@ -45,7 +45,7 @@ const EXEMPT_FILES: readonly string[] = [
 // Match `https://api.supabase.com<path>` where <path> is a template literal
 // or string that may contain `${...}` interpolations. We deliberately
 // include `?` and `#` in the capture so `normalise()` can strip them and
-// prove that `/lints` and `/lints?foo=bar` collapse to the same template.
+// prove that query and fragment variants collapse to the same template.
 // Capture stops at the first backtick, quote, or whitespace.
 const URL_RE = /https:\/\/api\.supabase\.com([^\s`"']*)/g;
 
@@ -75,7 +75,7 @@ function walk(dir: string, out: string[] = []): string[] {
 
 function normalise(rawPath: string): string {
   let p = rawPath;
-  // 1. Strip query string and fragment so `/lints?x=1#y` == `/lints`.
+  // 1. Strip query string and fragment so equivalent endpoint URLs normalise identically.
   p = p.replace(/[?#].*$/, "");
   // 2. Collapse any `${...}` interpolation (with any whitespace / quoting
   //    inside the braces) to a single `{ref}` marker. This covers
@@ -242,18 +242,18 @@ function renderMethodDiff(violations: Hit[]): string {
 }
 
 describe("URL normaliser", () => {
-  const CANON = "/v1/projects/{ref}/database/lints";
+  const CANON = "/v1/projects/{ref}/advisors/security";
   const variants = [
-    "/v1/projects/${ref}/database/lints",
-    "/v1/projects/${projectRef}/database/lints",
-    "/v1/projects/${ PROJECT_REF }/database/lints",
-    "/v1/projects/${cfg.projectRef}/database/lints",
-    "/v1/projects/aizkqajrzkvwuobisnzr/database/lints",
-    "/v1/projects/${ref}/database/lints/",
-    "/v1/projects/${ref}/database/lints?include_definition=true",
-    "/v1/projects/${ref}/database/lints#section",
-    "/v1/projects/${ref}/database/lints/?foo=bar",
-    "/v1/projects//${ref}//database//lints",
+    "/v1/projects/${ref}/advisors/security",
+    "/v1/projects/${projectRef}/advisors/security",
+    "/v1/projects/${ PROJECT_REF }/advisors/security",
+    "/v1/projects/${cfg.projectRef}/advisors/security",
+    "/v1/projects/aizkqajrzkvwuobisnzr/advisors/security",
+    "/v1/projects/${ref}/advisors/security/",
+    "/v1/projects/${ref}/advisors/security?include_definition=true",
+    "/v1/projects/${ref}/advisors/security#section",
+    "/v1/projects/${ref}/advisors/security/?foo=bar",
+    "/v1/projects//${ref}//advisors//security",
   ];
 
   for (const v of variants) {

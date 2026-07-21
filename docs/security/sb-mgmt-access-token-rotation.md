@@ -34,7 +34,7 @@ change.
 # From a machine that has the current token exported locally, NOT from CI logs.
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $SB_MGMT_ACCESS_TOKEN" \
-  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints"
+  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/advisors/security"
 # Expect: 200
 ```
 
@@ -49,8 +49,8 @@ failure to the rotation itself.
 2. **Name:** `peninsula-os-mgmt-YYYY-MM` (e.g. `peninsula-os-mgmt-2026-10`).
    The date suffix makes the audit trail readable at a glance.
 3. **Scopes:** tick only
-   - Projects → **Read**
-   - Database → **Read**
+   - Advisors → **Read**
+   - Advisors → **Read**
 4. **Organisation:** restrict to `peninsulaequine` only.
 5. **Project:** if the UI offers project-level restriction, restrict to
    `aizkqajrzkvwuobisnzr`.
@@ -93,14 +93,14 @@ Trigger the `Security gate` workflow manually:
 
 - GitHub → **Actions → Security gate → Run workflow → Run workflow**.
 - The **Verify token scopes are least-privilege** step must pass. It will
-  fail with **exit 1** if a required read scope is missing, or **exit 2** if
-  any write capability leaked in. Both cases mean the token was minted wrong —
+  fail with **exit 1** if the required read permission is missing. CI does not
+  issue mutating requests to infer write access; verify the token selection in Supabase —
   return to step 2.
 
 ### 5b. End-to-end scan (proves the token unblocks the gate)
 
 Same workflow run: the subsequent **Run security gate** step must exit 0.
-This is the real-world check that `GET /v1/projects/{ref}/database/lints`
+This is the real-world check that `GET /v1/projects/{ref}/advisors/security`
 succeeds with the new token.
 
 ### 5c. Edge function smoke (proves runtime rollout)
@@ -128,7 +128,7 @@ Only after steps 5a–5c are all green.
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $OLD_TOKEN" \
-  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints"
+  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/advisors/security"
 # Expect: 401
 ```
 
@@ -167,6 +167,6 @@ replacement immediately following steps 2–5. There is no way to un-revoke.
 - The token must never be logged. `assertMgmtToken()` installs a `console.*`
   sanitiser plus Node `uncaughtException` / `unhandledRejection` scrubbers.
 - If you widen scopes, update `docs/security/sb-mgmt-access-token.md`,
-  `scripts/ci/verifyMgmtTokenScopes.ts` (add the new capability probe), and
+  `scripts/ci/verifyMgmtTokenScopes.ts` (add a read-only endpoint check), and
   `src/test/mgmt-api-allowlist.test.ts` (add the new endpoint) in the **same
   PR** as the code that uses it.
