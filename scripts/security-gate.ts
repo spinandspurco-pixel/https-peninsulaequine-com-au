@@ -106,7 +106,7 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
     console.error(`ERROR: ${(err as Error).message} (project ${PROJECT_REF}).`);
     process.exit(2);
   }
-  const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
+  const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/advisors/security`;
   try {
     assertMgmtCall(url, "GET");
   } catch (err) {
@@ -120,7 +120,8 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
     console.error(`ERROR: Supabase linter fetch failed: ${res.status} ${await res.text()}`);
     process.exit(2);
   }
-  const lints = (await res.json()) as Lint[];
+  const payload = (await res.json()) as Lint[] | { lints?: Lint[] };
+  const lints = Array.isArray(payload) ? payload : (payload.lints ?? []);
   return lints.map((l) => ({
     source: "supabase",
     fingerprint: fp("supabase", [l.name, l.level, l.metadata?.schema, l.metadata?.name, l.cache_key]),
