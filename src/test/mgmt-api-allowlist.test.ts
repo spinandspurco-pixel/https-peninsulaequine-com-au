@@ -29,7 +29,7 @@ const SCAN_ROOTS = ["scripts", "supabase/functions", "src"];
 // future edit cannot quietly upgrade a read to a write against the
 // same URL (which would require broader token scopes).
 const ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
-  "/v1/projects/{ref}/database/lints": ["GET"],
+  "/v1/projects/{ref}/advisors/security": ["GET"],
 };
 const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
 
@@ -242,18 +242,18 @@ function renderMethodDiff(violations: Hit[]): string {
 }
 
 describe("URL normaliser", () => {
-  const CANON = "/v1/projects/{ref}/database/lints";
+  const CANON = "/v1/projects/{ref}/advisors/security";
   const variants = [
-    "/v1/projects/${ref}/database/lints",
-    "/v1/projects/${projectRef}/database/lints",
-    "/v1/projects/${ PROJECT_REF }/database/lints",
-    "/v1/projects/${cfg.projectRef}/database/lints",
-    "/v1/projects/aizkqajrzkvwuobisnzr/database/lints",
-    "/v1/projects/${ref}/database/lints/",
-    "/v1/projects/${ref}/database/lints?include_definition=true",
-    "/v1/projects/${ref}/database/lints#section",
-    "/v1/projects/${ref}/database/lints/?foo=bar",
-    "/v1/projects//${ref}//database//lints",
+    "/v1/projects/${ref}/advisors/security",
+    "/v1/projects/${projectRef}/advisors/security",
+    "/v1/projects/${ PROJECT_REF }/advisors/security",
+    "/v1/projects/${cfg.projectRef}/advisors/security",
+    "/v1/projects/aizkqajrzkvwuobisnzr/advisors/security",
+    "/v1/projects/${ref}/advisors/security/",
+    "/v1/projects/${ref}/advisors/security?include_definition=true",
+    "/v1/projects/${ref}/advisors/security#section",
+    "/v1/projects/${ref}/advisors/security/?foo=bar",
+    "/v1/projects//${ref}//advisors//security",
   ];
 
   for (const v of variants) {
