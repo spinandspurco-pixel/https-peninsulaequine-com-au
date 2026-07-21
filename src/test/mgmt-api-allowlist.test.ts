@@ -11,8 +11,8 @@
  *     probe reflects the newly required capability.
  *   - If the new call is unintended → remove it from the source.
  *
- * The scope-prober itself (verifyMgmtTokenScopes.ts) is exempted because its
- * whole purpose is to probe over-scope endpoints — it never runs in prod
+ * The token verifier itself (verifyMgmtTokenScopes.ts) is exempted because it
+ * independently checks the same read-only endpoint and never runs in production
  * code paths.
  */
 
@@ -45,7 +45,7 @@ const EXEMPT_FILES: readonly string[] = [
 // Match `https://api.supabase.com<path>` where <path> is a template literal
 // or string that may contain `${...}` interpolations. We deliberately
 // include `?` and `#` in the capture so `normalise()` can strip them and
-// prove that `/lints` and `/lints?foo=bar` collapse to the same template.
+// prove that query and fragment variants collapse to the same template.
 // Capture stops at the first backtick, quote, or whitespace.
 const URL_RE = /https:\/\/api\.supabase\.com([^\s`"']*)/g;
 
@@ -75,7 +75,7 @@ function walk(dir: string, out: string[] = []): string[] {
 
 function normalise(rawPath: string): string {
   let p = rawPath;
-  // 1. Strip query string and fragment so `/lints?x=1#y` == `/lints`.
+  // 1. Strip query string and fragment so equivalent endpoint URLs normalise identically.
   p = p.replace(/[?#].*$/, "");
   // 2. Collapse any `${...}` interpolation (with any whitespace / quoting
   //    inside the braces) to a single `{ref}` marker. This covers
