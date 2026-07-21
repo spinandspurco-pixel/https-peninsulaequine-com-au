@@ -24,8 +24,7 @@ imported by browser code — this is enforced by
 
 When minting the token in Supabase → Account → Access Tokens, tick **only**:
 
-- **Advisors → Read** — needed to read the security-advisor result.
-- **Advisors → Read** — needed for the same endpoint.
+- **Advisors → Read** (`advisors_read`) — needed to read the security-advisor result.
 
 Restrict the token to a **single organisation** and, if the UI offers it, a
 **single project** (`aizkqajrzkvwuobisnzr`). Do **not** grant any of the
@@ -65,4 +64,4 @@ following — none are used and each expands blast radius materially:
       `scripts/security-gate.ts`.
 - [ ] `bun run vitest run src/test/mgmt-token-guard.test.ts` passes.
 - [ ] `scripts/security-gate.ts` exits 0 against production with the newly
-      minted token (proves the advisors_read permission are sufficient).
+      minted token (proves the `advisors_read` permission is sufficient).
