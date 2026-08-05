@@ -19,8 +19,10 @@
  *   bun scripts/security-gate.ts                 # check, fail on new findings
  *   bun scripts/security-gate.ts --update-baseline   # rewrite baseline locally
  *
- * Env (required):
- *   SB_MGMT_ACCESS_TOKEN    Supabase management API token w/ read access to the lint endpoint
+ * Env (optional):
+ *   SB_MGMT_ACCESS_TOKEN    Supabase management API token w/ read access to the lint endpoint.
+ *                           When absent, the source is reported as unavailable without
+ *                           treating baseline findings as resolved.
  *                           (legacy SUPABASE_ACCESS_TOKEN is still honoured as a fallback)
 
  *
@@ -86,6 +88,12 @@ type BaselineEntry = {
   acknowledged_in?: string;
 };
 
+type SourceResult = {
+  findings: Finding[];
+  status: "ok" | "unavailable";
+  reason?: string;
+};
+
 function fp(source: string, parts: Array<string | undefined>): string {
   return createHash("sha256")
     .update([source, ...parts.map((p) => p ?? "")].join("|"))
@@ -97,7 +105,13 @@ function fp(source: string, parts: Array<string | undefined>): string {
 // Supabase linter source
 // ----------------------------------------------------------------------------
 
-async function fetchSupabaseFindings(): Promise<Finding[]> {
+async function fetchSupabaseFindings(): Promise<SourceResult> {
+  if (!TOKEN.trim()) {
+    const reason = "SB_MGMT_ACCESS_TOKEN is not configured";
+    console.warn(`Supabase: ${reason}; database advisor scan unavailable.`);
+    return { findings: [], status: "unavailable", reason };
+  }
+
   // Runtime guard: aborts if the mgmt token is missing AND installs a console
   // sanitiser so the token cannot leak via subsequent logging.
   try {
@@ -121,7 +135,7 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
     process.exit(2);
   }
   const lints = (await res.json()) as Lint[];
-  return lints.map((l) => ({
+  const findings = lints.map((l) => ({
     source: "supabase",
     fingerprint: fp("supabase", [l.name, l.level, l.metadata?.schema, l.metadata?.name, l.cache_key]),
     name: l.name,
@@ -134,6 +148,7 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
       ? `${l.metadata.schema}.${l.metadata.name}`
       : undefined].filter((x): x is string => Boolean(x)),
   }));
+  return { findings, status: "ok" };
 }
 
 // ----------------------------------------------------------------------------
@@ -148,13 +163,13 @@ type WizIssue = {
   entitySnapshot?: { name?: string; type?: string; cloudPlatform?: string };
 };
 
-async function fetchWizFindings(): Promise<Finding[]> {
+async function fetchWizFindings(): Promise<SourceResult> {
   const apiUrl = process.env.WIZ_API_URL;
   const clientId = process.env.WIZ_CLIENT_ID;
   const clientSecret = process.env.WIZ_CLIENT_SECRET;
   if (!apiUrl || !clientId || !clientSecret) {
     console.log("Wiz: credentials not set, skipping connector source.");
-    return [];
+    return { findings: [], status: "unavailable", reason: "credentials not configured" };
   }
   const authUrl = process.env.WIZ_AUTH_URL ?? "https://auth.app.wiz.io/oauth/token";
 
@@ -201,7 +216,7 @@ async function fetchWizFindings(): Promise<Finding[]> {
   }
   const body = (await res.json()) as { data?: { issues?: { nodes?: WizIssue[] } } };
   const nodes = body.data?.issues?.nodes ?? [];
-  return nodes.map((n) => ({
+  const findings = nodes.map((n) => ({
     source: "wiz",
     fingerprint: fp("wiz", [n.control?.name, n.severity, n.entitySnapshot?.type, n.entitySnapshot?.name]),
     name: n.control?.name ?? "wiz-issue",
@@ -211,6 +226,7 @@ async function fetchWizFindings(): Promise<Finding[]> {
     description: `${n.entitySnapshot?.type ?? "resource"} ${n.entitySnapshot?.name ?? n.id}`,
     searchHints: [n.entitySnapshot?.name].filter((x): x is string => Boolean(x)),
   }));
+  return { findings, status: "ok" };
 }
 
 // ----------------------------------------------------------------------------
@@ -252,23 +268,35 @@ function summary(lines: string[]) {
 async function main() {
   const update = process.argv.includes("--update-baseline");
 
-  const [supabase, wiz] = await Promise.all([
+  const [supabaseResult, wizResult] = await Promise.all([
     fetchSupabaseFindings(),
     fetchWizFindings(),
   ]);
+  const supabase = supabaseResult.findings;
+  const wiz = wizResult.findings;
   const findings = [...supabase, ...wiz];
 
   writeFileSync(
     REPORT_PATH,
-    JSON.stringify({ fetched_at: new Date().toISOString(), sources: { supabase, wiz } }, null, 2),
+    JSON.stringify({
+      fetched_at: new Date().toISOString(),
+      sources: {
+        supabase: { ...supabaseResult, findings: supabase },
+        wiz: { ...wizResult, findings: wiz },
+      },
+    }, null, 2),
   );
 
   if (update) {
+    if (supabaseResult.status !== "ok") {
+      console.error("ERROR: cannot update the baseline while the Supabase scan is unavailable.");
+      process.exit(2);
+    }
     writeBaseline(findings.map(toBaselineEntry));
     summary([
       "## Security Gate — baseline updated",
       `- Project: \`${PROJECT_REF}\``,
-      `- Sources: supabase=${supabase.length}, wiz=${wiz.length}`,
+      `- Sources: supabase=${supabaseResult.status} (${supabase.length}), wiz=${wizResult.status} (${wiz.length})`,
       `- Findings recorded: **${findings.length}**`,
     ]);
     return;
@@ -279,7 +307,13 @@ async function main() {
   const currentFps = new Set(findings.map((c) => c.fingerprint));
 
   const added = findings.filter((c) => !baselineFps.has(c.fingerprint));
-  const resolved = baseline.filter((b) => !currentFps.has(b.fingerprint));
+  const availableSources = new Set([
+    ...(supabaseResult.status === "ok" ? ["supabase"] : []),
+    ...(wizResult.status === "ok" ? ["wiz"] : []),
+  ]);
+  const resolved = baseline.filter((b) =>
+    availableSources.has(b.source ?? "supabase") && !currentFps.has(b.fingerprint),
+  );
 
   // Persisted for nightly-issue.ts to render Affected code areas.
   writeFileSync(ADDED_PATH, JSON.stringify({ added }, null, 2));
@@ -287,11 +321,21 @@ async function main() {
   const lines: string[] = [];
   lines.push("## Security Gate");
   lines.push(`- Project: \`${PROJECT_REF}\``);
-  lines.push(`- Sources: supabase=${supabase.length}, wiz=${wiz.length}`);
+  lines.push(`- Sources: supabase=${supabaseResult.status} (${supabase.length}), wiz=${wizResult.status} (${wiz.length})`);
   lines.push(`- Current findings: **${findings.length}**`);
   lines.push(`- Baseline findings: **${baseline.length}**`);
   lines.push(`- New (must fix or acknowledge): **${added.length}**`);
   lines.push(`- Resolved since baseline: **${resolved.length}**`);
+
+  const unavailable = [
+    supabaseResult.status === "unavailable" ? `Supabase database advisors — ${supabaseResult.reason}` : undefined,
+    wizResult.status === "unavailable" ? `Wiz — ${wizResult.reason}` : undefined,
+  ].filter((value): value is string => Boolean(value));
+  if (unavailable.length) {
+    lines.push("", "### ⚠️ Unavailable scanner sources");
+    for (const source of unavailable) lines.push(`- ${source}`);
+    lines.push("- Existing baseline findings from unavailable sources were not marked resolved.");
+  }
 
   if (resolved.length) {
     lines.push("", "### Resolved findings (consider pruning baseline)");
@@ -312,7 +356,12 @@ async function main() {
     process.exit(1);
   }
 
-  lines.push("", "✅ No new security findings.");
+  lines.push(
+    "",
+    availableSources.size > 0
+      ? "✅ No new security findings from the available scanner sources."
+      : "⚠️ Gate completed with reduced coverage; no scanner source was available.",
+  );
   summary(lines);
 }
 
