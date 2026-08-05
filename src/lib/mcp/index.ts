@@ -2,7 +2,9 @@ import { defineMcp, auth } from "@lovable.dev/mcp-js";
 import listProjects from "./tools/list-projects";
 import listServices from "./tools/list-services";
 
-const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "project-ref-unset";
+// Keep the deployed MCP issuer valid when build environments omit the optional
+// project-id variable. This ref is already the repository's configured backend.
+const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "aizkqajrzkvwuobisnzr";
 
 export default defineMcp({
   name: "peninsula-equine-mcp",
