@@ -38,12 +38,12 @@ test.describe("anonymous routing @anon", () => {
   test("login page renders without flashing protected UI", async ({ page }) => {
     await page.goto("/hq");
     await page.waitForURL(/\/login/);
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign In", exact: true })).toBeVisible();
   });
 
   test("/login hides HQ header and Sign Out for unauthenticated visitors", async ({ page }) => {
     await page.goto("/login");
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign In", exact: true })).toBeVisible();
     // No Sign Out control should be reachable on the public login screen.
     await expect(page.getByRole("button", { name: /sign out/i })).toHaveCount(0);
     // No HQ chrome header should render above the StaffPortalFrame.
@@ -52,4 +52,3 @@ test.describe("anonymous routing @anon", () => {
     await expect(page.getByText(/Staff Portal/i)).toHaveCount(1);
   });
 });
-
