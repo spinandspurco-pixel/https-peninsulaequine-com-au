@@ -59,7 +59,7 @@ jobs:
 
       - name: Type-check test suites
         run: |
-          deno check \
+          deno check --node-modules-dir=none \
             supabase/functions/validate-inquiry-upload/index.ts \
             supabase/functions/validate-inquiry-upload/integration_test.ts \
             supabase/functions/validate-inquiry-upload/boundary_test.ts \
@@ -67,21 +67,21 @@ jobs:
 
       - name: Run integration test suite
         run: |
-          deno test \
+          deno test --node-modules-dir=none \
             --allow-env --allow-net --allow-read \
             --reporter=pretty \
             supabase/functions/validate-inquiry-upload/integration_test.ts
 
       - name: Run boundary / safe-handling suite
         run: |
-          deno test \
+          deno test --node-modules-dir=none \
             --allow-env --allow-net --allow-read \
             --reporter=pretty \
             supabase/functions/validate-inquiry-upload/boundary_test.ts
 
       - name: Run config loader suite
         run: |
-          deno test \
+          deno test --node-modules-dir=none \
             --allow-env --allow-net --allow-read \
             --reporter=pretty \
             supabase/functions/validate-inquiry-upload/config_test.ts
