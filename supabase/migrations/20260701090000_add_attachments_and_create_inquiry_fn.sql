@@ -6,7 +6,8 @@ DROP POLICY IF EXISTS "Public can upload inquiry attachments" ON storage.objects
 
 -- Restrict client INSERTs: allow only authenticated users to INSERT into the inquiry-attachments bucket.
 -- If you prefer server-only uploads (recommended), remove this policy entirely so only the service role can insert.
-CREATE POLICY IF NOT EXISTS "Authenticated can insert to inquiry-attachments"
+DROP POLICY IF EXISTS "Authenticated can insert to inquiry-attachments" ON storage.objects;
+CREATE POLICY "Authenticated can insert to inquiry-attachments"
   ON storage.objects
   FOR INSERT
   TO authenticated

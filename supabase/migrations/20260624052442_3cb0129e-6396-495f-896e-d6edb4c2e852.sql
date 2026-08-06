@@ -1,6 +1,7 @@
 
-CREATE EXTENSION IF NOT EXISTS pg_cron;
-CREATE EXTENSION IF NOT EXISTS pg_net;
+-- Extension installation is intentionally omitted here. Hosted Supabase
+-- projects manage pg_cron/pg_net privileges at the platform level, and the
+-- following migration schedules this job only when pg_cron is available.
 
 CREATE OR REPLACE FUNCTION public.seed_staff_roles()
 RETURNS TABLE(out_email text, out_role public.app_role, out_backfilled boolean)
@@ -41,15 +42,5 @@ GRANT EXECUTE ON FUNCTION public.bootstrap_user_role() TO authenticated;
 
 SELECT public.seed_staff_roles();
 
-DO $$
-BEGIN
-  PERFORM cron.unschedule('seed-staff-roles-daily')
-    WHERE EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'seed-staff-roles-daily');
-EXCEPTION WHEN OTHERS THEN NULL;
-END $$;
-
-SELECT cron.schedule(
-  'seed-staff-roles-daily',
-  '15 3 * * *',
-  $cron$ SELECT public.seed_staff_roles(); $cron$
-);
+-- Scheduling is handled defensively by 20260624052541, which skips cleanly
+-- when pg_cron is unavailable.
