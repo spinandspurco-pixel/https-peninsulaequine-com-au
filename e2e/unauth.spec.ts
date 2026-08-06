@@ -48,7 +48,7 @@ test.describe("anonymous routing @anon", () => {
     await expect(page.getByRole("button", { name: /sign out/i })).toHaveCount(0);
     // No HQ chrome header should render above the StaffPortalFrame.
     await expect(page.getByText(/HQ · Command Centre/i)).toHaveCount(0);
-    // Only the StaffPortalFrame title should be present, never duplicated.
-    await expect(page.getByText(/Staff Portal/i)).toHaveCount(1);
+    // The public login card should render exactly once.
+    await expect(page.getByRole("heading", { name: "HQ Access", exact: true })).toHaveCount(1);
   });
 });

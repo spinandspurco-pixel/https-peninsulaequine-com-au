@@ -135,9 +135,13 @@ jobs:
             bunx playwright install --with-deps chromium
           fi
 
-      # Anonymous Playwright suite — covers protected-route redirects plus the
-      # /login header/sign-out regression checks. Restricted to @anon so we
-      # don't require auth fixtures here.
+      # Deterministic anonymous Playwright suite — covers protected-route
+      # redirects, public navigation, and request-payload safety without
+      # writing to the live backend. Tests tagged @live-backend remain
+      # available through Playwright's explicit live-backend project.
       - name: E2E anon suite (Playwright)
         run: bunx playwright test --project=anon-desktop
-
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
