@@ -77,7 +77,7 @@ var list_services_default = defineTool2({
 });
 
 // src/lib/mcp/index.ts
-var projectRef = define_import_meta_env_default.VITE_SUPABASE_PROJECT_ID ?? "aizkqajrzkvwuobisnzr";
+var projectRef = define_import_meta_env_default.VITE_SUPABASE_PROJECT_ID ?? "mxjuknqwzbvvmmdrvkql";
 var mcp_default = defineMcp({
   name: "peninsula-equine-mcp",
   title: "Peninsula Equine",

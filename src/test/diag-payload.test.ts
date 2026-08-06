@@ -5,7 +5,7 @@ const baseInput = {
   buildTime: "2026-06-30T12:00:00.000Z",
   buildCommit: "abc1234",
   bundleHash: "index-ABCD1234.js",
-  supabaseUrl: "https://aizkqajrzkvwuobisnzr.supabase.co",
+  supabaseUrl: "https://mxjuknqwzbvvmmdrvkql.supabase.co",
 };
 
 describe("classifySupabaseKey", () => {
@@ -62,7 +62,7 @@ describe("/api/diag payload contract", () => {
     expect(payload.buildInfo.bundleHash).toBe(baseInput.bundleHash);
     expect(payload.supabase.urlPresent).toBe(true);
     expect(payload.supabase.urlValid).toBe(true);
-    expect(payload.supabase.urlHost).toBe("aizkqajrzkvwuobisnzr.supabase.co");
+    expect(payload.supabase.urlHost).toBe("mxjuknqwzbvvmmdrvkql.supabase.co");
     expect(payload.supabase.key.ok).toBe(true);
   });
 

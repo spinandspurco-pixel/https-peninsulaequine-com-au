@@ -4,7 +4,7 @@ import {
   verifySupabasePublicEnv,
 } from "../../scripts/ci/verifySupabasePublicEnv";
 
-const PROJECT_ID = "xnjwraqanimjbxdctkwz";
+const PROJECT_ID = "mxjuknqwzbvvmmdrvkql";
 const URL = `https://${PROJECT_ID}.supabase.co`;
 const PUBLISHABLE_KEY = `sb_publishable_${"a".repeat(31)}`;
 

@@ -5,16 +5,15 @@
  * the running bundle against.
  *
  * Override at build time without code changes by setting either of these
- * Vite env vars in your hosting environment (e.g. Vercel → Settings →
- * Environment Variables):
+ * Vite env vars in the GitHub repository's Actions variables:
  *
- *   VITE_DIAGNOSTICS_EXPECTED_PROJECT_ID="aizkqajrzkvwuobisnzr"
- *   VITE_DIAGNOSTICS_EXPECTED_URL="https://aizkqajrzkvwuobisnzr.supabase.co"
+ *   VITE_DIAGNOSTICS_EXPECTED_PROJECT_ID="mxjuknqwzbvvmmdrvkql"
+ *   VITE_DIAGNOSTICS_EXPECTED_URL="https://mxjuknqwzbvvmmdrvkql.supabase.co"
  *
  * If unset, the defaults below are used.
  */
 
-const DEFAULT_PROJECT_ID = "aizkqajrzkvwuobisnzr";
+const DEFAULT_PROJECT_ID = "mxjuknqwzbvvmmdrvkql";
 
 const envProjectId = import.meta.env.VITE_DIAGNOSTICS_EXPECTED_PROJECT_ID as
   | string

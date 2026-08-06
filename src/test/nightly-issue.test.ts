@@ -15,7 +15,7 @@ import {
 } from "../../scripts/ci/nightly-issue";
 
 const SAMPLE_GATE_OUTPUT = `## Security Gate
-- Project: \`aizkqajrzkvwuobisnzr\`
+- Project: \`mxjuknqwzbvvmmdrvkql\`
 - Current findings: **3**
 - Baseline findings: **1**
 - New (must fix or acknowledge): **2**

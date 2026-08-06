@@ -5,7 +5,7 @@ import {
   normaliseMgmtPath,
 } from "../../scripts/ci/mgmtApiGuard";
 
-const ALLOWED = "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints";
+const ALLOWED = "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints";
 
 describe("assertMgmtCall", () => {
   it("returns the normalised path for an allowlisted GET", () => {
@@ -61,7 +61,7 @@ describe("normaliseMgmtPath (guard variant)", () => {
     const variants = [
       "/v1/projects/${ref}/database/lints",
       "/v1/projects/${projectRef}/database/lints",
-      "/v1/projects/aizkqajrzkvwuobisnzr/database/lints/",
+      "/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints/",
       "/v1/projects/${ref}/database/lints?x=1",
     ];
     for (const v of variants) {

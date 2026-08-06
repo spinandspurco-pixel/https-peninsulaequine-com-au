@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderEnvError, validateSupabaseEnv } from "@/lib/validateEnv";
 
-const VALID_URL = "https://xnjwraqanimjbxdctkwz.supabase.co";
+const VALID_URL = "https://mxjuknqwzbvvmmdrvkql.supabase.co";
 
 function setEnv(url: string, publishableKey = "", anonKey = "") {
   vi.stubEnv("VITE_SUPABASE_URL", url);

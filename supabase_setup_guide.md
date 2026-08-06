@@ -6,7 +6,7 @@
 
 ## 1. Project Overview
 
-**Project ID:** `aizkqajrzkvwuobisnzr`  
+**Project ID:** `mxjuknqwzbvvmmdrvkql`  
 **Canonical domain:** `peninsulaequine.systems`  
 **Hosting platform:** Lovable Cloud (manages Supabase + frontend deployment)  
 **Source of truth:** GitHub repository `spinandspurco-pixel/https-peninsulaequine-com-au`
@@ -38,7 +38,7 @@ The managed Supabase instance is attached to the Lovable Cloud project at **lova
 If direct Supabase access is needed:
 
 1. Go to **supabase.com** and log in
-2. Navigate to project `aizkqajrzkvwuobisnzr`
+2. Navigate to project `mxjuknqwzbvvmmdrvkql`
 3. Credentials are managed by Lovable Cloud — request access through your Lovable account settings
 
 ---
@@ -108,10 +108,10 @@ supabase db pull  # Syncs remote schema into local migrations
 These are synced from Lovable Cloud to `.env`:
 
 ```env
-VITE_SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
-VITE_SUPABASE_PROJECT_ID=aizkqajrzkvwuobisnzr
+VITE_SUPABASE_URL=https://mxjuknqwzbvvmmdrvkql.supabase.co
+VITE_SUPABASE_PROJECT_ID=mxjuknqwzbvvmmdrvkql
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...  # Current format (or eyJ... legacy format - see warning below)
-SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co  # Backend/local dev
+SUPABASE_URL=https://mxjuknqwzbvvmmdrvkql.supabase.co  # Backend/local dev
 ```
 
 **Important:** These are safe to expose in frontend code (publishable key is not inherently read-only—it can perform writes wherever Row Level Security (RLS) policies allow them).
@@ -386,7 +386,7 @@ supabase/functions/
 The project's `supabase/config.toml` defines JWT verification and environment settings:
 
 ```toml
-project_id = "aizkqajrzkvwuobisnzr"
+project_id = "mxjuknqwzbvvmmdrvkql"
 
 [functions.admin-ai-assistant]
 verify_jwt = false  # Custom guard: checks mgmt token
@@ -560,9 +560,9 @@ The `.env` file is auto-managed by Lovable Cloud. For local development, ensure 
 ```bash
 # From Lovable Cloud project → Backend → API keys, copy these to .env:
 cat > .env << EOF
-SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
-VITE_SUPABASE_URL=https://aizkqajrzkvwuobisnzr.supabase.co
-VITE_SUPABASE_PROJECT_ID=aizkqajrzkvwuobisnzr
+SUPABASE_URL=https://mxjuknqwzbvvmmdrvkql.supabase.co
+VITE_SUPABASE_URL=https://mxjuknqwzbvvmmdrvkql.supabase.co
+VITE_SUPABASE_PROJECT_ID=mxjuknqwzbvvmmdrvkql
 VITE_SUPABASE_PUBLISHABLE_KEY=<your sb_publishable_* key from Lovable>
 EOF
 ```
@@ -686,7 +686,7 @@ The platform provides diagnostic edge functions:
 ### View Logs
 
 **Supabase Dashboard:**
-1. Go to supabase.com → project `aizkqajrzkvwuobisnzr`
+1. Go to supabase.com → project `mxjuknqwzbvvmmdrvkql`
 2. **Functions** → Select function → **Logs** tab
 3. View recent invocations, errors, and output
 
@@ -783,6 +783,6 @@ For production incidents, refer to **RUNBOOK.md** for escalation procedures.
 ---
 
 **Last updated:** July 2, 2026  
-**Project ID:** `aizkqajrzkvwuobisnzr`  
+**Project ID:** `mxjuknqwzbvvmmdrvkql`  
 **Canonical domain:** `peninsulaequine.systems`  
 **Verified Status:** All components tested and operational
