@@ -4,7 +4,7 @@ import listServices from "./tools/list-services";
 
 // Keep the deployed MCP issuer valid when build environments omit the optional
 // project-id variable. This ref is already the repository's configured backend.
-const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "aizkqajrzkvwuobisnzr";
+const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "mxjuknqwzbvvmmdrvkql";
 
 export default defineMcp({
   name: "peninsula-equine-mcp",

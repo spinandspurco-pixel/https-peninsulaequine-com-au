@@ -3,7 +3,7 @@ import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { useSearchParams, Link } from "react-router-dom";
 
 const FUNCTION_URL =
-  "https://aizkqajrzkvwuobisnzr.supabase.co/functions/v1/verify-google-dns";
+  "https://mxjuknqwzbvvmmdrvkql.supabase.co/functions/v1/verify-google-dns";
 
 const DEFAULT_DOMAIN = "peninsulaequine.systems";
 const DEFAULT_TOKEN =

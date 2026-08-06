@@ -34,7 +34,7 @@ change.
 # From a machine that has the current token exported locally, NOT from CI logs.
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $SB_MGMT_ACCESS_TOKEN" \
-  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints"
+  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints"
 # Expect: 200
 ```
 
@@ -53,7 +53,7 @@ failure to the rotation itself.
    - Database → **Read**
 4. **Organisation:** restrict to `peninsulaequine` only.
 5. **Project:** if the UI offers project-level restriction, restrict to
-   `aizkqajrzkvwuobisnzr`.
+   `mxjuknqwzbvvmmdrvkql`.
 6. **Expiry:** 90 days.
 7. Copy the value **once** into a password manager entry named
    `SB_MGMT_ACCESS_TOKEN — <YYYY-MM>`. Do not paste it into chat, email, or
@@ -109,7 +109,7 @@ Curl the edge function directly:
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" \
-  "https://aizkqajrzkvwuobisnzr.supabase.co/functions/v1/mgmt-db-lints"
+  "https://mxjuknqwzbvvmmdrvkql.supabase.co/functions/v1/mgmt-db-lints"
 # Expect: 200 (or 401 without auth — but never 500)
 ```
 
@@ -128,7 +128,7 @@ Only after steps 5a–5c are all green.
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $OLD_TOKEN" \
-  "https://api.supabase.com/v1/projects/aizkqajrzkvwuobisnzr/database/lints"
+  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints"
 # Expect: 401
 ```
 

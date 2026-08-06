@@ -53,7 +53,7 @@ const URL_RE = /https:\/\/api\.supabase\.com([^\s`"']*)/g;
 // literal ref must collapse to `{ref}` so a hard-coded URL cannot bypass
 // the interpolation-based normalisation.
 const KNOWN_PROJECT_REFS: readonly string[] = [
-  "aizkqajrzkvwuobisnzr",
+  "mxjuknqwzbvvmmdrvkql",
 ];
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -248,7 +248,7 @@ describe("URL normaliser", () => {
     "/v1/projects/${projectRef}/database/lints",
     "/v1/projects/${ PROJECT_REF }/database/lints",
     "/v1/projects/${cfg.projectRef}/database/lints",
-    "/v1/projects/aizkqajrzkvwuobisnzr/database/lints",
+    "/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints",
     "/v1/projects/${ref}/database/lints/",
     "/v1/projects/${ref}/database/lints?include_definition=true",
     "/v1/projects/${ref}/database/lints#section",
@@ -265,8 +265,8 @@ describe("URL normaliser", () => {
   it("does not touch unrelated occurrences of the known project ref", () => {
     // A hard-coded ref outside the /projects/<ref>/ slot must be left as-is
     // so we don't accidentally rewrite log lines or unrelated identifiers.
-    expect(normalise("/v1/other/aizkqajrzkvwuobisnzr/details")).toBe(
-      "/v1/other/aizkqajrzkvwuobisnzr/details",
+    expect(normalise("/v1/other/mxjuknqwzbvvmmdrvkql/details")).toBe(
+      "/v1/other/mxjuknqwzbvvmmdrvkql/details",
     );
   });
 });

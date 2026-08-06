@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const FUNCTION_URL =
-  "https://aizkqajrzkvwuobisnzr.supabase.co/functions/v1/verify-google-dns";
+  "https://mxjuknqwzbvvmmdrvkql.supabase.co/functions/v1/verify-google-dns";
 
 const DEFAULT_DOMAIN = "peninsulaequine.systems";
 const DEFAULT_TOKEN =

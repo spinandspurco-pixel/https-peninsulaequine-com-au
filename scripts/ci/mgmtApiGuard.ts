@@ -23,7 +23,7 @@ export const MGMT_ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>>
   "/v1/projects/{ref}/database/lints": ["GET"],
 };
 
-const KNOWN_PROJECT_REFS: readonly string[] = ["aizkqajrzkvwuobisnzr"];
+const KNOWN_PROJECT_REFS: readonly string[] = ["mxjuknqwzbvvmmdrvkql"];
 
 export function normaliseMgmtPath(rawPath: string): string {
   let p = rawPath;

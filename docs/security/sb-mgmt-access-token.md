@@ -13,7 +13,7 @@ Only **one** endpoint is called with this token today:
 | ------ | ---------------------------------------------------------------- | -------------------------- | --------------------------------------------- |
 | `GET`  | `https://api.supabase.com/v1/projects/{ref}/database/lints`      | `scripts/security-gate.ts` | Nightly + PR security gate — reads DB linter. |
 
-Project ref: `aizkqajrzkvwuobisnzr` (production). No `POST`, `PATCH`, `PUT`, or
+Project ref: `mxjuknqwzbvvmmdrvkql` (production). No `POST`, `PATCH`, `PUT`, or
 `DELETE` call is made against `api.supabase.com` anywhere in `scripts/`, `src/`,
 `supabase/functions/`, or the GitHub Actions workflows. The token is never
 imported by browser code — this is enforced by
@@ -28,7 +28,7 @@ When minting the token in Supabase → Account → Access Tokens, tick **only**:
 - **Database → Read** — needed for `GET /v1/projects/{ref}/database/lints`.
 
 Restrict the token to a **single organisation** and, if the UI offers it, a
-**single project** (`aizkqajrzkvwuobisnzr`). Do **not** grant any of the
+**single project** (`mxjuknqwzbvvmmdrvkql`). Do **not** grant any of the
 following — none are used and each expands blast radius materially:
 
 - Secrets (read or write)

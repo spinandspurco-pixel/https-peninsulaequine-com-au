@@ -26,7 +26,7 @@
 import { assertMgmtToken, scrubError } from "./assertMgmtToken.ts";
 
 const API = "https://api.supabase.com";
-const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "aizkqajrzkvwuobisnzr";
+const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "mxjuknqwzbvvmmdrvkql";
 
 interface Probe {
   label: string;

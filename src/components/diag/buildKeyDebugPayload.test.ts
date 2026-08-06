@@ -8,7 +8,7 @@ const baseInput = (overrides: Partial<KeyDebugPayloadInput> = {}): KeyDebugPaylo
   capturedAt: "2026-07-01T00:00:00.000Z",
   origin: "https://peninsulaequine.systems",
   bundleHash: "abc123",
-  supaUrl: "https://aizkqajrzkvwuobisnzr.supabase.co",
+  supaUrl: "https://mxjuknqwzbvvmmdrvkql.supabase.co",
   supaUrlValid: true,
   supaKey: RAW_KEY,
   supaKeyPrefix: "sb_publishable_",
@@ -21,7 +21,7 @@ const baseInput = (overrides: Partial<KeyDebugPayloadInput> = {}): KeyDebugPaylo
   paletteMsg: "New-format publishable key detected.",
   diag: {
     supabase: {
-      urlHost: "aizkqajrzkvwuobisnzr.supabase.co",
+      urlHost: "mxjuknqwzbvvmmdrvkql.supabase.co",
       key: { family: "sb_publishable", prefix: "sb_publishable_", length: RAW_KEY.length },
     },
   },

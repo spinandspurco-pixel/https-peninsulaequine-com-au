@@ -185,9 +185,9 @@ Navigate to `/hq/deploy-health` → Email tab (admin only). This runs `email-ops
 
 | Item | Value |
 |---|---|
-| Project ID | `aizkqajrzkvwuobisnzr` |
-| Supabase URL | `https://aizkqajrzkvwuobisnzr.supabase.co` |
-| Dashboard | `https://supabase.com/dashboard/project/aizkqajrzkvwuobisnzr` |
+| Project ID | `mxjuknqwzbvvmmdrvkql` |
+| Supabase URL | `https://mxjuknqwzbvvmmdrvkql.supabase.co` |
+| Dashboard | `https://supabase.com/dashboard/project/mxjuknqwzbvvmmdrvkql` |
 
 ---
 
