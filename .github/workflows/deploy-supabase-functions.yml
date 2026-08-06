@@ -40,6 +40,9 @@ jobs:
       - name: Link production database
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD"
 
+      - name: Repair legacy migration version
+        run: supabase migration repair --status reverted 20260701
+
       - name: Apply database migrations
         run: supabase db push --linked --include-all
 
