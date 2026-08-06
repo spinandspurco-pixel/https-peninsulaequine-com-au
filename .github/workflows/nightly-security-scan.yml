@@ -29,15 +29,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.3.10
 
       - name: Cache Bun dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.bun/install/cache
@@ -63,17 +63,20 @@ jobs:
         run: bun scripts/security-gate.ts | tee gate-output.txt
         continue-on-error: true
 
-      - name: Run anon Data API regression suite
+      - name: Verify Supabase credentials and run anon Data API regression suite
         id: regression
         env:
+          VITE_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
-        run: bun vitest run src/test/security-regression.test.ts
+        run: |
+          bun scripts/ci/verifySupabasePublicEnv.ts
+          bun vitest run src/test/security-regression.test.ts
         continue-on-error: true
 
       - name: Upload security report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nightly-security-report
           path: |
@@ -85,7 +88,7 @@ jobs:
 
       - name: Preflight — verify token can write issues
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // Fail fast with a clear, actionable error BEFORE we try to file
@@ -117,12 +120,15 @@ jobs:
 
       - name: Compile nightly-issue helpers for Node
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
-        run: bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir scripts/ci scripts/ci/nightly-issue.ts scripts/ci/affected-areas.ts
-
+        run: |
+          helper_dir="$RUNNER_TEMP/nightly-ci"
+          mkdir -p "$helper_dir"
+          printf '%s\n' '{"type":"commonjs"}' > "$helper_dir/package.json"
+          bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir "$helper_dir" scripts/ci/nightly-issue.ts scripts/ci/affected-areas.ts
 
       - name: Open or update tracking issue on failure
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           GATE_OUTCOME: ${{ steps.gate.outcome }}
           REGRESSION_OUTCOME: ${{ steps.regression.outcome }}
@@ -135,8 +141,8 @@ jobs:
               reconcileIssue,
               NIGHTLY_ISSUE_TITLE,
               NIGHTLY_ISSUE_LABELS,
-            } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/nightly-issue.js`);
-            const { mapAffectedAreas } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/affected-areas.js`);
+            } = require(`${process.env.RUNNER_TEMP}/nightly-ci/nightly-issue.js`);
+            const { mapAffectedAreas } = require(`${process.env.RUNNER_TEMP}/nightly-ci/affected-areas.js`);
 
             let gateOutput = '';
             try { gateOutput = fs.readFileSync('gate-output.txt', 'utf8'); } catch {}
@@ -198,6 +204,34 @@ jobs:
             };
 
             try {
+              const labelDefinitions = {
+                security: {
+                  color: 'b60205',
+                  description: 'Security-related work and findings',
+                },
+                'nightly-scan': {
+                  color: '5319e7',
+                  description: 'Created or updated by the nightly security scan',
+                },
+              };
+              for (const name of NIGHTLY_ISSUE_LABELS) {
+                try {
+                  await github.rest.issues.getLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name,
+                  });
+                } catch (labelError) {
+                  if (labelError?.status !== 404) throw labelError;
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name,
+                    ...labelDefinitions[name],
+                  });
+                }
+              }
+
               const result = await reconcileIssue(client, body, NIGHTLY_ISSUE_TITLE, NIGHTLY_ISSUE_LABELS);
               core.info(`Issue ${result.action}: #${result.issueNumber}`);
             } catch (e) {
