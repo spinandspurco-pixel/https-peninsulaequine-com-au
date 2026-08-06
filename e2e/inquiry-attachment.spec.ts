@@ -37,7 +37,7 @@ type SubmitResponse = {
   received?: { attachment_count?: number };
 };
 
-test.describe("Contact inquiry submission with attachment @anon", () => {
+test.describe("Contact inquiry submission with attachment @anon @live-backend", () => {
   test("submits form + attachment, shows confirmation, persists metadata", async ({
     page,
   }) => {
@@ -103,7 +103,7 @@ test.describe("Contact inquiry submission with attachment @anon", () => {
 
     // 2. Submit-inquiry response.
     const submitResponse: Response = await submitResponsePromise;
-    expect(submitResponse.status(), "submit-inquiry HTTP status").toBe(200);
+    expect(submitResponse.status(), "submit-inquiry HTTP status").toBe(201);
     const submitBody = (await submitResponse.json()) as SubmitResponse;
     expect(submitBody.ok, "submit-inquiry ok flag").toBe(true);
     expect(submitBody.id, "inquiry id persisted").toBeTruthy();

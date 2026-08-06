@@ -42,12 +42,23 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
       testIgnore: /auth\.setup\.ts/,
       grep: /@anon/,
+      grepInvert: /@live-backend/,
     },
     {
       name: "anon-mobile",
       use: { ...devices["iPhone 13"] },
       testIgnore: /auth\.setup\.ts/,
       grep: /@anon|@mobile/,
+      grepInvert: /@live-backend/,
+    },
+    {
+      // Explicit real-backend suite. These tests may write test inquiries,
+      // attachments, or auth events and are deliberately excluded from the
+      // deterministic pull-request projects above.
+      name: "live-backend",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: /auth\.setup\.ts/,
+      grep: /@live-backend/,
     },
 
     {

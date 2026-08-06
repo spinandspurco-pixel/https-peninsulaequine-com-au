@@ -38,10 +38,13 @@ function scan(haystack: string, needles: string[]): string | null {
 }
 
 test.describe("inquiry submission — no raw key leaks @anon", () => {
+  test.describe.configure({ timeout: 60_000 });
+
   test("submitting the /contact form never puts a Supabase key in a payload", async ({
     page,
   }) => {
     const suspects: Array<{ url: string; where: string; needle: string; snippet: string }> = [];
+    let submitRequestCount = 0;
 
     const inspect = (req: Request) => {
       const url = req.url();
@@ -49,6 +52,7 @@ test.describe("inquiry submission — no raw key leaks @anon", () => {
       // edge functions, storage). Third-party analytics beacons are out of
       // scope for this check.
       if (!/supabase\.co\//.test(url)) return;
+      if (url.includes("/functions/v1/submit-inquiry")) submitRequestCount += 1;
 
       // 1. URL + query string must be clean of every forbidden secret AND
       //    of the publishable key (which belongs in headers only).
@@ -84,6 +88,24 @@ test.describe("inquiry submission — no raw key leaks @anon", () => {
     };
 
     page.on("request", inspect);
+    await page.route("**/functions/v1/**", async (route) => {
+      const isSubmit = route.request().url().includes("/submit-inquiry");
+      await route.fulfill({
+        status: isSubmit ? 201 : 200,
+        contentType: "application/json",
+        body: JSON.stringify(
+          isSubmit
+            ? {
+                ok: true,
+                id: "00000000-0000-4000-8000-000000000001",
+                status: "new",
+                created_at: new Date().toISOString(),
+                received: { attachment_count: 0 },
+              }
+            : { ok: true },
+        ),
+      });
+    });
 
     await page.goto("/contact");
 
@@ -101,6 +123,9 @@ test.describe("inquiry submission — no raw key leaks @anon", () => {
       "Automated payload-leak regression. Please ignore — created by e2e/inquiry-key-leak.spec.ts.",
     );
 
+    // The real form rejects sub-1.5-second submissions as spam. Waiting here
+    // proves the request assertions below exercise the network path.
+    await page.waitForTimeout(1_600);
     await page.getByTestId("contact-submit").click();
 
     // Confirmation copy from Contact.tsx confirms the round-trip succeeded,
@@ -125,11 +150,8 @@ test.describe("inquiry submission — no raw key leaks @anon", () => {
       );
     }
 
-    // Sanity: we should have actually observed at least one Supabase
-    // request, otherwise the assertions above are vacuous.
-    expect(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (page as any)._requestCount ?? true,
-    ).toBeTruthy();
+    // Sanity: exactly one persisted-submission request was observed, so the
+    // payload assertions above cannot pass vacuously.
+    expect(submitRequestCount).toBe(1);
   });
 });

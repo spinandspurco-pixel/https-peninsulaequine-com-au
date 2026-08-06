@@ -54,9 +54,27 @@ function assertErrorShape(
 
 // ---------- method / content-type gate ----------
 
-Deno.test("GET → 405 method_not_allowed", async () => {
+Deno.test("GET → 200 with public upload config", async () => {
   const res = await handler(
     new Request("http://localhost/validate-inquiry-upload", { method: "GET" }),
+  );
+  assertEquals(res.status, 200);
+  assertEquals(res.headers.get("content-type"), "application/json");
+  const body = await res.json() as {
+    max_bytes?: unknown;
+    allowed_types?: unknown;
+    allowed_mime?: unknown;
+    allowed_extensions?: unknown;
+  };
+  assertEquals(body.max_bytes, 10 * 1024 * 1024);
+  assertEquals(typeof body.allowed_types, "object");
+  assert(Array.isArray(body.allowed_mime));
+  assert(Array.isArray(body.allowed_extensions));
+});
+
+Deno.test("PUT → 405 method_not_allowed", async () => {
+  const res = await handler(
+    new Request("http://localhost/validate-inquiry-upload", { method: "PUT" }),
   );
   assertEquals(res.status, 405);
   assertErrorShape(await readError(res), "method_not_allowed");

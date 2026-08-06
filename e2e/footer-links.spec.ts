@@ -43,6 +43,11 @@ async function gotoOk(page: Page, href: string) {
 }
 
 test.describe("footer links @anon @mobile", () => {
+  // The image-heavy services page can take longer to release its browser
+  // context on constrained CI runners, especially when several projects run
+  // together. Keep assertions strict while allowing teardown to complete.
+  test.describe.configure({ timeout: 60_000 });
+
   test("footer renders only the documented hrefs (no stale /arenas, /stables, /infrastructure)", async ({ page }) => {
     await gotoOk(page, "/");
     const footer = page.locator("footer");

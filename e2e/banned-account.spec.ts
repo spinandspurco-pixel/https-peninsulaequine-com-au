@@ -22,7 +22,7 @@ const BANNED_EMAILS = [
   "glenn@peninsulaequine.org",
 ];
 
-test.describe("banned .org accounts @anon", () => {
+test.describe("banned .org accounts @anon @live-backend", () => {
   test("unauthenticated /hq redirects to /login (not the HQ shell)", async ({ page }) => {
     await page.goto("/hq");
     await page.waitForURL((url) => url.pathname === "/login", { timeout: 10_000 });
