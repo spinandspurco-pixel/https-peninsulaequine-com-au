@@ -43,13 +43,13 @@ jobs:
       - name: Apply database migrations
         run: supabase db push --linked --include-all
 
-      - name: Deploy standard Edge Functions
+      - name: Deploy standard Edge Functions through the bundling API
         run: |
           for function_dir in supabase/functions/*; do
             [ -f "$function_dir/index.ts" ] || continue
             function_name="${function_dir##*/}"
             [ "$function_name" = "mcp" ] && continue
-            supabase functions deploy "$function_name" --project-ref "$SUPABASE_PROJECT_ID"
+            supabase functions deploy "$function_name" --project-ref "$SUPABASE_PROJECT_ID" --use-api
           done
 
       - name: Deploy MCP Edge Function through the bundling API
