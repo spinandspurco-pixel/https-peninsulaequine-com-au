@@ -11,7 +11,7 @@ name: Publish Smoke Test
 #   - repository_dispatch   — fired by an external webhook on deploy success
 #                             (event_type: "deployment-succeeded")
 #   - push to main          — rebuilds dist/ then compares against live
-#   - schedule (*/2 min)    — lightweight watcher; only runs the full smoke
+#   - schedule (every 5 min) — lightweight watcher; only runs the full smoke
 #                             test when the live bundle hash has changed
 #                             since the last observed deploy. Acts as the
 #                             automatic post-deploy trigger when no webhook
@@ -31,15 +31,19 @@ on:
   repository_dispatch:
     types: [deployment-succeeded]
   schedule:
-    # Poll every 2 minutes; the watcher step short-circuits when the live
-    # bundle hash is unchanged, so this is cheap.
-    - cron: "*/2 * * * *"
+    # Five minutes is GitHub Actions' shortest supported interval. Start at
+    # minute 3 to avoid the top-of-hour load spike, when scheduled jobs are
+    # more likely to be delayed or dropped.
+    - cron: "3-59/5 * * * *"
   push:
     branches: [main]
 
 concurrency:
-  group: publish-smoke-${{ github.ref }}
-  cancel-in-progress: true
+  # Keep the scheduled watcher separate from push/manual verification and
+  # queue overlaps so a delayed watcher cannot cancel a deployment smoke run.
+  group: publish-smoke-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   smoke:
@@ -135,6 +139,10 @@ jobs:
       # soft-passes.
       - name: Build (for asset hash comparison)
         if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch' && steps.build-cache.outputs.cache-hit != 'true'
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: bun run build
 
       - name: Run publish smoke test
@@ -143,6 +151,7 @@ jobs:
         env:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
           SMOKE_SUMMARY_PATH: ${{ github.workspace }}/smoke-summary.json
+          EXPECTED_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
         run: |
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             node scripts/publish-smoke-test.mjs --skip-local-build-check
@@ -246,4 +255,3 @@ jobs:
             gh issue comment "$existing" --body "✅ Smoke test recovered at $(date -u +%Y-%m-%dT%H:%M:%SZ). Closing."
             gh issue close "$existing"
           fi
-

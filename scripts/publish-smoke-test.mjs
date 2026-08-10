@@ -6,7 +6,8 @@
  *   1. Homepage loads (200) and contains expected hero markers.
  *   2. /hq route renders the SPA shell (200, root div, bundle reference).
  *   3. /login renders the staff sign-in form (email + password markers).
- *   4. Hero asset bundle hash on production matches the asset hash from the
+ *   4. The live JavaScript targets the expected Supabase production project.
+ *   5. Hero asset bundle hash on production matches the asset hash from the
  *      latest local build (dist/) — proves the new bundle was promoted.
  *
  * Usage:
@@ -30,6 +31,8 @@ const BASE =
   process.env.SMOKE_BASE_URL ||
   "https://peninsulaequine.systems";
 const SKIP_LOCAL = args.includes("--skip-local-build-check");
+const EXPECTED_SUPABASE_PROJECT_ID =
+  process.env.EXPECTED_SUPABASE_PROJECT_ID?.trim() || "";
 
 const results = [];
 function record(name, ok, detail = "") {
@@ -65,7 +68,8 @@ async function fetchText(url, retries = 3, retryDelayMs = 2000) {
 async function checkHomepage() {
   try {
     const { status, text } = await fetchText(BASE + "/");
-    if (status !== 200) return record("Homepage 200", false, `status=${status}`);
+    if (status !== 200)
+      return record("Homepage 200", false, `status=${status}`);
     const hasRoot = text.includes('id="root"');
     const hasMeta = /<title>/i.test(text);
     if (!hasRoot || !hasMeta)
@@ -91,13 +95,68 @@ async function checkHq() {
 async function checkLogin() {
   try {
     const { status, text } = await fetchText(BASE + "/login");
-    if (status !== 200) return record("/login route", false, `status=${status}`);
+    if (status !== 200)
+      return record("/login route", false, `status=${status}`);
     // SPA — markers come from prerender or index shell; we accept either.
     if (!text.includes('id="root"'))
       return record("/login route", false, "missing SPA root");
     record("/login renders (200)", true);
   } catch (e) {
     record("/login route", false, String(e));
+  }
+}
+
+function findEntryBundle(html) {
+  const match = html.match(
+    /<script[^>]+src=["']([^"']*\/assets\/index-[A-Za-z0-9_-]+\.js)["']/i,
+  );
+  return match?.[1] ?? null;
+}
+
+async function checkSupabaseProject() {
+  if (!EXPECTED_SUPABASE_PROJECT_ID) {
+    record(
+      "Supabase production project",
+      true,
+      "skipped (EXPECTED_SUPABASE_PROJECT_ID not set)",
+    );
+    return;
+  }
+
+  try {
+    const homepage = await fetchText(BASE + "/");
+    const entryBundle = findEntryBundle(homepage.text);
+    if (!entryBundle) {
+      record(
+        "Supabase production project",
+        false,
+        "live entry bundle not found",
+      );
+      return;
+    }
+
+    const entryUrl = new URL(entryBundle, homepage.url || BASE).href;
+    const entry = await fetchText(entryUrl);
+    const expectedHost = `${EXPECTED_SUPABASE_PROJECT_ID}.supabase.co`;
+    if (entry.status === 200 && entry.text.includes(expectedHost)) {
+      record(
+        "Supabase production project matches",
+        true,
+        EXPECTED_SUPABASE_PROJECT_ID,
+      );
+      return;
+    }
+
+    const actualHost = entry.text.match(
+      /https:\/\/([a-z0-9]+)\.supabase\.co/i,
+    )?.[1];
+    record(
+      "Supabase production project matches",
+      false,
+      `expected=${EXPECTED_SUPABASE_PROJECT_ID} live=${actualHost || "<not found>"}`,
+    );
+  } catch (e) {
+    record("Supabase production project", false, String(e));
   }
 }
 
@@ -114,7 +173,11 @@ function findLocalHeroAssetHash() {
 
 async function checkHeroBundle() {
   if (SKIP_LOCAL) {
-    record("Hero asset bundle hash", true, "skipped (--skip-local-build-check)");
+    record(
+      "Hero asset bundle hash",
+      true,
+      "skipped (--skip-local-build-check)",
+    );
     return;
   }
   const localHero = findLocalHeroAssetHash();
@@ -157,6 +220,7 @@ async function main() {
   await checkHomepage();
   await checkHq();
   await checkLogin();
+  await checkSupabaseProject();
   await checkHeroBundle();
 
   console.log("");
@@ -209,4 +273,3 @@ main().catch((e) => {
   console.error("Unexpected error:", e);
   process.exit(5);
 });
-
