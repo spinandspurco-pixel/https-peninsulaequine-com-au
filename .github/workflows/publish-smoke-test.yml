@@ -45,13 +45,17 @@ concurrency:
   cancel-in-progress: false
   queue: max
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   smoke:
     name: Verify live deployment
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # ── Watcher: only run the full smoke test when the live bundle hash
       # has changed since the previous run. On manual/push/webhook triggers
@@ -74,7 +78,7 @@ jobs:
 
       - name: Restore last-seen bundle hash
         id: cache-hash
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .last-smoke-hash
           key: publish-smoke-last-hash-v1
@@ -102,11 +106,11 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.3.10
 
       - name: Cache Bun dependencies
         if: steps.gate.outputs.run == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.bun/install/cache
@@ -125,7 +129,7 @@ jobs:
       - name: Cache build output (dist + Vite deps)
         id: build-cache
         if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             dist

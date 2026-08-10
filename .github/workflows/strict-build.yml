@@ -16,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.3.10
 
       # Cache Bun's global install cache + node_modules keyed by the lockfile.
       # On a cache hit, `bun install` short-circuits to a near-no-op; on a miss
@@ -30,7 +30,7 @@ jobs:
       # the same OS even when the lockfile changes, so we still skip the
       # network for most packages.
       - name: Cache Bun dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.bun/install/cache
@@ -70,7 +70,7 @@ jobs:
       # even on a cache miss (restored via the fallback key).
       - name: Cache build output (dist + Vite deps)
         id: build-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             dist
@@ -108,7 +108,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vitest-coverage
           path: coverage/
@@ -120,7 +120,7 @@ jobs:
       # download and only run `--with-deps` to ensure system libs are present.
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-v2-${{ hashFiles('bun.lock', 'bun.lockb') }}
