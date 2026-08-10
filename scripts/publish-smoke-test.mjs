@@ -4,14 +4,14 @@
  *
  * Checks:
  *   1. Homepage loads (200) and contains expected hero markers.
- *   2. /hq route renders the SPA shell (200, root div, bundle reference).
+ *   2. /hq route renders the SPA shell (200, or GitHub Pages' 404 fallback).
  *   3. /login renders the staff sign-in form (email + password markers).
  *   4. The live JavaScript targets the expected Supabase production project.
  *   5. Hero asset bundle hash on production matches the asset hash from the
  *      latest local build (dist/) — proves the new bundle was promoted.
  *
  * Usage:
- *   node scripts/publish-smoke-test.mjs [--base https://peninsulaequine.systems]
+ *   node scripts/publish-smoke-test.mjs [--base https://peninsulaequine.com.au]
  *
  * Exit codes:
  *   0 — all checks passed
@@ -29,7 +29,7 @@ const baseArg = args.find((a) => a.startsWith("--base="));
 const BASE =
   (baseArg && baseArg.split("=")[1]) ||
   process.env.SMOKE_BASE_URL ||
-  "https://peninsulaequine.systems";
+  "https://peninsulaequine.com.au";
 const SKIP_LOCAL = args.includes("--skip-local-build-check");
 const EXPECTED_SUPABASE_PROJECT_ID =
   process.env.EXPECTED_SUPABASE_PROJECT_ID?.trim() || "";
@@ -83,10 +83,15 @@ async function checkHomepage() {
 async function checkHq() {
   try {
     const { status, text } = await fetchText(BASE + "/hq");
-    if (status !== 200) return record("/hq route", false, `status=${status}`);
+    if (status !== 200 && status !== 404)
+      return record("/hq route", false, `status=${status}`);
     if (!text.includes('id="root"'))
       return record("/hq route", false, "missing SPA root");
-    record("/hq route serves SPA (200)", true);
+    record(
+      "/hq route serves SPA",
+      true,
+      status === 404 ? "GitHub Pages fallback (404 with SPA shell)" : "200",
+    );
   } catch (e) {
     record("/hq route", false, String(e));
   }
@@ -95,12 +100,16 @@ async function checkHq() {
 async function checkLogin() {
   try {
     const { status, text } = await fetchText(BASE + "/login");
-    if (status !== 200)
+    if (status !== 200 && status !== 404)
       return record("/login route", false, `status=${status}`);
     // SPA — markers come from prerender or index shell; we accept either.
     if (!text.includes('id="root"'))
       return record("/login route", false, "missing SPA root");
-    record("/login renders (200)", true);
+    record(
+      "/login renders",
+      true,
+      status === 404 ? "GitHub Pages fallback (404 with SPA shell)" : "200",
+    );
   } catch (e) {
     record("/login route", false, String(e));
   }

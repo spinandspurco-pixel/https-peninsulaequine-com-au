@@ -23,7 +23,7 @@ on:
       base_url:
         description: "Base URL to smoke-test"
         required: false
-        default: "https://peninsulaequine.systems"
+        default: "https://peninsulaequine.com.au"
       force:
         description: "Run even if the live bundle hash has not changed"
         required: false
@@ -63,7 +63,7 @@ jobs:
       - name: Detect live bundle hash
         id: detect
         env:
-          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.com.au' }}
         run: |
           html="$(curl -sSL "$SMOKE_BASE_URL/")"
           # Match the hashed main entry bundle (e.g. /assets/index-XXXX.js or
@@ -153,7 +153,7 @@ jobs:
         id: smoke
         if: steps.gate.outputs.run == 'true'
         env:
-          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.com.au' }}
           SMOKE_SUMMARY_PATH: ${{ github.workspace }}/smoke-summary.json
           EXPECTED_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
         run: |
@@ -174,7 +174,7 @@ jobs:
         id: failmsg
         if: failure() && steps.gate.outputs.run == 'true'
         env:
-          BASE: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+          BASE: ${{ github.event.inputs.base_url || 'https://peninsulaequine.com.au' }}
           LIVE_HASH: ${{ steps.detect.outputs.live_hash }}
           TRIGGER: ${{ github.event_name }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -239,7 +239,7 @@ jobs:
           # Ensure the required labels exist (idempotent — no-op if already present)
           gh label create smoke-test --color "e11d48" --description "Live smoke test failure tracking" 2>/dev/null || true
           gh label create production --color "dc2626" --description "Production issue" 2>/dev/null || true
-          title="Publish smoke test failing on peninsulaequine.systems"
+          title="Publish smoke test failing on peninsulaequine.com.au"
           existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
           if [ -n "$existing" ] && [ "$existing" != "null" ]; then
             printf '%s' "$BODY" | gh issue comment "$existing" --body-file -
@@ -253,7 +253,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          title="Publish smoke test failing on peninsulaequine.systems"
+          title="Publish smoke test failing on peninsulaequine.com.au"
           existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
           if [ -n "$existing" ] && [ "$existing" != "null" ]; then
             gh issue comment "$existing" --body "✅ Smoke test recovered at $(date -u +%Y-%m-%dT%H:%M:%SZ). Closing."
