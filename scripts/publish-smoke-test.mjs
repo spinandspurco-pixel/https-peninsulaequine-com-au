@@ -11,7 +11,7 @@
  *      latest local build (dist/) — proves the new bundle was promoted.
  *
  * Usage:
- *   node scripts/publish-smoke-test.mjs [--base https://peninsulaequine.com.au]
+ *   node scripts/publish-smoke-test.mjs [--base https://peninsulaequine.systems]
  *
  * Exit codes:
  *   0 — all checks passed
@@ -29,7 +29,7 @@ const baseArg = args.find((a) => a.startsWith("--base="));
 const BASE =
   (baseArg && baseArg.split("=")[1]) ||
   process.env.SMOKE_BASE_URL ||
-  "https://peninsulaequine.com.au";
+  "https://peninsulaequine.systems";
 const SKIP_LOCAL = args.includes("--skip-local-build-check");
 const EXPECTED_SUPABASE_PROJECT_ID =
   process.env.EXPECTED_SUPABASE_PROJECT_ID?.trim() || "";
