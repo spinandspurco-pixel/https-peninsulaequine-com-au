@@ -38,7 +38,7 @@ type DiagState =
  * Enabled when ANY of:
  *   - URL has ?debug=1
  *   - URL has ?debug=auth
- *   - localStorage["LOVABLE_CLIENT_DIAG"] === "1"
+ *   - localStorage["PE_CLIENT_DIAG"] === "1"
  *
  * Renders only on /login and /hq (and /hq/* children). Read-only — never
  * mutates auth/RLS. Safe to ship; if not enabled, returns null.
@@ -423,10 +423,8 @@ export function ClientDiagPanel() {
         "etag",
         "age",
         "x-cache",
-        "x-vercel-cache",
         "cf-cache-status",
         "x-served-by",
-        "x-vercel-id",
         "last-modified",
         "date",
         "content-type",
@@ -470,7 +468,7 @@ export function ClientDiagPanel() {
       enabledNow =
         sp.get("debug") === "1" ||
         sp.get("debug") === "auth" ||
-        window.localStorage.getItem("LOVABLE_CLIENT_DIAG") === "1";
+        window.localStorage.getItem("PE_CLIENT_DIAG") === "1";
     } catch {
       enabledNow = false;
     }
@@ -492,7 +490,7 @@ export function ClientDiagPanel() {
     enabled =
       sp.get("debug") === "1" ||
       sp.get("debug") === "auth" ||
-      window.localStorage.getItem("LOVABLE_CLIENT_DIAG") === "1";
+      window.localStorage.getItem("PE_CLIENT_DIAG") === "1";
   } catch {
     enabled = false;
   }
@@ -570,7 +568,7 @@ export function ClientDiagPanel() {
   const DEFAULT_PAIR: ThresholdPair = { warn: 200, crit: 500 };
   const readThresholds = (): LatencyThresholds => {
     try {
-      const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
+      const raw = window.localStorage.getItem("PE_DIAG_LATENCY");
       if (raw) {
         const p = JSON.parse(raw);
         // Migrate legacy shape { warn, crit } → { default: { warn, crit } }
@@ -590,7 +588,7 @@ export function ClientDiagPanel() {
   const persistThresholds = (next: LatencyThresholds) => {
     setLatencyThresholds(next);
     try {
-      window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
+      window.localStorage.setItem("PE_DIAG_LATENCY", JSON.stringify(next));
     } catch {
       /* ignore */
     }
@@ -879,11 +877,9 @@ export function ClientDiagPanel() {
   const environment =
     host === "localhost" || host === "127.0.0.1"
       ? "local"
-      : host.includes("id-preview--") || host.endsWith(".lovable.app")
-        ? host.includes("id-preview--")
-          ? "lovable-preview"
-          : "lovable-published"
-        : host.endsWith("peninsulaequine.systems")
+      : host.endsWith(".github.io")
+        ? "github-pages"
+        : host.endsWith("peninsulaequine.com.au")
           ? "production"
           : "custom";
   let region = "(unknown)";
@@ -1021,7 +1017,7 @@ export function ClientDiagPanel() {
   const [curlCopied, setCurlCopied] = useState<string | null>(null);
   const buildCurlSnippet = () => {
     const origin =
-      typeof window !== "undefined" ? window.location.origin : "https://peninsulaequine.systems";
+      typeof window !== "undefined" ? window.location.origin : "https://peninsulaequine.com.au";
     const stamp = new Date().toISOString();
     const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
     const fmtMs = (ms: number | null | undefined) =>
@@ -1237,7 +1233,7 @@ export function ClientDiagPanel() {
               <button
                 onClick={() => {
                   try {
-                    window.localStorage.removeItem("LOVABLE_DIAG_LATENCY");
+                    window.localStorage.removeItem("PE_DIAG_LATENCY");
                   } catch {
                     /* ignore */
                   }
@@ -1731,7 +1727,7 @@ export function ClientDiagPanel() {
                 {row("checksum", supaKeyChecksum)}
                 {row("length", supaKeyLen || "—")}
                 {row("expected", "sb_publishable_*")}
-                {!ok && row("action", "Rotate via Lovable Cloud → API keys, then republish")}
+                {!ok && row("action", "Rotate in Supabase Dashboard → API, update GitHub Actions variables, then redeploy Pages")}
               </div>
             );
           })()}
@@ -2043,7 +2039,7 @@ export function ClientDiagPanel() {
           </details>
           <div style={{ marginTop: 6, opacity: 0.5, fontSize: 10 }}>
             Toggle off: remove <code>?debug=1</code> from URL, or run{" "}
-            <code>localStorage.removeItem('LOVABLE_CLIENT_DIAG')</code>.
+            <code>localStorage.removeItem('PE_CLIENT_DIAG')</code>.
           </div>
         </div>
       )}

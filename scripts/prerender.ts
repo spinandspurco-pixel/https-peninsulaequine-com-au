@@ -14,7 +14,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 
-const SITE_ORIGIN = "https://peninsulaequine.systems";
+const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
 
 // Sitewide fallback OG card — the branded 1200×630 root card. Used by
@@ -265,4 +265,3 @@ function main() {
 }
 
 main();
-

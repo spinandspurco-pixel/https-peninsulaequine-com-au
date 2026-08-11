@@ -1,7 +1,6 @@
 import { defineConfig, loadEnv, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 import {
   makeBuildInfoPayload,
@@ -11,16 +10,15 @@ import {
 
 const BUILD_TIME = new Date().toISOString();
 const BUILD_COMMIT =
-  process.env.VERCEL_GIT_COMMIT_SHA ||
-  process.env.COMMIT_REF ||
   process.env.GITHUB_SHA ||
+  process.env.COMMIT_REF ||
   "local";
 
 /**
  * Emits a static `api/build-info` (and `.json` alias) into the build output
  * so the deployed site exposes /api/build-info as a JSON document containing
  * build time, the main bundle hash, and the commit SHA. No server required —
- * Vercel/Netlify/CF Pages all serve static files in front of SPA rewrites.
+ * GitHub Pages serves the static files; its 404 fallback provides SPA routing.
  *
  * Also emits `/api/diag` — a non-secret snapshot of the Supabase env vars
  * baked into the bundle (URL host + key prefix/family/length). Used by
@@ -122,7 +120,6 @@ export default defineConfig(({ mode }) => {
   },
   plugins: [
     react(),
-    mode === "development" && componentTagger(),
     buildInfoPlugin(supabaseUrl, supabaseKey),
     mcpPlugin(),
   ].filter(Boolean),
@@ -138,4 +135,3 @@ export default defineConfig(({ mode }) => {
   },
   };
 });
-

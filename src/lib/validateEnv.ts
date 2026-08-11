@@ -29,7 +29,7 @@ export function validateSupabaseEnv(): EnvProblem | null {
     return {
       title: "VITE_SUPABASE_URL is missing",
       detail: "The frontend cannot reach the backend without a project URL.",
-      fix: "Set VITE_SUPABASE_URL in your hosting environment (Vercel → Settings → Environment Variables) for Production and Preview, then redeploy.",
+      fix: "Set VITE_SUPABASE_URL in the GitHub Actions variables used by the Pages deployment, then redeploy.",
     };
   }
 
@@ -37,12 +37,12 @@ export function validateSupabaseEnv(): EnvProblem | null {
     return {
       title: "Supabase client key is missing",
       detail: "The frontend has no publishable key to authenticate API calls.",
-      fix: "Copy the sb_publishable_… value from Lovable → Cloud → Backend → API Keys and set it as VITE_SUPABASE_PUBLISHABLE_KEY (or VITE_SUPABASE_ANON_KEY for compatibility) in your hosting environment for Production and Preview, then redeploy.",
+      fix: "Copy the sb_publishable_… value from Supabase Dashboard → Settings → API and set it as VITE_SUPABASE_PUBLISHABLE_KEY in the GitHub Actions variables used by Pages, then redeploy.",
     };
   }
 
   if (key.startsWith(LEGACY_JWT_PREFIX)) {
-    // Legacy JWT anon keys remain VALID for un-migrated Lovable Cloud projects.
+    // Legacy JWT anon keys remain valid for older Supabase projects.
     // Surface a console warning but do NOT block boot.
      
     console.warn(
@@ -55,7 +55,7 @@ export function validateSupabaseEnv(): EnvProblem | null {
     return {
       title: "Unrecognised Supabase publishable key format",
       detail: `VITE_SUPABASE_PUBLISHABLE_KEY must start with "${SB_PUBLISHABLE_PREFIX}" or the legacy "${LEGACY_JWT_PREFIX}" JWT prefix. Got: "${key.slice(0, 12)}…"`,
-      fix: "Copy the correct publishable key from Lovable → Cloud → Backend → API Keys and replace it in your hosting environment, then redeploy.",
+      fix: "Copy the correct publishable key from Supabase Dashboard → Settings → API, update the GitHub Actions variable, then redeploy Pages.",
     };
   }
 

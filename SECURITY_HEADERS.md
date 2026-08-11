@@ -4,9 +4,8 @@ Production-safe HTTP security headers configured at the hosting layer.
 
 ## Where they live
 
-- **Vercel** — `vercel.json` → `headers` block (applies to all routes).
-- **Netlify / Cloudflare Pages** — `public/_headers` (same values, native syntax).
-- **Lovable hosting** — Lovable's edge already sets HSTS and basic protections; the headers below act as a project-level baseline and migrate cleanly if/when the site moves off Lovable.
+- **GitHub Pages** — the static site is served from the Pages deployment; verify the live response headers after each hosting change.
+- **`public/_headers`** — a portable static-host baseline retained for hosts that support the file.
 
 ## What is enforced (production-safe)
 
@@ -24,8 +23,8 @@ Production-safe HTTP security headers configured at the hosting layer.
 A full Content-Security-Policy is shipped as `Content-Security-Policy-Report-Only` so violations surface in DevTools without breaking Google sign-in, Supabase auth, analytics, fonts, or remote imagery.
 
 Allowlist covers:
-- `script-src` — self + `'unsafe-inline'` + `'unsafe-eval'` (Vite/Lovable runtime), `accounts.google.com`, `apis.google.com`, `*.lovable.app`, `*.lovable.dev`.
-- `connect-src` — self, `*.supabase.co` (https + wss), `accounts.google.com`, Lovable hosts, `*.googleapis.com`.
+- `script-src` — self + `'unsafe-inline'` + `'unsafe-eval'` (Vite), `accounts.google.com`, `apis.google.com`.
+- `connect-src` — self, `*.supabase.co` (https + wss), `accounts.google.com`, `*.googleapis.com`.
 - `frame-src` / `form-action` — Google OAuth + Supabase auth endpoints.
 - `img-src` — `self data: blob: https:` (covers Unsplash, OG images, AI-generated assets).
 - `style-src` / `font-src` — Google Fonts.
@@ -34,7 +33,7 @@ Allowlist covers:
 
 1. Leave Report-Only deployed for ≥ 1 week; watch the browser console + any CSP report endpoint.
 2. Add any missing origins surfaced by reports (most likely candidates: an analytics host, a future embed).
-3. Once clean, rename `Content-Security-Policy-Report-Only` → `Content-Security-Policy` in both `vercel.json` and `public/_headers`.
+3. Once clean, rename `Content-Security-Policy-Report-Only` → `Content-Security-Policy` in `public/_headers` and validate the equivalent response at the active host.
 4. Re-run the publish smoke test and verify Google sign-in end-to-end on `/login`.
 
 ### Known risks if enforced today

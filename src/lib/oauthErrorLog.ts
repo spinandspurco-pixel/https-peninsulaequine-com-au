@@ -90,7 +90,7 @@ export function diagnoseOAuthError(entry: OAuthErrorEntry): OAuthFix {
         "Open Backend → Users → Auth Settings → Google.",
         "Re-paste the Client ID and Client Secret (no leading/trailing whitespace).",
         "Confirm the success toast appears, then wait ~60 seconds.",
-        "Or switch to Lovable-managed Google OAuth to bypass custom credentials.",
+        "Verify the provider and redirect configuration in Supabase before retrying.",
         "Re-run the Google OAuth check on this page to confirm PASS.",
       ],
     };
@@ -170,7 +170,7 @@ export function diagnoseOAuthError(entry: OAuthErrorEntry): OAuthFix {
     severity: "warn",
     title: "Unrecognised OAuth error",
     steps: [
-      "Copy the raw message and search Lovable / Supabase docs for the exact phrase.",
+      "Copy the raw message and search the Supabase documentation for the exact phrase.",
       "Re-run the Google OAuth provider check above to narrow down whether the failure is at the provider, the redirect URI, or the client.",
     ],
   };

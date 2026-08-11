@@ -1,8 +1,8 @@
 # Peninsula Equine
 
-Production codebase for **peninsulaequine.systems** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
+Production codebase for **peninsulaequine.com.au** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
 
-> Single-bundle React SPA. Backend on Lovable Cloud (Supabase). Edited via Lovable, synced to GitHub, deployable to Lovable hosting or Vercel.
+> Single-bundle React SPA. The frontend deploys from GitHub Actions to GitHub Pages; Supabase provides Auth, database, storage, and Edge Functions.
 
 ---
 
@@ -38,7 +38,7 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 | Routing | `react-router-dom` v6 (`BrowserRouter`) |
 | Styling | Tailwind CSS v3 + shadcn/ui (Radix primitives) |
 | State / data | `@tanstack/react-query`, `zustand`, `react-hook-form` + `zod` |
-| Backend | Supabase (Lovable Cloud) — Postgres + Auth + Storage + Edge Functions |
+| Backend | Supabase — Postgres + Auth + Storage + Edge Functions |
 | AI | Lovable AI Gateway (Gemini / GPT-5) via edge functions |
 | PDF / docs | `jspdf`, `react-markdown` |
 | Testing | `vitest`, `@testing-library/react`, `@playwright/test`, `axe-core` |
@@ -74,8 +74,8 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 ├── scripts/                 # Build, prerender, verification, smoke tests
 ├── .github/workflows/       # CI (strict build, prerender, a11y, smoke, security)
 ├── vite.config.ts           # Vite config (alias @ → src/)
-├── vercel.json              # SPA rewrite for Vercel
-├── public/_redirects        # SPA fallback (Netlify-style; harmless on Lovable)
+├── .github/workflows/deploy-github-pages.yml # GitHub Pages deployment
+├── public/_headers          # Static-host security-header baseline
 ├── OPS_ALERTS.md            # Live operational alerts (external infra)
 ├── RUNBOOK.md               # Deploy, rollback, key rotation, and governance
 └── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
@@ -130,7 +130,7 @@ Production codebase for **peninsulaequine.systems** — the public marketing sit
 
 ---
 
-## 5. Supabase (Lovable Cloud) setup
+## 5. Supabase setup
 
 The Supabase client is auto-generated at `src/integrations/supabase/client.ts` — **do not edit**. Import everywhere as:
 
@@ -143,11 +143,11 @@ import { supabase } from "@/integrations/supabase/client";
 - **RLS is mandatory** on every `public` table, paired with explicit `GRANT`s to `authenticated` / `service_role` (and `anon` only when the policy allows anonymous reads).
 - **Roles** live in a dedicated `user_roles` table (enum: `admin`, `moderator`, `employee`, `trainer`, `preview`, `user`). Checked via the `has_role(uuid, app_role)` security-definer function. Never store role on profiles.
 - **Auth providers:** email + Google. HIBP password protection enabled (`password_hibp_enabled`).
-- **Service role key** is not exposed to the frontend and is unavailable on Lovable Cloud beyond edge-function runtime.
+- **Service role key** is not exposed to the frontend and is available only to the Supabase Edge Function runtime.
 
 ### Migrations
 
-All schema changes go through `supabase/migrations/*.sql`. The Lovable agent applies these; do not run `supabase db push` against the managed project manually.
+All schema changes go through `supabase/migrations/*.sql`. The Supabase deployment workflow applies them; do not run `supabase db push` directly against production.
 
 ---
 
@@ -178,7 +178,7 @@ Frontend-injected (Vite — must be prefixed `VITE_`):
 | `VITE_SUPABASE_PROJECT_ID` | Project ref |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | **Must be `sb_publishable_…` format.** Legacy JWT-shaped keys (`eyJ…`) are forbidden — they cause 401s on rotation. |
 
-Backend-only (set in Supabase dashboard / Lovable Cloud secrets, never in `.env`):
+Backend-only (set in Supabase secrets, never in `.env`):
 
 - `SUPABASE_SERVICE_ROLE_KEY` — server only
 - `RESEND_API_KEY`, `LOVABLE_API_KEY`, plus any provider keys edge functions need
@@ -225,39 +225,19 @@ bun run verify:a11y   # axe-core accessibility sweep
 
 ## 10. Deployment
 
-### Lovable hosting (default)
+### GitHub Pages
 
-- Push to GitHub or edit in Lovable → publish via the Lovable UI.
-- Custom domains: `www.peninsulaequine.systems`, `peninsulaequine.systems`.
-- SPA fallback is built into Lovable hosting — `public/_redirects` is a no-op there but kept for portability.
+1. Merge a reviewed change to `main`.
+2. GitHub Actions runs `bun install --frozen-lockfile` and `bun run build`.
+3. The Pages workflow publishes `dist`, including `404.html` as the SPA fallback.
+4. Repository variables `VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID`, and `VITE_SUPABASE_PUBLISHABLE_KEY` provide the public client configuration.
+5. The production custom domain is `peninsulaequine.com.au`; DNS is managed at the registrar.
 
-### Vercel
-
-1. Import the GitHub repo in Vercel.
-2. **Framework preset:** Vite.
-3. **Build command:** `bun run build` (or `npm run build` if Bun is unavailable on the runner).
-4. **Output dir:** `dist`.
-5. **Install command:** `bun install`.
-6. **Environment variables:** set the three `VITE_SUPABASE_*` values above in the Vercel project settings (Production + Preview).
-7. SPA routing is handled by `vercel.json` (`/(.*) → /index.html`).
-
-After first deploy, verify on the Vercel preview URL:
-- Homepage 200 + new bundle hash (not the stuck `index-BwFYsMqQ.js`).
+After a deploy, verify on the production domain:
+- Homepage 200 + the latest bundle hash.
 - `/hq` renders the login gate.
 - Login completes against Supabase (no 401s — confirms `sb_publishable_*` key is bound correctly).
 - A deep link (e.g. `/services/arenas`) refreshes without 404.
-
-### Netlify / Cloudflare Pages
-
-Same build/output settings. `public/_redirects` handles SPA fallback on both.
-
-### SPA fallback summary
-
-| Host | Mechanism |
-|---|---|
-| Lovable | Built-in (no config needed) |
-| Vercel | `vercel.json` rewrites |
-| Netlify / Cloudflare Pages | `public/_redirects` |
 
 ---
 
@@ -278,11 +258,11 @@ Same build/output settings. `public/_redirects` handles SPA fallback on both.
 
 ---
 
-## 12. GitHub ↔ Lovable sync
+## 12. GitHub deployment flow
 
-- Two-way sync: edits in Lovable push to GitHub; pushes to GitHub sync into Lovable.
-- Do not run stateful git commands inside the Lovable agent; git state is managed.
-- Local development against GitHub is fully supported — clone, branch, PR, merge. Lovable picks up the merged commit.
+- GitHub is the source of truth: branch, review, and merge changes there.
+- A merge to `main` runs validation and deploys the public frontend to GitHub Pages.
+- Use the GitHub Actions run and `/hq/deploy-health` to verify each release.
 
 ---
 

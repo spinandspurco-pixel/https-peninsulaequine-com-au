@@ -10,7 +10,7 @@ import {
 
 const TARGETS: RetryTarget[] = [
   { label: "Custom domain", url: "https://example.test" },
-  { label: "Lovable published", url: "https://example-pub.test" },
+  { label: "Pages deployment", url: "https://example-pub.test" },
 ];
 
 function probe(overrides: Partial<ProbeLike> & { label: string }): ProbeLike {

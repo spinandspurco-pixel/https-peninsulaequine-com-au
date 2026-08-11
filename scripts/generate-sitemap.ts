@@ -19,7 +19,7 @@ import { resolve } from "path";
 import { services } from "../src/data/content";
 import { CASE_STUDIES } from "../src/data/caseStudyData";
 
-const BASE_URL = "https://peninsulaequine.systems";
+const BASE_URL = "https://peninsulaequine.com.au";
 
 type ChangeFreq =
   | "always"

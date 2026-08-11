@@ -46,13 +46,13 @@ export function resolveLandingPath(
 
 /**
  * Lightweight, opt-in auth tracing. Enable in the browser console:
- *   localStorage.setItem("LOVABLE_AUTH_DEBUG", "1")
+ *   localStorage.setItem("PE_AUTH_DEBUG", "1")
  * or append `?debug=auth` to any URL.
  */
 export function authDebugEnabled(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    if (window.localStorage.getItem("LOVABLE_AUTH_DEBUG") === "1") return true;
+    if (window.localStorage.getItem("PE_AUTH_DEBUG") === "1") return true;
     const sp = new URLSearchParams(window.location.search);
     return sp.get("debug") === "auth";
   } catch {

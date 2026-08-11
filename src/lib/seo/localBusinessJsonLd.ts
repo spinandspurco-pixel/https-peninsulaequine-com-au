@@ -1,6 +1,6 @@
 import { siteConfig } from "@/data/content";
 
-export const SITE_BASE = "https://peninsulaequine.systems";
+export const SITE_BASE = "https://peninsulaequine.com.au";
 
 // Merricks North, VIC 3926 — approximate HQ coordinates
 const HQ_GEO = { latitude: -38.3547, longitude: 145.0389 };

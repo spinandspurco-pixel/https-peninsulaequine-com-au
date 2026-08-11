@@ -135,12 +135,10 @@ const runId = process.env.PUBLISH_RUN_ID || randomUUID();
 const commitSha =
   process.env.COMMIT_SHA ||
   process.env.GITHUB_SHA ||
-  process.env.VERCEL_GIT_COMMIT_SHA ||
   null;
 const branch =
   process.env.BRANCH ||
   process.env.GITHUB_REF_NAME ||
-  process.env.VERCEL_GIT_COMMIT_REF ||
   null;
 const actor = process.env.PUBLISH_ACTOR || process.env.GITHUB_ACTOR || null;
 

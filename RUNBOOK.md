@@ -1,7 +1,7 @@
 # Peninsula Equine — Platform Runbook
 
-> **Canonical domain:** `peninsulaequine.systems` (apex + `www.`)  
-> **Admin email:** `info@peninsulaequine.systems`  
+> **Public website:** `peninsulaequine.com.au` (apex + `www.`)
+> **Admin email:** `info@peninsulaequine.systems`
 > **Repo:** `spinandspurco-pixel/https-peninsulaequine-com-au`
 
 ---
@@ -11,23 +11,22 @@
 | Concern | Platform | Where to manage |
 |---|---|---|
 | **Source of truth (code)** | GitHub | `main` branch — all changes via PR |
-| **Frontend hosting (primary)** | Lovable Cloud | lovable.dev → Project → Publish |
-| **Frontend hosting (secondary)** | Vercel | vercel.com → Project settings |
-| **Custom domains** | Lovable Cloud | Lovable → Project → Domains (`peninsulaequine.systems`, `www.peninsulaequine.systems`) |
-| **Auth + database + storage** | Supabase (managed by Lovable Cloud) | lovable.dev → Project → Backend |
+| **Frontend hosting** | GitHub Pages | GitHub Actions → `Deploy Peninsula Equine to GitHub Pages` |
+| **Custom domains** | Registrar DNS + GitHub Pages | `peninsulaequine.com.au` and `www.peninsulaequine.com.au` |
+| **Auth + database + storage** | Supabase | Supabase project dashboard |
 | **Edge functions** | Supabase | `supabase/functions/` — deployed on commit |
 | **Transactional email (sending)** | Resend | resend.com → Domain: `notify.peninsulaequine.systems` |
 | **Business email (inbox/outbox)** | Mail provider (e.g., Google Workspace) | DNS MX records for `peninsulaequine.systems` |
-| **DNS** | Domain registrar | Wherever `peninsulaequine.systems` is registered |
+| **DNS** | Instra | Instra DNS records for `peninsulaequine.com.au` |
 | **AI assistant** | Lovable AI Gateway | Managed by Lovable — `LOVABLE_API_KEY` secret |
 
 ---
 
 ## 2. Change-control rules
 
-1. **No direct production edits in Lovable without a PR.** All changes must flow through a GitHub PR merged to `main`. Lovable picks up the merged commit automatically.
-2. **One production host.** Lovable Cloud is the primary host for `peninsulaequine.systems`. Vercel is secondary (preview/backup only). Do not point the apex domain DNS to both simultaneously.
-3. **Environment variables.** Frontend (`VITE_SUPABASE_*`) are auto-managed by Lovable Cloud and synced to `.env` in the repo. Backend secrets (`RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, sender `FROM_EMAIL`, etc.) live only in the Supabase/Lovable secrets dashboard — never in `.env` or source code.
+1. **All production changes go through GitHub.** Merge reviewed changes to `main`; the GitHub Pages workflow publishes the result.
+2. **One production host.** GitHub Pages is the sole public website host. Do not point the apex domain at any legacy CloudFront, Vercel, or preview host.
+3. **Environment variables.** Frontend (`VITE_SUPABASE_*`) live in GitHub repository variables. Backend secrets (`RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, sender `FROM_EMAIL`, etc.) live only in Supabase secrets — never in `.env` or source code.
 4. **Schema migrations.** All Supabase schema changes go through `supabase/migrations/*.sql`. Never run `supabase db push` manually against the managed project.
 
 ---
@@ -40,21 +39,21 @@
 1. Create a branch off main
 2. Make changes → open PR → CI must pass (strict-build, security-gate)
 3. Merge PR to main
-4. Lovable picks up the commit and auto-publishes
+4. GitHub Actions builds and deploys GitHub Pages
 5. Verify: smoke test passes (publish-smoke-test workflow)
 ```
 
 ### Hotfix deploy
 
-Same as standard. For urgent production fixes, Lovable allows direct edits in their editor — but always merge back to `main` immediately after.
+Same as standard. For urgent fixes, merge a small GitHub PR and verify the Pages workflow before changing DNS or backend configuration.
 
-### Vercel deploy
+### GitHub Pages deploy
 
-Vercel auto-deploys every push to `main` (if connected).  
-Build command: `bun run build`  
-Output dir: `dist`  
-Install command: `bun install`  
-Environment variables needed in Vercel project settings:
+GitHub Pages deploys each merge to `main`. The workflow uses:
+- Build command: `bun run build`
+- Output dir: `dist`
+- Install command: `bun install --frozen-lockfile`
+- Repository variables:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PROJECT_ID`
 - `VITE_SUPABASE_PUBLISHABLE_KEY` (must be `sb_publishable_*` format)
@@ -64,15 +63,15 @@ Environment variables needed in Vercel project settings:
 ## 4. Rollback procedure
 
 ### Frontend rollback
-1. In Lovable: go to Project → Publish history → select the last good build → Re-publish.
-2. In Vercel: go to Project → Deployments → find the last good deployment → Promote to production.
-3. In GitHub: revert the offending commit, open a PR, merge, let Lovable/Vercel redeploy.
+1. In GitHub: revert the offending commit or open a corrective PR.
+2. Merge to `main` and confirm the GitHub Pages deployment succeeds.
+3. Verify the public domain only after the deployment is live.
 
 ### Database rollback
 Supabase migrations are forward-only. To roll back a schema change:
 1. Write a new migration that reverses the change.
 2. Add it to `supabase/migrations/` with a new timestamp filename.
-3. Merge via PR — Lovable applies it on next publish.
+3. Merge via PR — the Supabase deployment workflow applies it.
 
 ---
 
@@ -82,22 +81,21 @@ Supabase migrations are forward-only. To roll back a schema change:
 
 The key must be in `sb_publishable_*` format. Legacy `eyJ…` JWT keys are disabled on rotation and cause 401s.
 
-1. In Lovable Cloud: Project → Backend → API keys → Copy the `sb_publishable_*` key.
-2. Lovable automatically updates `.env` in the GitHub repo.
-3. In Vercel: Project → Settings → Environment Variables → update `VITE_SUPABASE_PUBLISHABLE_KEY`.
-4. Redeploy on Vercel (trigger a new build or redeploy from the Deployments tab).
+1. In Supabase Dashboard: Project Settings → API → copy the `sb_publishable_*` key.
+2. Update the GitHub repository variable `VITE_SUPABASE_PUBLISHABLE_KEY`.
+3. Trigger or merge a GitHub Pages deployment.
 
 ### Resend API key
 
 1. Generate a new key in resend.com → API Keys.
-2. Update the `RESEND_API_KEY` secret in Supabase/Lovable Cloud secrets dashboard.
+2. Update the `RESEND_API_KEY` secret in Supabase secrets.
 3. Edge functions pick it up on next invocation — no redeploy needed.
 4. Run the send-test-email diagnostic from `/hq/deploy-health` to confirm delivery.
 
 ### Supabase service role key
 
 1. Rotate in Supabase dashboard → Project Settings → API.
-2. Update in Lovable Cloud secrets dashboard (the key is never in the repo or `.env`).
+2. Update the Supabase secret (the key is never in the repo or `.env`).
 3. Edge functions pick it up on next invocation.
 
 ---
@@ -144,8 +142,8 @@ Navigate to `/hq/deploy-health` → Email tab (admin only). This runs `email-ops
 
 | Record | Type | Points to | Purpose |
 |---|---|---|---|
-| `peninsulaequine.systems` | `A` / `ALIAS` / `CNAME` | Lovable hosting IP/CNAME | Apex production hosting |
-| `www.peninsulaequine.systems` | `CNAME` | Lovable hosting | www redirect/alias |
+| `peninsulaequine.com.au` | four `A` records | GitHub Pages IPs | Apex public hosting |
+| `www.peninsulaequine.com.au` | `CNAME` | `spinandspurco-pixel.github.io.` | www public hosting |
 | `peninsulaequine.systems` | `MX` | Mail provider | Email receiving |
 | `peninsulaequine.systems` | `TXT` | SPF value | Email authentication |
 | `notify.peninsulaequine.systems` | `TXT`/`CNAME` | Resend values | Transactional email sending |
@@ -156,13 +154,11 @@ Navigate to `/hq/deploy-health` → Email tab (admin only). This runs `email-ops
 
 ## 8. Auth configuration
 
-- **Auth provider:** Supabase (managed by Lovable Cloud)
+- **Auth provider:** Supabase
 - **Sign-in methods:** Email magic link + Google OAuth
 - **Redirect URL whitelist** (must be set in Supabase dashboard → Auth → URL Configuration):
-  - `https://peninsulaequine.systems/**`
-  - `https://www.peninsulaequine.systems/**`
-  - `https://*.lovable.app/**` (for Lovable preview URLs)
-  - `https://*.vercel.app/**` (for Vercel preview deployments)
+  - `https://peninsulaequine.com.au/**`
+  - `https://www.peninsulaequine.com.au/**`
   - `http://localhost:8080/**` (local dev)
 - **Roles:** managed in `user_roles` table; checked server-side via `has_role()` function. Never store role in client storage.
 

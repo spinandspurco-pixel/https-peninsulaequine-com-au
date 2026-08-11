@@ -77,7 +77,7 @@ export function DeployHealthBanner() {
           <span className="text-muted-foreground/20 hidden sm:inline" aria-hidden>·</span>
           <p className="text-[11px] text-muted-foreground/65 hidden sm:inline truncate">
             {escalated
-              ? `${state.streak} consecutive stale checks — escalate to Lovable Support`
+              ? `${state.streak} consecutive stale checks — check GitHub Pages and DNS`
               : "Live bundle has not advanced to the latest publishable key"}
           </p>
         </div>

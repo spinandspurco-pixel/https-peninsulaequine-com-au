@@ -1,7 +1,7 @@
 /**
  * Google OAuth sign-in helper with automatic retry-on-transient.
  *
- * Wraps `lovable.auth.signInWithOAuth("google", …)` so both the primary
+ * Wraps Supabase OAuth so both the primary
  * "Sign in with Google" button and the in-banner "Retry" action share one
  * code path. Network blips and Supabase 5xx responses get one quiet
  * automatic retry with linear backoff; deterministic failures (missing
@@ -9,7 +9,7 @@
  * fail fast so the UI can surface an actionable error immediately.
  */
 
-import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 
 export type OAuthAttemptResult =
   | { kind: "ok"; via: "popup" | "redirect"; attempts: number }
@@ -63,12 +63,12 @@ export async function attemptGoogleSignIn(opts: {
   for (let attempt = 1; attempt <= max; attempt++) {
     opts.onAttempt?.(attempt);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: opts.redirectUri,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: opts.redirectUri },
       });
-      if (result.redirected) return { kind: "ok", via: "redirect", attempts: attempt };
-      if (!result.error) return { kind: "ok", via: "popup", attempts: attempt };
-      lastMsg = result.error.message || "Unknown error";
+      if (!error) return { kind: "ok", via: "redirect", attempts: attempt };
+      lastMsg = error.message || "Unknown error";
     } catch (err) {
       lastMsg = err instanceof Error ? err.message : String(err);
     }

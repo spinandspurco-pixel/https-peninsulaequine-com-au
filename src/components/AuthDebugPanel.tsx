@@ -35,7 +35,7 @@ function debugAllowed(isAdmin: boolean): boolean {
   // unless one of these is true:
   //   1. running on localhost
   //   2. Vite dev build (import.meta.env.DEV)
-  //   3. explicit opt-in via ?debug=auth or localStorage.LOVABLE_AUTH_DEBUG=1
+  //   3. explicit opt-in via ?debug=auth or localStorage.PE_AUTH_DEBUG=1
   //      (the localStorage flag additionally requires an admin signed in)
   // Always hidden when HQ preview mode is active (?view=preview) so preview
   // surfaces stay clean regardless of who is signed in.
@@ -44,7 +44,7 @@ function debugAllowed(isAdmin: boolean): boolean {
       const sp = new URLSearchParams(window.location.search);
       if (sp.get("view") === "preview") return false;
       if (sp.get("debug") === "auth" && isAdmin) return true;
-      if (window.localStorage.getItem("LOVABLE_AUTH_DEBUG") === "1" && isAdmin) return true;
+      if (window.localStorage.getItem("PE_AUTH_DEBUG") === "1" && isAdmin) return true;
     } catch {
       /* ignore */
     }

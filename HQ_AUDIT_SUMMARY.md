@@ -177,7 +177,7 @@ const { data, error } = result;
 - Role mappings synced on login and on-demand via `/hq/whoami`
 
 ### Deployment Pipeline
-- HQ functionality depends on Vercel rewrite rules (`vercel.json`)
+- HQ deep links use the GitHub Pages `404.html` SPA fallback
 - Authentication callback routed to `/auth/callback`
 - All HQ surfaces behind ProtectedRoute component with role validation
 
