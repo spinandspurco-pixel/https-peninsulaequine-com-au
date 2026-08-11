@@ -152,6 +152,10 @@ jobs:
       - name: Run publish smoke test
         id: smoke
         if: steps.gate.outputs.run == 'true'
+        # Scheduled checks keep the existing tracking issue current without
+        # turning an already-known outage into repeated workflow-failure email.
+        # Push and manual checks remain hard failures.
+        continue-on-error: ${{ github.event_name == 'schedule' }}
         env:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.com.au' }}
           SMOKE_SUMMARY_PATH: ${{ github.workspace }}/smoke-summary.json
@@ -164,7 +168,7 @@ jobs:
           fi
 
       - name: Record observed bundle hash
-        if: steps.gate.outputs.run == 'true' && steps.detect.outputs.live_hash != ''
+        if: always() && steps.gate.outputs.run == 'true' && steps.detect.outputs.live_hash != ''
         run: printf '%s' "${{ steps.detect.outputs.live_hash }}" > .last-smoke-hash
 
       # ── Failure notification: write a clear GitHub step summary and
@@ -172,7 +176,7 @@ jobs:
       # without subscribing to workflow email noise.
       - name: Build failure summary
         id: failmsg
-        if: failure() && steps.gate.outputs.run == 'true'
+        if: always() && steps.gate.outputs.run == 'true' && steps.smoke.outcome == 'failure'
         env:
           BASE: ${{ github.event.inputs.base_url || 'https://peninsulaequine.com.au' }}
           LIVE_HASH: ${{ steps.detect.outputs.live_hash }}
@@ -230,7 +234,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Open or update tracking issue on failure
-        if: failure() && steps.gate.outputs.run == 'true'
+        if: always() && steps.gate.outputs.run == 'true' && steps.smoke.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BODY: ${{ steps.failmsg.outputs.body }}
@@ -248,7 +252,7 @@ jobs:
           fi
 
       - name: Auto-close tracking issue on success
-        if: success() && steps.gate.outputs.run == 'true'
+        if: always() && steps.gate.outputs.run == 'true' && steps.smoke.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
