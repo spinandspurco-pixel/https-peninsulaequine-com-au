@@ -157,8 +157,8 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed max-w-2xl">
           The retry outcome panel failed to render. The rest of the page is
-          unaffected. Copy the debug payload below and send it to Lovable
-          Support so the underlying issue can be traced.
+          unaffected. Copy the debug payload below and attach it to the GitHub
+          deployment issue so the underlying problem can be traced.
         </p>
         <dl className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-1 text-[0.7rem] text-foreground/70">
           <dt className="uppercase tracking-[0.3em] text-foreground/40">Error</dt>

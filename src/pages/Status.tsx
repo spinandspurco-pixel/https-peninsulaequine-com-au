@@ -34,7 +34,7 @@ const DOT: Record<DeployStatus["status"], string> = {
 export default function Status() {
   usePageMeta({
     title: "System status — Peninsula Equine",
-    description: "Live deployment status for peninsulaequine.systems.",
+    description: "Live deployment status for peninsulaequine.com.au.",
   });
   const [data, setData] = useState<DeployStatus | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -40,7 +40,6 @@ const INITIAL_SECTIONS: ChecklistSection[] = [
       { id: "gws-txt", label: "Google Workspace TXT record present", detail: "google-site-verification=iMvRcyyPNi6aHBd0py3awRWPqS6-Yh2hXIl9y4vkKDU on @", status: "pending" },
       { id: "gws-verified", label: "Google Workspace marks domain verified", status: "pending" },
       { id: "resend-systems-verified", label: "notify.peninsulaequine.systems verified in Resend", status: "pending" },
-      { id: "lovable-custom-domain", label: "peninsulaequine.systems live on Lovable (A 185.158.133.1)", status: "pass" },
     ],
   },
   {

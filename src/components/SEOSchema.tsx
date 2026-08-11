@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { siteConfig } from "@/data/content";
 
-const SITE_ORIGIN = "https://peninsulaequine.systems";
+const SITE_ORIGIN = "https://peninsulaequine.com.au";
 
 // Schema.org structured data for SEO
 const localBusinessSchema = {

@@ -839,7 +839,7 @@ function SocialProofStrip() {
 
 function PricingSchemaMarkup() {
   useEffect(() => {
-    const baseUrl = "https://peninsulaequine.lovable.app";
+    const baseUrl = "https://peninsulaequine.com.au";
     const tag = "pricing-schema";
 
     const offerCatalog = {

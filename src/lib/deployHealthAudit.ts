@@ -7,11 +7,11 @@ export type DeployHealthAuditAction =
   | "retry_promotion_attempt"
   | "copy_escalation_text"
   | "copy_escalation_json"
-  | "copy_support_email"
+  | "copy_tracking_issue"
   | "download_escalation_txt"
   | "copy_promotion_report"
   | "export_audit_log"
-  | "open_support_email";
+  | "open_tracking_issue";
 
 export type DeployHealthAuditStatus = "success" | "failure" | "info";
 

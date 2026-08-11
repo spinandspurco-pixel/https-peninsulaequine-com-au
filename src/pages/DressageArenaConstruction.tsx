@@ -10,7 +10,7 @@ const META_TITLE =
   "Dressage Arena Construction — Engineered Footing, Drainage, Base | Peninsula Equine";
 const META_DESCRIPTION =
   "A technical guide to dressage arena construction: 20×60m geometry, sub-grade and drainage, geotextile sand footing blends, kickboards and lighting. Built for Mornington Peninsula conditions.";
-const CANONICAL = "https://peninsulaequine.systems/guides/dressage-arena-construction";
+const CANONICAL = "https://peninsulaequine.com.au/guides/dressage-arena-construction";
 
 const FAQS: { q: string; a: string }[] = [
   {
@@ -117,8 +117,8 @@ export default function DressageArenaConstruction() {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://peninsulaequine.systems/" },
-          { "@type": "ListItem", position: 2, name: "Arenas", item: "https://peninsulaequine.systems/arenas" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://peninsulaequine.com.au/" },
+          { "@type": "ListItem", position: 2, name: "Arenas", item: "https://peninsulaequine.com.au/arenas" },
           { "@type": "ListItem", position: 3, name: "Dressage Arena Construction", item: CANONICAL },
         ],
       },

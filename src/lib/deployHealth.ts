@@ -13,8 +13,7 @@ const MODERN_MARKER = "sb_publishable_";
 const BUNDLE_RE = /\/assets\/(index-[A-Za-z0-9_-]+\.js)/;
 
 export const DEPLOY_HEALTH_TARGETS = [
-  { label: "Custom domain", url: "https://peninsulaequine.systems" },
-  { label: "Lovable published", url: "https://https-peninsulaequine-com-au.lovable.app" },
+  { label: "Public custom domain", url: "https://peninsulaequine.com.au" },
 ];
 
 const STREAK_KEY = "pe.deployHealth.staleStreak";

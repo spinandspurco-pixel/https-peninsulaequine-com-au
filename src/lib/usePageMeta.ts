@@ -19,7 +19,7 @@ type PageMeta = {
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 };
 
-const BASE = "https://peninsulaequine.systems";
+const BASE = "https://peninsulaequine.com.au";
 const SITE_NAME = "Peninsula Equine";
 const DEFAULT_IMAGE = `${BASE}/og-image.jpg`;
 const CANONICAL_ID = "route-canonical-link";
@@ -118,4 +118,3 @@ export function usePageMeta({
     };
   }, [title, description, path, image, ogType, twitterCard, jsonLd]);
 }
-

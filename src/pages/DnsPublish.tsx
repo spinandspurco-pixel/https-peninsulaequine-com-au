@@ -10,8 +10,7 @@ const TTL = "300";
 const TYPE = "TXT";
 const HOST = "@";
 
-const LOVABLE_DOMAINS_URL =
-  "https://lovable.dev/projects/ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff/settings/domains";
+const REGISTRAR_DNS_URL = "https://instra.secure-admin.com/index.php";
 
 const isValidTxt = (v: string) =>
   /^google-site-verification=[A-Za-z0-9_-]{43}$/.test(v.trim());
@@ -71,9 +70,9 @@ export default function DnsPublish() {
             Google Workspace TXT record
           </h1>
           <p className="text-sm text-foreground/60 leading-relaxed">
-            One paste into Lovable's managed DNS panel for{" "}
+            Add this record in the authoritative registrar DNS console for{" "}
             <span className="font-mono text-foreground/80">{DOMAIN}</span>.
-            Existing A and _lovable records stay untouched.
+            Preserve the existing web, mail, and verification records.
           </p>
         </header>
 
@@ -153,28 +152,26 @@ export default function DnsPublish() {
             Publish path
           </h2>
           <ol className="space-y-3 text-sm text-foreground/70 leading-relaxed list-decimal pl-5">
-            <li>Open the Lovable Domains panel below.</li>
+            <li>Open the registrar DNS console below.</li>
             <li>
-              Find <span className="font-mono">{DOMAIN}</span> → ⋯ →{" "}
-              <span className="font-mono">Configure</span> →{" "}
-              <span className="font-mono">Manage DNS records</span>.
+              Select <span className="font-mono">{DOMAIN}</span> and open its DNS records.
             </li>
             <li>
               Add record · paste the four fields above (or use{" "}
               <span className="font-mono">Copy all</span>).
             </li>
-            <li>Save. Leave the existing A record and MX records alone.</li>
+            <li>Save. Leave existing web A/AAAA, MX, and unrelated TXT records alone.</li>
             <li>Come back here and run the verifier.</li>
           </ol>
 
           <div className="flex flex-wrap gap-6 pt-2 text-xs uppercase tracking-[0.3em]">
             <a
-              href={LOVABLE_DOMAINS_URL}
+              href={REGISTRAR_DNS_URL}
               target="_blank"
               rel="noreferrer"
               className="text-foreground hover:opacity-60 transition-opacity"
             >
-              → Open Lovable DNS
+              → Open registrar DNS
             </a>
             <Link
               to={`/hq/dns-verify?domain=${encodeURIComponent(

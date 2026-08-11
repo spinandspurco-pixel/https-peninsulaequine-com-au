@@ -143,7 +143,7 @@ export function classifyRetryOutcome(
   }
   return {
     status: "no_change",
-    message: `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`,
+    message: `No change after ${attempts} attempt(s) — the public site is still stale. Check the GitHub Pages deployment and custom-domain DNS.`,
   };
 }
 
@@ -345,4 +345,3 @@ export async function runRetryPromotion<P extends ProbeLike>(
     finalProbes: cleaned,
   };
 }
-

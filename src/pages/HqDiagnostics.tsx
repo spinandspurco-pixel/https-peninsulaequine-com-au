@@ -242,23 +242,16 @@ export default function HqDiagnostics() {
       note: "Used when running the app locally.",
     });
     list.push({
-      env: "preview",
-      label: "Lovable preview origin",
-      uri: "https://https-peninsulaequine-com-au.lovable.app/auth/callback",
-      required: false,
-      note: "Published lovable.app preview.",
-    });
-    list.push({
       env: "production",
       label: "Production origin",
-      uri: "https://peninsulaequine.systems/auth/callback",
+      uri: "https://peninsulaequine.com.au/auth/callback",
       required: true,
       note: "Live custom domain — must be allowed for production sign-in.",
     });
     list.push({
       env: "production",
       label: "Production origin (www)",
-      uri: "https://www.peninsulaequine.systems/auth/callback",
+      uri: "https://www.peninsulaequine.com.au/auth/callback",
       required: false,
       note: "www subdomain variant.",
     });

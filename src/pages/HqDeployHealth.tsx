@@ -38,15 +38,16 @@ type AuditRow = {
  * HQ → Operations → Deploy Health
  *
  * Internal admin-only detector for stuck production deployments.
- * Strictly read-only: this panel CANNOT clear or force-promote a pinned
- * deployment. That is a Lovable platform action. The "Copy escalation
- * payload" action just prepares a support message for the admin.
+ * Strictly read-only: this panel cannot change GitHub Pages or DNS. The
+ * tracking-issue actions prepare the current evidence for an administrator.
  */
 
 const TARGETS = [
-  { label: "Custom domain", url: "https://peninsulaequine.systems" },
-  { label: "Lovable published", url: "https://https-peninsulaequine-com-au.lovable.app" },
+  { label: "Public custom domain", url: "https://peninsulaequine.com.au" },
 ];
+
+const DEPLOYMENT_ISSUE_URL =
+  "https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/issues/33";
 
 const LEGACY_MARKER = "eyJhbGci";
 const MODERN_MARKER = "sb_publishable_";
@@ -341,9 +342,10 @@ export default function HqDeployHealth() {
 
   const escalation = useMemo(() => {
     const lines: string[] = [];
-    lines.push("Lovable Support — stuck production promotion");
+    lines.push("GitHub Pages custom-domain deployment check");
     lines.push("");
-    lines.push(`Project ID: ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff`);
+    lines.push("Repository: spinandspurco-pixel/https-peninsulaequine-com-au");
+    lines.push(`Tracking issue: ${DEPLOYMENT_ISSUE_URL}`);
     lines.push(`Checked at: ${lastCheckedAt ?? "(not yet)"}`);
     lines.push(`Triggered by: ${user?.email ?? "(unknown admin)"}`);
     lines.push(`Page bundle (admin browser): ${pageBundle ?? "(unknown)"}`);
@@ -362,12 +364,10 @@ export default function HqDeployHealth() {
       lines.push(`    stuck: ${isStuck(r)}`);
     }
     lines.push("");
-    lines.push("Required platform action:");
-    lines.push("Clear stuck production promotion / pinned deployment and force-promote");
-    lines.push("a fresh frontend deployment for the listed domains. Production API keys");
-    lines.push("have already been rotated to sb_publishable_*; the live bundle has not");
-    lines.push("advanced. Staff login fails with 401: Legacy API keys are disabled until");
-    lines.push("the bundle is promoted. Do not rotate keys again.");
+    lines.push("Required action:");
+    lines.push("Confirm the latest main build has deployed to GitHub Pages, then point the");
+    lines.push("authoritative apex and www DNS records at GitHub Pages. Do not rotate");
+    lines.push("Supabase keys: this condition is a routing/deployment check.");
     return lines.join("\n");
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
@@ -400,7 +400,7 @@ export default function HqDeployHealth() {
     tryCopy("Escalation payload", escalation, "Escalation payload copied", "copy_escalation_text");
 
 
-  const supportSubject = "Stuck production promotion — force-promote required";
+  const supportSubject = "GitHub Pages custom-domain DNS cutover";
   const supportBody = useMemo(() => {
     const keyLines: string[] = ["", "------", "Supabase key-type mismatch details:"];
     if (results.length === 0) {
@@ -430,14 +430,11 @@ export default function HqDeployHealth() {
       ...keyLines,
       "",
       "------",
-      "Recommended next steps (platform side):",
-      "1. Clear any pinned/stuck production deployment for this project.",
-      "2. Force-promote the latest successful frontend build to:",
-      "     - https://peninsulaequine.systems",
-      "     - https://www.peninsulaequine.systems",
-      "     - https://https-peninsulaequine-com-au.lovable.app",
+      "Recommended next steps:",
+      "1. Confirm the latest main commit deployed successfully to GitHub Pages.",
+      "2. Point peninsulaequine.com.au apex A records and www CNAME to GitHub Pages.",
       "3. Confirm the served bundle contains `sb_publishable_` and no legacy `eyJhbGci` key.",
-      "4. Reply with the promoted deployment ID + timestamp so we can re-run Deploy Health.",
+      "4. Re-run Deploy Health after DNS propagation.",
       "",
       "Do NOT rotate API keys again — already rotated to sb_publishable_*.",
     ].join("\n");
@@ -445,21 +442,17 @@ export default function HqDeployHealth() {
   }, [escalation, results]);
 
 
-  const openSupportEmail = async () => {
+  const openTrackingIssue = async () => {
     let clipboardOk = false;
     try {
       await navigator.clipboard?.writeText(supportBody);
       clipboardOk = true;
     } catch {
-      /* ignore — mailto still opens */
+      /* ignore — opening the tracking issue still works */
     }
-    const href =
-      `mailto:support@lovable.dev` +
-      `?subject=${encodeURIComponent(supportSubject)}` +
-      `&body=${encodeURIComponent(supportBody)}`;
-    window.location.href = href;
-    toast.success("Opening email — payload also copied to clipboard");
-    void logDeployHealthAudit("open_support_email", "success", {
+    window.open(DEPLOYMENT_ISSUE_URL, "_blank", "noopener,noreferrer");
+    toast.success("Opened the GitHub deployment issue — payload also copied");
+    void logDeployHealthAudit("open_tracking_issue", "success", {
       subject: supportSubject,
       bodyBytes: supportBody.length,
       clipboardCopied: clipboardOk,
@@ -470,8 +463,9 @@ export default function HqDeployHealth() {
   const escalationJson = useMemo(() => {
     return JSON.stringify(
       {
-        kind: "stuck_production_promotion",
-        projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+        kind: "github_pages_custom_domain_check",
+        repository: "spinandspurco-pixel/https-peninsulaequine-com-au",
+        trackingIssue: DEPLOYMENT_ISSUE_URL,
         checkedAt: lastCheckedAt,
         triggeredBy: user?.email ?? null,
         adminPageBundle: pageBundle,
@@ -489,12 +483,12 @@ export default function HqDeployHealth() {
           error: r.error,
         })),
         requiredPlatformAction:
-          "Clear stuck production promotion / pinned deployment and force-promote a fresh frontend build. Do not rotate keys again.",
+          "Confirm the GitHub Pages deployment, then move the authoritative apex and www DNS records to GitHub Pages. Do not rotate Supabase keys.",
         recommendedNextSteps: [
-          "Clear any pinned/stuck production deployment for this project.",
-          "Force-promote the latest successful frontend build to peninsulaequine.systems, www.peninsulaequine.systems, https-peninsulaequine-com-au.lovable.app.",
+          "Confirm the latest main commit has deployed successfully to GitHub Pages.",
+          "Point peninsulaequine.com.au apex A records and www CNAME to GitHub Pages.",
           "Confirm served bundle contains sb_publishable_ and no legacy eyJhbGci key.",
-          "Reply with promoted deployment ID + timestamp so Deploy Health can be re-run.",
+          "Re-run Deploy Health after DNS propagation.",
         ],
       },
       null,
@@ -597,12 +591,12 @@ export default function HqDeployHealth() {
     }
   };
 
-  const copySupportEmail = () => {
+  const copyTrackingIssueUpdate = () => {
     const full =
-      `To: support@lovable.dev\n` +
+      `GitHub issue: ${DEPLOYMENT_ISSUE_URL}\n` +
       `Subject: ${supportSubject}\n\n` +
       supportBody;
-    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)", "copy_support_email");
+    return tryCopy("GitHub issue update", full, "GitHub issue update copied", "copy_tracking_issue");
   };
 
 
@@ -660,10 +654,9 @@ export default function HqDeployHealth() {
           </div>
           <h1 className="font-serif text-3xl text-foreground">Deploy Health</h1>
           <p className="text-sm text-foreground/60 max-w-2xl leading-relaxed">
-            Read-only detector for stuck production promotions. Compares the
+            Read-only production detector. Compares the
             live JS bundle on each public domain against the expected modern
-            publishable-key marker. This panel cannot clear or promote a
-            deployment — that is a Lovable platform action.
+            publishable-key marker. It cannot change GitHub Pages or DNS.
           </p>
         </header>
 
@@ -691,8 +684,8 @@ export default function HqDeployHealth() {
                 {retrying
                   ? retryProgress && retryProgress.attempt > 0
                     ? `Retrying… attempt ${retryProgress.attempt}/${retryProgress.max}`
-                    : "Retrying promotion…"
-                  : "Retry promotion"}
+                    : "Retrying checks…"
+                  : "Retry checks"}
               </button>
               <span
                 role="status"
@@ -813,7 +806,7 @@ export default function HqDeployHealth() {
                 <li>Confirm <code>.env</code> writes <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> starting with <code>sb_publishable_</code>.</li>
                 <li>Republish the frontend so the new key is baked into <code>/assets/index-*.js</code>.</li>
                 <li>Run <strong>Re-run checks</strong> above and confirm every target shows <strong>Fresh</strong>.</li>
-                <li>If the bundle still serves a legacy key after republish, use <strong>Copy support email</strong> to escalate (promotion is stuck, not the key).</li>
+                <li>If the bundle remains stale after the Pages deployment, use <strong>Copy GitHub issue update</strong> and confirm the domain DNS records.</li>
               </ol>
             </div>
           )}
@@ -829,17 +822,17 @@ export default function HqDeployHealth() {
               <p className="text-sm text-foreground/80 leading-relaxed max-w-2xl">
                 One or more live bundles still contain the legacy <code>eyJhbGci</code> key
                 or are missing the modern <code>sb_publishable_</code> marker. Copy the full
-                payload below and send it to Lovable Support to force-promote a fresh build.
+                payload below and attach it to the GitHub deployment issue while checking the Pages deployment and DNS.
               </p>
             </div>
             <div className="shrink-0 flex flex-col gap-2">
               <button
                 type="button"
-                onClick={copySupportEmail}
+                onClick={copyTrackingIssueUpdate}
                 className="text-sm tracking-[0.3em] uppercase text-amber-900 bg-amber-600/15 border border-amber-700/50 px-4 py-2 hover:bg-amber-600/25"
-                title="Generate a ready-to-send support email (To, Subject, body with key-type mismatch details) and copy it to your clipboard"
+                title="Copy a ready-to-paste GitHub issue update with the current diagnostic details"
               >
-                Copy support email
+                Copy GitHub issue update
               </button>
               <button
                 type="button"
@@ -997,10 +990,10 @@ export default function HqDeployHealth() {
                 <>
                   <button
                     type="button"
-                    onClick={openSupportEmail}
+                    onClick={openTrackingIssue}
                     className="text-xs tracking-[0.3em] uppercase text-red-700 underline underline-offset-8"
                   >
-                    Escalate to Lovable Support →
+                    Open GitHub deployment issue →
                   </button>
                   <button
                     type="button"
@@ -1027,8 +1020,8 @@ export default function HqDeployHealth() {
               At least one live domain is serving a stale bundle (legacy
               <code className="px-1">eyJhbGci</code> present, or
               <code className="px-1">sb_publishable_</code> missing).
-              Production promotion is stuck. Copy the escalation payload and
-              send to Lovable Support.
+              The public site is stale. Copy the evidence and check the GitHub
+              Pages deployment and authoritative DNS records.
             </p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <button
@@ -1041,10 +1034,10 @@ export default function HqDeployHealth() {
               </button>
               <button
                 type="button"
-                onClick={openSupportEmail}
+                onClick={openTrackingIssue}
                 className="text-xs tracking-[0.3em] uppercase text-amber-700 underline underline-offset-8"
               >
-                Contact Lovable Support →
+                Open GitHub deployment issue →
               </button>
               <button
                 type="button"
@@ -1055,10 +1048,10 @@ export default function HqDeployHealth() {
               </button>
               <button
                 type="button"
-                onClick={copySupportEmail}
+                onClick={copyTrackingIssueUpdate}
                 className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
               >
-                Copy support email
+                Copy GitHub issue update
               </button>
               <button
                 type="button"
@@ -1198,9 +1191,9 @@ export default function HqDeployHealth() {
             Escalation payload
           </div>
           <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
-            Prefilled for Lovable Support. Includes project ID, observed bundle
-            hashes per domain, marker check results, and the timestamp of this
-            check. This panel never attempts to clear or promote a deployment.
+            Ready for the GitHub deployment issue. Includes observed bundle
+            hashes, marker check results, and the timestamp of this check. This
+            panel never changes a deployment or DNS record.
           </p>
           <pre className="text-[0.7rem] leading-relaxed text-foreground/75 whitespace-pre-wrap border border-border/10 p-4 bg-foreground/[0.015]">
 {escalation}
@@ -1208,10 +1201,10 @@ export default function HqDeployHealth() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <button
               type="button"
-              onClick={openSupportEmail}
+              onClick={openTrackingIssue}
               className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
             >
-              Contact Lovable Support →
+              Open GitHub deployment issue →
             </button>
             <button
               type="button"
@@ -1222,10 +1215,10 @@ export default function HqDeployHealth() {
             </button>
             <button
               type="button"
-              onClick={copySupportEmail}
+              onClick={copyTrackingIssueUpdate}
               className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
             >
-              Copy support email
+              Copy GitHub issue update
             </button>
             <button
               type="button"
@@ -1243,9 +1236,8 @@ export default function HqDeployHealth() {
             </button>
           </div>
           <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
-            Opens your mail client with support@lovable.dev pre-filled (subject,
-            payload, and recommended next steps). The payload is also copied to
-            your clipboard in case the mail client truncates.
+            Opens the GitHub deployment issue and copies the timestamped
+            diagnostic update to your clipboard for pasting into the issue.
           </p>
         </section>
 
@@ -1285,7 +1277,7 @@ export default function HqDeployHealth() {
           </div>
           <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
             Every admin diagnostic action on this page — view, run checks,
-            retry promotion, copy, download, open support email — is recorded
+            retry checks, copy, download, and open the tracking issue — is recorded
             in <code>deploy_health_audit</code>. Insert and read are gated by
             row-level security to the <code>admin</code> role.
           </p>

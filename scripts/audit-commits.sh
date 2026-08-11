@@ -14,21 +14,24 @@ else
 fi
 echo ""
 
-# Check for hardcoded .com.au references in source code
-echo "2. Scanning for hardcoded .com.au references..."
-if grep -r "peninsulaequine\.com\.au" src/ --exclude-dir=node_modules 2>/dev/null | grep -v "DOMAIN_SETUP.md"; then
-  echo "   ⚠️  Found .com.au references in source code (should only be in redirects)"
+# Check for retired Vercel configuration. Plain-text migration notes are allowed;
+# only active configuration signatures should fail this audit.
+echo "2. Checking for retired Vercel configuration..."
+if git grep -n -i -E '(@vercel/|vercel\\.json|vercel\\.app|VERCEL_)' -- . ':!scripts/audit-commits.sh'; then
+  echo "   ❌ Retired Vercel references found"
 else
-  echo "   ✅ No hardcoded .com.au in source"
+  echo "   ✅ No Vercel configuration references found"
 fi
 echo ""
 
-# Check for exposed secrets in recent commits
-echo "3. Checking for exposed secrets..."
-if git log --all -p | grep -E "(SUPABASE_SERVICE_ROLE_KEY|sk_live_|RESEND_API_KEY)" | head -5; then
-  echo "   ❌ CRITICAL: Secrets found in commit history!"
+# Check the current tracked source for token-shaped secrets. Documentation and
+# `.env.example` deliberately contain variable names and example placeholders,
+# so they are not evidence of an exposure.
+echo "3. Checking the current tree for exposed secrets..."
+if git grep -n -E '(sb_secret_[[:alnum:]_-]{20,}|sk_live_[[:alnum:]_]{20,}|re_[[:alnum:]_]{20,})' -- ':!*.md' ':!.env.example' ':!*.test.ts' ':!*.test.tsx'; then
+  echo "   ❌ CRITICAL: Token-shaped secret found in tracked source!"
 else
-  echo "   ✅ No secrets detected in recent commits"
+  echo "   ✅ No token-shaped secrets detected in tracked source"
 fi
 echo ""
 
@@ -48,7 +51,7 @@ echo ""
 
 # Check for deployment-related files
 echo "6. Verifying deployment files exist..."
-for file in DEPLOYMENT_CHECKLIST.md DOMAIN_SETUP.md .env.example vercel.json; do
+for file in RUNBOOK.md DOMAIN_SETUP.md .env.example .github/workflows/deploy-github-pages.yml; do
   if [ -f "$file" ]; then
     echo "   ✅ $file"
   else

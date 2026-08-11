@@ -515,7 +515,7 @@ CNAME (DKIM):    default._domainkey.notify...   → resend.com DNS
 **Status check:** Run edge function `resend-domain-status` to verify.
 
 ```bash
-curl https://your-domain.vercel.app/api/resend-domain-status
+curl https://peninsulaequine.com.au/api/resend-domain-status
 ```
 
 ---

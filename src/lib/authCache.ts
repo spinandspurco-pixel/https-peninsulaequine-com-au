@@ -4,7 +4,6 @@ const AUTH_STORAGE_MATCHERS = [
   (key: string) => key.startsWith("sb-") && key.endsWith("-auth-token"),
   (key: string) => key.toLowerCase().includes("supabase.auth"),
   (key: string) => key.toLowerCase().includes("gotrue"),
-  (key: string) => key.toLowerCase().includes("lovable.auth"),
 ];
 
 function clearAuthKeys(storage: Storage | undefined): number {
