@@ -10,6 +10,7 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
+import { probeGoogleOAuth } from "@/lib/probeGoogleOAuth";
 
 export type OAuthAttemptResult =
   | { kind: "ok"; via: "popup" | "redirect"; attempts: number }
@@ -60,15 +61,42 @@ export async function attemptGoogleSignIn(opts: {
   const backoff = Math.max(0, opts.backoffMs ?? 400);
   let lastMsg = "";
 
+  // Fail clearly before asking the SDK to navigate. Without this preflight a
+  // disabled provider can leave the login button spinning while the browser
+  // waits on an authorization URL that can never succeed.
+  const redirectOrigin = new URL(opts.redirectUri).origin;
+  const provider = await probeGoogleOAuth(
+    import.meta.env.VITE_SUPABASE_URL as string | undefined,
+    redirectOrigin,
+  );
+  if (provider.status === "misconfigured") {
+    return {
+      kind: "error",
+      message: "Google OAuth provider is not enabled or is missing its Client ID or Client Secret.",
+      attempts: 0,
+      transient: false,
+    };
+  }
+
   for (let attempt = 1; attempt <= max; attempt++) {
     opts.onAttempt?.(attempt);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: opts.redirectUri },
+        options: {
+          redirectTo: opts.redirectUri,
+          skipBrowserRedirect: true,
+        },
       });
-      if (!error) return { kind: "ok", via: "redirect", attempts: attempt };
-      lastMsg = error.message || "Unknown error";
+      if (!error && data.url) {
+        window.location.assign(data.url);
+        return { kind: "ok", via: "redirect", attempts: attempt };
+      }
+      if (!error) {
+        lastMsg = "Supabase did not return a Google authorization URL.";
+      } else {
+        lastMsg = error.message || "Unknown error";
+      }
     } catch (err) {
       lastMsg = err instanceof Error ? err.message : String(err);
     }

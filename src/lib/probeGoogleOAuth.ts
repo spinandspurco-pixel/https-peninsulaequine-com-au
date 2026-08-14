@@ -3,7 +3,7 @@
  * is fully configured on the Supabase auth service.
  *
  * Strategy: hit `${SUPABASE_URL}/auth/v1/authorize?provider=google` with
- * `redirect: "manual"`. Supabase returns:
+ * CORS enabled and `redirect: "manual"`. Supabase returns:
  *   - 302 → Google              ⇒ response.type === "opaqueredirect"  (OK)
  *   - 400 "missing OAuth secret" or "provider … not enabled"            (FAIL)
  *
@@ -44,22 +44,20 @@ export async function probeGoogleOAuth(
   }
   const target =
     `${supabaseUrl.replace(/\/$/, "")}/auth/v1/authorize?provider=google` +
-    `&redirect_to=${encodeURIComponent(appOrigin)}`;
+    `&redirect_to=${encodeURIComponent(`${appOrigin.replace(/\/$/, "")}/auth/callback`)}`;
 
   try {
     const res = await fetch(target, {
       method: "GET",
-      mode: "no-cors",
+      mode: "cors",
       redirect: "manual",
       cache: "no-store",
     });
     if (res.type === "opaqueredirect") {
       return { status: "ok", detail: "Supabase redirected to Google — provider is configured." };
     }
-    // Fall back to a normal fetch to read the body for the canonical error.
-    const probe = await fetch(target, { method: "GET", cache: "no-store" }).catch(() => null);
-    if (probe && probe.ok === false) {
-      const body = await probe.text().catch(() => "");
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
       const classified = classifyBody(body);
       if (classified === "misconfigured") {
         return {
@@ -69,12 +67,12 @@ export async function probeGoogleOAuth(
       }
       return {
         status: "unknown",
-        detail: `Auth service returned HTTP ${probe.status}; inconclusive.`,
+        detail: `Auth service returned HTTP ${res.status}; inconclusive.`,
       };
     }
     return {
       status: "unknown",
-      detail: `Inconclusive — response type "${res.type}".`,
+      detail: `Inconclusive — response type "${res.type}" with HTTP ${res.status}.`,
     };
   } catch (err) {
     return {

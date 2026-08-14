@@ -21,6 +21,9 @@ import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBann
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
+const getGoogleOAuthCallbackUrl = () =>
+  `${window.location.origin}/auth/callback`;
+
 interface SignInError {
   kind: SignInErrorKind;
   title: string;
@@ -180,7 +183,7 @@ export default function Login() {
     setIsLoading(true);
     trackAuthFunnel("auth_login_attempt", { method: "google", via: "retry", force: true });
     const result = await attemptGoogleSignIn({
-      redirectUri: window.location.origin,
+      redirectUri: getGoogleOAuthCallbackUrl(),
       maxAttempts: 2,
       onAttempt: (n) => authLog("oauth:google:retry-attempt", { attempt: n }),
     });
@@ -452,7 +455,7 @@ export default function Login() {
               className="w-full h-11 border-border/50 hover:border-accent/30 hover:bg-accent/5 text-sm rounded-sm transition-all duration-200"
               onClick={async () => {
                 authLog("oauth:google:click", {
-                  redirectTo: window.location.origin,
+                  redirectTo: getGoogleOAuthCallbackUrl(),
                   href: window.location.href,
                 });
                 setSignInError(null);
@@ -472,7 +475,7 @@ export default function Login() {
                   toast.error(e.title);
                 }, 15000);
                 const result = await attemptGoogleSignIn({
-                  redirectUri: window.location.origin,
+                  redirectUri: getGoogleOAuthCallbackUrl(),
                   maxAttempts: 2,
                   onAttempt: (n) =>
                     authLog("oauth:google:attempt", { attempt: n }),
