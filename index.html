@@ -10,14 +10,9 @@
     <meta name="google-site-verification" content="_ZDj_sSQKF62BAAFMZe3EswPETPgnDgzQbLCI9ICD9g" />
     <link rel="canonical" href="https://peninsulaequine.com.au/" />
 
-    <!-- Fonts: Playfair Display (serif) + DM Sans (sans) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- Preload critical latin variable font files -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYgA.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v40/nuFRD-vYSZviVYUb_rj3ij__anPXDTnCjmHKM4nYO7KN_qiTXtHA-Q.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="https://fonts.gstatic.com/s/dmsans/v17/rP2Hp2ywxg089UriCZOIHQ.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Self-host the brand fonts so layout and contrast do not depend on Google Fonts. -->
+    <link rel="preload" href="/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Preload homepage hero ONLY on "/" so other routes don't pay the cost.
          Inline script runs before body parse, so it still wins LCP on the homepage. -->
@@ -43,13 +38,6 @@
       })();
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" /></noscript>
-
-
-
-    
-    
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://peninsulaequine.com.au/" />
     <meta property="og:locale" content="en_AU" />
