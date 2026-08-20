@@ -1,4 +1,11 @@
-# Peninsula Equine - Google Cloud Deployment Guide
+# Archived: Google Cloud Deployment Guide
+
+> **Historical record — do not follow as an operational runbook.** GitHub Pages
+> is the sole production frontend host, and Cloud Run/GCP must not be
+> re-enabled as a production, preview, or failover route. This document is
+> retained only for historical context; follow
+> [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
+> [RUNBOOK.md](./RUNBOOK.md) for current operations.
 
 Complete infrastructure setup for deploying Peninsula Equine website and HQ to Google Cloud Platform with enterprise-grade security, scalability, and monitoring.
 

@@ -28,6 +28,7 @@
 2. **One production host.** GitHub Pages is the sole public website host. Do not point the apex domain at any legacy CloudFront, Vercel, or preview host.
 3. **Environment variables.** Frontend (`VITE_SUPABASE_*`) live in GitHub repository variables. Backend secrets (`RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, sender `FROM_EMAIL`, etc.) live only in Supabase secrets — never in `.env` or source code.
 4. **Schema migrations.** All Supabase schema changes go through `supabase/migrations/*.sql`. Never run `supabase db push` manually against the managed project.
+5. **Retired routes stay retired.** Do not restart Cloud Run/GCP, Vercel, CloudFront, S3, or another frontend host as production, preview, or failover. Historical deployment documents are records, not runbooks; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
 
 ---
 
