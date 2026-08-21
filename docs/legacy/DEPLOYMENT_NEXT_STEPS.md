@@ -1,3 +1,7 @@
+> **ARCHIVED — historical record only.** This document describes a retired deployment path (GCP / Cloud Run). GitHub Pages is the sole canonical production host. Do not use these instructions to deploy or reconfigure the live site. See [docs/legacy/README.md](README.md) for context.
+
+---
+
 # Peninsula Equine - Deployment Next Steps
 
 ## 🎯 Current Status

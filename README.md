@@ -78,7 +78,7 @@ Production codebase for **peninsulaequine.com.au** — the public marketing site
 ├── public/_headers          # Static-host security-header baseline
 ├── OPS_ALERTS.md            # Live operational alerts (external infra)
 ├── RUNBOOK.md               # Deploy, rollback, key rotation, and governance
-└── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
+└── docs/legacy/             # Archived historical records (retired GCP/Cloud Run deployment materials)
 ```
 
 ---
@@ -269,7 +269,7 @@ After a deploy, verify on the production domain:
 ## 13. Operational status
 
 - **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). No open alerts.
-- **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
+- **Legacy deployment archive:** retired GCP / Cloud Run / Docker materials are preserved as historical records in [`docs/legacy/`](./docs/legacy/README.md). They must not be used to deploy or configure the live site.
 - **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
 
 ---
