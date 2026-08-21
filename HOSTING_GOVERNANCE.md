@@ -37,7 +37,8 @@ approved operational change outside this repository.
 3. DNS changes must preserve `peninsulaequine.com.au` and
    `www.peninsulaequine.com.au` as GitHub Pages custom domains; see
    [DOMAIN_SETUP.md](./DOMAIN_SETUP.md).
-4. Roll back frontend releases by reverting or correcting Git history and
-   redeploying GitHub Pages; do not fail over to a retired host.
+4. Roll back frontend releases with a revert commit or follow-up corrective
+   commit, then redeploy GitHub Pages; do not rewrite `main` history or fail
+   over to a retired host.
 5. Historical GCP documents are labelled as archived and must not be followed
    as runbooks.
