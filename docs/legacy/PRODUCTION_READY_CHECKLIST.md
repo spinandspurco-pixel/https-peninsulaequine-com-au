@@ -1,8 +1,11 @@
-> **ARCHIVED — historical record only.** This document describes a retired deployment path (GCP / Cloud Run). GitHub Pages is the sole canonical production host. Do not use these instructions to deploy or reconfigure the live site. See [docs/legacy/README.md](README.md) for context.
+# Archived: Cloud Run Production Readiness Checklist
 
----
-
-# Peninsula Equine - Production Ready Checklist
+> **Historical record — do not follow as an operational runbook.** GitHub Pages
+> is the sole production frontend host, and Cloud Run/GCP must not be
+> re-enabled as a production, preview, or failover route. This document is
+> retained only for historical context; follow
+> [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
+> [RUNBOOK.md](./RUNBOOK.md) for current operations.
 
 **Status Date:** July 3, 2026  
 **Deployment Target:** Google Cloud Platform (Cloud Run)  
@@ -140,7 +143,7 @@ Peninsula Equine website and HQ staff/client portals are **production-ready** fo
 - ✅ **Timeout:** 3600 seconds
 
 ### Cloud Run Service Configuration
-- ✅ **File:** `docs/legacy/cloud-run-service.yaml`
+- ✅ **File:** `k8s/cloud-run-service.yaml`
 - ✅ **Specifications:**
   - Memory: 512 MB per instance
   - CPU: 1 vCPU per instance
@@ -304,7 +307,7 @@ Peninsula Equine website and HQ staff/client portals are **production-ready** fo
 ### Key Configuration Files
 - **Docker:** `Dockerfile` - Container image definition
 - **CI/CD:** `cloudbuild.yaml` - Google Cloud Build pipeline
-- **Deployment:** `docs/legacy/cloud-run-service.yaml` - Knative Service config
+- **Deployment:** `k8s/cloud-run-service.yaml` - Knative Service config
 - **Scripts:** `scripts/deploy-gcp.sh` - Automated deployment
 - **Guide:** `GCP_DEPLOYMENT_GUIDE.md` - Comprehensive setup instructions
 

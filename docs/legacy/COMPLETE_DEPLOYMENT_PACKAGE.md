@@ -1,8 +1,11 @@
-> **ARCHIVED — historical record only.** This document describes a retired deployment path (GCP / Cloud Run). GitHub Pages is the sole canonical production host. Do not use these instructions to deploy or reconfigure the live site. See [docs/legacy/README.md](README.md) for context.
+# Archived: Peninsula Equine Cloud Run Deployment Package
 
----
-
-# 🚀 Peninsula Equine - Complete Deployment Package
+> **Historical record — do not follow as an operational runbook.** GitHub Pages
+> is the sole production frontend host, and Cloud Run/GCP must not be
+> re-enabled as a production, preview, or failover route. This document is
+> retained only for historical context; follow
+> [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
+> [RUNBOOK.md](./RUNBOOK.md) for current operations.
 
 **Status:** ✅ **PRODUCTION READY**  
 **Date:** July 3, 2026  
