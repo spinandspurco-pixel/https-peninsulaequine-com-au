@@ -4,6 +4,10 @@ Production codebase for **peninsulaequine.com.au** — the public marketing site
 
 > Single-bundle React SPA. The frontend deploys from GitHub Actions to GitHub Pages; Supabase provides Auth, database, storage, and Edge Functions.
 
+> **Hosting governance:** this repository and GitHub Pages are the canonical
+> production route. Read [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md)
+> before making any deployment, DNS, or hosting change.
+
 ---
 
 ## Build & Security Status
@@ -227,6 +231,10 @@ bun run verify:a11y   # axe-core accessibility sweep
 
 ### GitHub Pages
 
+GitHub Pages is the sole production frontend host. Retired GCP/Cloud Run,
+Vercel, CloudFront, S3, and similar routes must not be re-enabled or used as
+preview/failover paths; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
+
 1. Merge a reviewed change to `main`.
 2. GitHub Actions runs `bun install --frozen-lockfile` and `bun run build`.
 3. The Pages workflow publishes `dist`, including `404.html` as the SPA fallback.
@@ -263,6 +271,8 @@ After a deploy, verify on the production domain:
 - GitHub is the source of truth: branch, review, and merge changes there.
 - A merge to `main` runs validation and deploys the public frontend to GitHub Pages.
 - Use the GitHub Actions run and `/hq/deploy-health` to verify each release.
+- Retired deployment documentation is historical only and cannot be used to
+  create a parallel production route.
 
 ---
 

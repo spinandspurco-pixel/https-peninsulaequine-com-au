@@ -1,4 +1,10 @@
-# 🎯 Final Status: "440 Problems" Resolved
+# Historical Status: "440 Problems" Resolved
+
+> **Historical record — do not follow its Cloud Run deployment instructions.**
+> GitHub Pages is the sole production frontend host, and Cloud Run/GCP must not
+> be re-enabled as a production, preview, or failover route. Follow
+> [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
+> [RUNBOOK.md](./RUNBOOK.md) for current operations.
 
 **Date:** July 3, 2026  
 **Status:** ✅ **PRODUCTION READY - All Issues Resolved**

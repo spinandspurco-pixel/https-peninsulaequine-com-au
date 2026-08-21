@@ -5,6 +5,9 @@
 `peninsulaequine.com.au` is the primary public website domain. GitHub Pages serves the frontend from this repository; Supabase serves the backend separately.
 
 Do not retain CloudFront, S3, Vercel, or another web-hosting record for the public apex once the cutover is complete.
+Cloud Run/GCP and other legacy hosting routes are retired and must not be
+re-enabled for production, preview, or failover; see
+[HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
 
 ## Registrar DNS steps
 

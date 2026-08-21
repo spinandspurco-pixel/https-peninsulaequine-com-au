@@ -1,4 +1,11 @@
-# Peninsula Equine - Deployment Next Steps
+# Archived: Cloud Run Deployment Next Steps
+
+> **Historical record — do not follow as an operational runbook.** GitHub Pages
+> is the sole production frontend host, and Cloud Run/GCP must not be
+> re-enabled as a production, preview, or failover route. This document is
+> retained only for historical context; follow
+> [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
+> [RUNBOOK.md](./RUNBOOK.md) for current operations.
 
 ## 🎯 Current Status
 
