@@ -723,7 +723,7 @@ function ServiceAreaSection() {
               <div>
                 <p className="text-sm font-medium text-foreground mb-1">Lessons are on-site only</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  All riding lessons are conducted at our Merricks North property (59 Tubbarubba Rd). Construction services extend across all zones listed above. Not sure if we cover your area? <Link to="/contact" className="text-accent hover:underline">Get in touch</Link> — we're happy to discuss.
+                  All riding lessons are conducted at our Merricks North property. Construction services extend across all zones listed above. Not sure if we cover your area? <Link to="/contact" className="text-accent hover:underline">Get in touch</Link> — we're happy to discuss.
                 </p>
               </div>
             </div>

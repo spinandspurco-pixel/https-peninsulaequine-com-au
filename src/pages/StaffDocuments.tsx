@@ -511,7 +511,7 @@ function EventChecklistForm({ onSubmit, loading }: { onSubmit: (data: any) => vo
         </div>
         <div className="space-y-2">
           <Label>Venue *</Label>
-          <Input value={form.venue} onChange={e => setForm(p => ({ ...p, venue: e.target.value }))} required placeholder="59 Tubbarubba Rd, Merricks North" />
+          <Input value={form.venue} onChange={e => setForm(p => ({ ...p, venue: e.target.value }))} required placeholder="Merricks North" />
         </div>
         <div className="space-y-2">
           <Label>Organiser Name *</Label>
