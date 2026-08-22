@@ -26,7 +26,7 @@ ul{padding-left:20px}li{margin-bottom:6px}
 <h2>Information Sharing</h2><p>We do not sell, trade, or otherwise transfer your personal information to third parties. We may share information with trusted partners who assist us in operating our website or conducting our business, as long as those parties agree to keep this information confidential.</p>
 <h2>Data Retention</h2><p>We retain your personal information only for as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required by law.</p>
 <h2>Contact Us</h2><p>If you have questions about this Privacy Policy, please contact us at ${siteConfig.email}.</p>
-<div class="footer">${siteConfig.name} · ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip} · ${siteConfig.phone}</div>
+<div class="footer">${siteConfig.name} · ${siteConfig.address.city} · ${siteConfig.phone}</div>
 </body></html>`;
 }
 
@@ -42,7 +42,7 @@ h1{font-size:28px;margin-bottom:4px}h2{font-size:18px;margin-top:32px;border-bot
 <h2>Disclaimer</h2><p>The materials on this website are provided on an 'as is' basis. ${siteConfig.name} makes no warranties, expressed or implied.</p>
 <h2>Service Terms</h2><p>All construction and service agreements are subject to separate written contracts. Quotes provided through this website are estimates only and subject to change based on site conditions, material costs, and project specifications.</p>
 <h2>Contact Us</h2><p>If you have questions about these Terms of Service, please contact us at ${siteConfig.email}.</p>
-<div class="footer">${siteConfig.name} · ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip} · ${siteConfig.phone}</div>
+<div class="footer">${siteConfig.name} · ${siteConfig.address.city} · ${siteConfig.phone}</div>
 </body></html>`;
 }
 
@@ -71,7 +71,7 @@ th{text-align:left;padding:8px 12px;background:#f5f5f0;border-bottom:2px solid #
 <h2>Warranties</h2><p>Provider warrants all workmanship for a period of 12 months from completion. Materials are covered under their respective manufacturer warranties.</p>
 <h2>Signatures</h2>
 <div class="sig"><div class="sig-line">Provider Signature / Date</div><div class="sig-line">Client Signature / Date</div></div>
-<div class="footer">${siteConfig.name} · ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip} · ${siteConfig.phone}</div>
+<div class="footer">${siteConfig.name} · ${siteConfig.address.city} · ${siteConfig.phone}</div>
 </body></html>`;
 }
 
@@ -125,7 +125,7 @@ td{padding:8px 12px;border-bottom:1px solid #eee}
 
 <h2>Contact</h2>
 <p>Email: ${siteConfig.email}<br/>Phone: ${siteConfig.phone}</p>
-<div class="footer">${siteConfig.name} · ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip} · ${siteConfig.phone}</div>
+<div class="footer">${siteConfig.name} · ${siteConfig.address.city} · ${siteConfig.phone}</div>
 </body></html>`;
 }
 

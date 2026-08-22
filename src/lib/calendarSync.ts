@@ -18,7 +18,7 @@ export interface CalendarEvent {
   location?: string;
 }
 
-const DEFAULT_LOCATION = "Peninsula Equine, 59 Tubbarubba Rd, Merricks North VIC 3926";
+const DEFAULT_LOCATION = "Peninsula Equine, Merricks North";
 
 function pad(n: number): string {
   return n.toString().padStart(2, "0");
