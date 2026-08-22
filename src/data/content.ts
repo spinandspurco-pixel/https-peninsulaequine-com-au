@@ -8,7 +8,6 @@ export const siteConfig = {
   phone: "0418 585 489",
   email: "info@peninsulaequine.systems",
   address: {
-    street: "59 Tubbarubba Road",
     city: "Merricks North",
     state: "VIC",
     zip: "3926",

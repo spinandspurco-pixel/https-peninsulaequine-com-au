@@ -15,7 +15,6 @@ const localBusinessSchema = {
   email: siteConfig.email,
   address: {
     "@type": "PostalAddress",
-    streetAddress: siteConfig.address.street,
     addressLocality: siteConfig.address.city,
     addressRegion: siteConfig.address.state,
     postalCode: siteConfig.address.zip,
@@ -102,7 +101,6 @@ const sportsActivityLocationSchema = {
   telephone: siteConfig.phone,
   address: {
     "@type": "PostalAddress",
-    streetAddress: siteConfig.address.street,
     addressLocality: siteConfig.address.city,
     addressRegion: siteConfig.address.state,
     postalCode: siteConfig.address.zip,

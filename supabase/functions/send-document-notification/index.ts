@@ -122,7 +122,7 @@ serve(async (req) => {
             <a href="https://peninsulaequine.systems/hq/documents" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">Review in Document Portal</a>
           </div>
           <p style="font-size: 12px; color: #888; text-align: center;">
-            Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926
+            Peninsula Equine · Merricks North
           </p>
         </div>
       </div>
@@ -168,7 +168,7 @@ serve(async (req) => {
               <a href="https://peninsulaequine.systems/client-portal" style="display:inline-block;background:#E8C067;color:#171A23;padding:10px 24px;border-radius:6px;font-weight:600;text-decoration:none;">View Your Documents</a>
             </div>
             <p style="font-size: 12px; color: #888; text-align: center;">
-              Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926
+              Peninsula Equine · Merricks North
             </p>
           </div>
         </div>
