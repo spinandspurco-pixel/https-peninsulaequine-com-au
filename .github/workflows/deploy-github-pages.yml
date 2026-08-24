@@ -29,12 +29,14 @@ jobs:
           mkdir -p dist
           cp retired-site/index.html dist/index.html
           cp retired-site/index.html dist/404.html
+          cp public/google7675cee3aad607c0.html dist/google7675cee3aad607c0.html
           touch dist/.nojekyll
 
       - name: Verify retirement page
         run: |
           grep -q 'https://peninsulaequine.com.au' dist/index.html
           ! grep -Eqi 'Tubbarubba|info@peninsulaequine\.systems' dist/index.html
+          grep -q 'google-site-verification: google7675cee3aad607c0.html' dist/google7675cee3aad607c0.html
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
