@@ -11,7 +11,7 @@
 | Concern | Platform | Where to manage |
 |---|---|---|
 | **Source of truth (code)** | GitHub | `main` branch — all changes via PR |
-| **Frontend hosting** | GitHub Pages | GitHub Actions → `Deploy Peninsula Equine to GitHub Pages` |
+| **Frontend hosting** | GitHub Pages (redirect) + `peninsulaequine.com.au` (production) | GitHub Actions → `Deploy Peninsula Equine to GitHub Pages` publishes a route-preserving redirect; verify DNS origin for production |
 | **Custom domains** | Registrar DNS + GitHub Pages | `peninsulaequine.com.au` and `www.peninsulaequine.com.au` |
 | **Auth + database + storage** | Supabase | Supabase project dashboard |
 | **Edge functions** | Supabase | `supabase/functions/` — deployed on commit |
@@ -25,7 +25,7 @@
 ## 2. Change-control rules
 
 1. **All production changes go through GitHub.** Merge reviewed changes to `main`; the GitHub Pages workflow publishes the result.
-2. **One production host.** GitHub Pages is the sole public website host. Do not point the apex domain at any legacy CloudFront, Vercel, or preview host.
+2. **One production domain.** `peninsulaequine.com.au` is the sole public-facing domain. GitHub Pages now publishes a route-preserving redirect to that domain rather than the application itself. Do not point the apex domain at any legacy CloudFront, Vercel, or preview host, and confirm the authoritative origin of `peninsulaequine.com.au` before making DNS changes.
 3. **Environment variables.** Frontend (`VITE_SUPABASE_*`) live in GitHub repository variables. Backend secrets (`RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, sender `FROM_EMAIL`, etc.) live only in Supabase secrets — never in `.env` or source code.
 4. **Schema migrations.** All Supabase schema changes go through `supabase/migrations/*.sql`. Never run `supabase db push` manually against the managed project.
 5. **Retired routes stay retired.** Do not restart Cloud Run/GCP, Vercel, CloudFront, S3, or another frontend host as production, preview, or failover. Historical deployment documents are records, not runbooks; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
@@ -50,14 +50,7 @@ Same as standard. For urgent fixes, merge a small GitHub PR and verify the Pages
 
 ### GitHub Pages deploy
 
-GitHub Pages deploys each merge to `main`. The workflow uses:
-- Build command: `bun run build`
-- Output dir: `dist`
-- Install command: `bun install --frozen-lockfile`
-- Repository variables:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PROJECT_ID`
-- `VITE_SUPABASE_PUBLISHABLE_KEY` (must be `sb_publishable_*` format)
+GitHub Pages deploys each merge to `main`. The workflow (`deploy-github-pages.yml`) now publishes `retired-site/index.html` as a route-preserving redirect to `https://peninsulaequine.com.au`; it does **not** run `bun run build` or serve the React application. The redirect page is static HTML — no repository variables or build steps are needed.
 
 ---
 

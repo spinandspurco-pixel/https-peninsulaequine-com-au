@@ -2,10 +2,9 @@
 
 Production codebase for **peninsulaequine.com.au** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
 
-> Single-bundle React SPA. The frontend deploys from GitHub Actions to GitHub Pages; Supabase provides Auth, database, storage, and Edge Functions.
+> Single-bundle React SPA. The application is hosted at `peninsulaequine.com.au`; Supabase provides Auth, database, storage, and Edge Functions. GitHub Pages (`spinandspurco-pixel.github.io`) publishes a route-preserving redirect to `peninsulaequine.com.au` — it does not directly serve the application.
 
-> **Hosting governance:** this repository and GitHub Pages are the canonical
-> production route. Read [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md)
+> **Hosting governance:** read [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md)
 > before making any deployment, DNS, or hosting change.
 
 ---
@@ -82,7 +81,7 @@ Production codebase for **peninsulaequine.com.au** — the public marketing site
 ├── public/_headers          # Static-host security-header baseline
 ├── OPS_ALERTS.md            # Live operational alerts (external infra)
 ├── RUNBOOK.md               # Deploy, rollback, key rotation, and governance
-└── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
+└── docs/legacy/             # Archived historical records (retired GCP/Cloud Run deployment materials)
 ```
 
 ---
@@ -231,21 +230,26 @@ bun run verify:a11y   # axe-core accessibility sweep
 
 ### GitHub Pages
 
-GitHub Pages is the sole production frontend host. Retired GCP/Cloud Run,
-Vercel, CloudFront, S3, and similar routes must not be re-enabled or used as
-preview/failover paths; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
+GitHub Pages (`spinandspurco-pixel.github.io`) publishes a route-preserving
+redirect to `https://peninsulaequine.com.au`. It does **not** build or serve
+the React application. The workflow copies `retired-site/index.html` to `dist/`
+— no `bun run build`, no repository variables needed.
+
+`peninsulaequine.com.au` is the sole production address. Confirm its DNS origin
+before making any hosting or DNS change; see
+[HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
+
+Retired GCP/Cloud Run, Vercel, CloudFront, S3, and similar routes must not be
+re-enabled or used as preview/failover paths.
 
 1. Merge a reviewed change to `main`.
-2. GitHub Actions runs `bun install --frozen-lockfile` and `bun run build`.
-3. The Pages workflow publishes `dist`, including `404.html` as the SPA fallback.
-4. Repository variables `VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID`, and `VITE_SUPABASE_PUBLISHABLE_KEY` provide the public client configuration.
-5. The production custom domain is `peninsulaequine.com.au`; DNS is managed at the registrar.
+2. GitHub Actions publishes `retired-site/index.html` as the redirect page.
+3. Verify: `curl -I https://spinandspurco-pixel.github.io` should return a redirect to `peninsulaequine.com.au`.
 
-After a deploy, verify on the production domain:
-- Homepage 200 + the latest bundle hash.
+After confirming the redirect is live, verify the production domain directly:
+- Homepage loads from `peninsulaequine.com.au`.
 - `/hq` renders the login gate.
-- Login completes against Supabase (no 401s — confirms `sb_publishable_*` key is bound correctly).
-- A deep link (e.g. `/services/arenas`) refreshes without 404.
+- Login completes against Supabase.
 
 ---
 
@@ -279,7 +283,7 @@ After a deploy, verify on the production domain:
 ## 13. Operational status
 
 - **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). No open alerts.
-- **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
+- **Legacy deployment archive:** retired GCP / Cloud Run / Docker materials are preserved as historical records in [`docs/legacy/`](./docs/legacy/README.md). They must not be used to deploy or configure the live site.
 - **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
 
 ---
