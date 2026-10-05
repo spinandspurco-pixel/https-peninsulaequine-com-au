@@ -130,7 +130,7 @@ jobs:
           name: accessibility-report
           path: reports/accessibility/
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 14
 
       - name: Append report summary to job
         if: always()
