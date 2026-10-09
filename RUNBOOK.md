@@ -1,191 +1,87 @@
-# Peninsula Equine — Platform Runbook
+# Peninsula Equine — Current Website Runbook
 
-> **Public website:** `peninsulaequine.com.au` (apex + `www.`)
-> **Admin email:** `info@peninsulaequine.systems`
-> **Repo:** `spinandspurco-pixel/https-peninsulaequine-com-au`
+Last reconciled: **9 October 2026**.
 
----
+## Current production
 
-## 1. Platform ownership map
-
-| Concern | Platform | Where to manage |
-|---|---|---|
-| **Source of truth (code)** | GitHub | `main` branch — all changes via PR |
-| **Frontend hosting** | GitHub Pages | GitHub Actions → `Deploy Peninsula Equine to GitHub Pages` |
-| **Custom domains** | Registrar DNS + GitHub Pages | `peninsulaequine.com.au` and `www.peninsulaequine.com.au` |
-| **Auth + database + storage** | Supabase | Supabase project dashboard |
-| **Edge functions** | Supabase | `supabase/functions/` — deployed on commit |
-| **Transactional email (sending)** | Resend | resend.com → Domain: `notify.peninsulaequine.systems` |
-| **Business email (inbox/outbox)** | Mail provider (e.g., Google Workspace) | DNS MX records for `peninsulaequine.systems` |
-| **DNS** | Instra | Instra DNS records for `peninsulaequine.com.au` |
-| **AI assistant** | Lovable AI Gateway | Managed by Lovable — `LOVABLE_API_KEY` secret |
-
----
-
-## 2. Change-control rules
-
-1. **All production changes go through GitHub.** Merge reviewed changes to `main`; the GitHub Pages workflow publishes the result.
-2. **One production host.** GitHub Pages is the sole public website host. Do not point the apex domain at any legacy CloudFront, Vercel, or preview host.
-3. **Environment variables.** Frontend (`VITE_SUPABASE_*`) live in GitHub repository variables. Backend secrets (`RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, sender `FROM_EMAIL`, etc.) live only in Supabase secrets — never in `.env` or source code.
-4. **Schema migrations.** All Supabase schema changes go through `supabase/migrations/*.sql`. Never run `supabase db push` manually against the managed project.
-5. **Retired routes stay retired.** Do not restart Cloud Run/GCP, Vercel, CloudFront, S3, or another frontend host as production, preview, or failover. Historical deployment documents are records, not runbooks; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
-
----
-
-## 3. Deploy process
-
-### Standard deploy (code change)
-
-```
-1. Create a branch off main
-2. Make changes → open PR → CI must pass (strict-build, security-gate)
-3. Merge PR to main
-4. GitHub Actions builds and deploys GitHub Pages
-5. Verify: smoke test passes (publish-smoke-test workflow)
-```
-
-### Hotfix deploy
-
-Same as standard. For urgent fixes, merge a small GitHub PR and verify the Pages workflow before changing DNS or backend configuration.
-
-### GitHub Pages deploy
-
-GitHub Pages deploys each merge to `main`. The workflow uses:
-- Build command: `bun run build`
-- Output dir: `dist`
-- Install command: `bun install --frozen-lockfile`
-- Repository variables:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PROJECT_ID`
-- `VITE_SUPABASE_PUBLISHABLE_KEY` (must be `sb_publishable_*` format)
-
----
-
-## 4. Rollback procedure
-
-### Frontend rollback
-1. In GitHub: revert the offending commit or open a corrective PR.
-2. Merge to `main` and confirm the GitHub Pages deployment succeeds.
-3. Verify the public domain only after the deployment is live.
-
-### Database rollback
-Supabase migrations are forward-only. To roll back a schema change:
-1. Write a new migration that reverses the change.
-2. Add it to `supabase/migrations/` with a new timestamp filename.
-3. Merge via PR — the Supabase deployment workflow applies it.
-
----
-
-## 5. Key rotation
-
-### Supabase publishable key (`VITE_SUPABASE_PUBLISHABLE_KEY`)
-
-The key must be in `sb_publishable_*` format. Legacy `eyJ…` JWT keys are disabled on rotation and cause 401s.
-
-1. In Supabase Dashboard: Project Settings → API → copy the `sb_publishable_*` key.
-2. Update the GitHub repository variable `VITE_SUPABASE_PUBLISHABLE_KEY`.
-3. Trigger or merge a GitHub Pages deployment.
-
-### Resend API key
-
-1. Generate a new key in resend.com → API Keys.
-2. Update the `RESEND_API_KEY` secret in Supabase secrets.
-3. Edge functions pick it up on next invocation — no redeploy needed.
-4. Run the send-test-email diagnostic from `/hq/deploy-health` to confirm delivery.
-
-### Supabase service role key
-
-1. Rotate in Supabase dashboard → Project Settings → API.
-2. Update the Supabase secret (the key is never in the repo or `.env`).
-3. Edge functions pick it up on next invocation.
-
----
-
-## 6. Email system overview
-
-| Sender purpose | Secret | Expected format |
-|---|---|---|
-| HQ notifications (admin-to-admin) | `HQ_EMAIL_FROM` | `Peninsula Equine HQ <hq@notify.peninsulaequine.systems>` |
-| Noreply / system | `NOREPLY_EMAIL_FROM` | `Peninsula Equine <noreply@notify.peninsulaequine.systems>` |
-| Bookings | `BOOKINGS_EMAIL_FROM` | `Peninsula Equine Bookings <bookings@notify.peninsulaequine.systems>` |
-| Quotes | `QUOTES_EMAIL_FROM` | `Peninsula Equine <quotes@notify.peninsulaequine.systems>` |
-| Default / fallback | `FROM_EMAIL` | `Peninsula Equine <hello@notify.peninsulaequine.systems>` |
-| Reply-to / inbox | — (hardcoded) | `info@peninsulaequine.systems` |
-| Staff notifications | `NOTIFICATION_EMAIL` | `info@peninsulaequine.systems` |
-
-All outgoing transactional email routes through **Resend** using the verified sending domain `notify.peninsulaequine.systems`.  
-The main inbox `info@peninsulaequine.systems` is a separate mailbox managed by your mail provider (MX records).
-
-### DNS records required for email
-
-**Resend (sending — `notify.peninsulaequine.systems`):**
-- SPF `TXT` record on `notify.peninsulaequine.systems`
-- DKIM `CNAME` record (provided by Resend)
-- Optional DMARC `TXT` on `_dmarc.notify.peninsulaequine.systems`
-
-**Mail provider (receiving — `peninsulaequine.systems`):**
-- `MX` records pointing to your mail provider
-- SPF `TXT` record on `peninsulaequine.systems`
-- DKIM `TXT`/`CNAME` records per your mail provider's instructions
-- DMARC `TXT` on `_dmarc.peninsulaequine.systems`
-
-### Verifying email health
-
-Navigate to `/hq/deploy-health` → Email tab (admin only). This runs `email-ops-status` and `resend-domain-status` edge functions to check:
-- All sender secrets are configured and point to `notify.peninsulaequine.systems`
-- The Resend domain is verified
-- SPF/DKIM status per Resend's records
-- Last successful and last failed test send
-
----
-
-## 7. DNS overview
-
-| Record | Type | Points to | Purpose |
-|---|---|---|---|
-| `peninsulaequine.com.au` | four `A` records | GitHub Pages IPs | Apex public hosting |
-| `www.peninsulaequine.com.au` | `CNAME` | `spinandspurco-pixel.github.io.` | www public hosting |
-| `peninsulaequine.systems` | `MX` | Mail provider | Email receiving |
-| `peninsulaequine.systems` | `TXT` | SPF value | Email authentication |
-| `notify.peninsulaequine.systems` | `TXT`/`CNAME` | Resend values | Transactional email sending |
-
-> **Check DNS propagation:** run the DNS checker at `/hq/dns-*` routes (admin only) or use `dig`/`nslookup` from the command line.
-
----
-
-## 8. Auth configuration
-
-- **Auth provider:** Supabase
-- **Sign-in methods:** Email magic link + Google OAuth
-- **Redirect URL whitelist** (must be set in Supabase dashboard → Auth → URL Configuration):
-  - `https://peninsulaequine.com.au/**`
-  - `https://www.peninsulaequine.com.au/**`
-  - `http://localhost:8080/**` (local dev)
-- **Roles:** managed in `user_roles` table; checked server-side via `has_role()` function. Never store role in client storage.
-
----
-
-## 9. Monitoring & alerts
-
-| Signal | Where |
+| Concern | Current evidence |
 |---|---|
-| Deploy health (bundle hash drift, stale streak) | `/hq/deploy-health` |
-| Email delivery health | `/hq/deploy-health` → Email tab |
-| DNS propagation status | `/hq/dns-*` routes |
-| CI workflow status | GitHub Actions tab |
-| Operational alerts | `OPS_ALERTS.md` in repo root |
-| Smoke test results | `smoke-summary.json` in repo root |
+| Public frontend | ChatGPT Sites project `appgprj_6a816abda00c8191a88c78dac6fd7152` |
+| Latest published release | Version 38, 9 October 2026 |
+| Source commit | `1ef39614adadf957202eb42044c4c66a1c7c919f` in the Site's source repository |
+| Successful deployment | `appgdep_6ac854a94720819186f509b737708bab` |
+| Public routes | https://peninsulaequine.com.au and its www hostname |
+| Native route | https://peninsula-equine.jordynn-oakl-5154.chatgpt.site |
+| Direct contact | 0418 585 489; ciro@procasa.com.au |
+| Website enquiry | Prepared email; visitor reviews and sends using their email app |
+| Optional design brief | Browser-local draft and downloadable PDF, manually emailed by visitor |
+| Automatic delivery | Not activated; prerequisites below remain incomplete |
 
----
+Both .com.au bindings and SSL are active. The live homepage and design-brief
+journey loaded in the browser on 9 October. A synthetic brief produced a
+downloadable PDF; the temporary browser draft was cleared. No real enquiry or
+email was sent. The exact current source passed `npm test` (build, typecheck,
+119 tests, zero failures). These checks do not certify physical devices,
+screen readers, alternate browsers or real inbox delivery.
 
-## 10. Supabase project reference
+## Release and recovery
 
-| Item | Value |
-|---|---|
-| Project ID | `mxjuknqwzbvvmmdrvkql` |
-| Supabase URL | `https://mxjuknqwzbvvmmdrvkql.supabase.co` |
-| Dashboard | `https://supabase.com/dashboard/project/mxjuknqwzbvvmmdrvkql` |
+1. Open the existing Site and its current source; check for newer work.
+2. Make scoped changes, retain its stack and release safeguards, and run the
+   relevant source and interaction checks.
+3. Push the exact tested source, save its matching archive as a version, then
+   publish that version through Sites. Preserve its audience and domain bindings.
+4. Confirm the successful deployment result, actual apex/www route, and affected
+   visitor journeys. Record any checks that could not run.
+5. Recover using a previously successful version of this same Site and its
+   matching archive. Do not fail over to a legacy host or rewrite source history.
 
----
+A saved version is not necessarily published. A GitHub merge, CI pass or
+GitHub Pages deployment in this repository is not proof of a Sites release.
+See [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
 
-*Last updated: July 2026*
+## Enquiry delivery gates
+
+The public contact fallback remains usable while online delivery is unfinished.
+The Site source includes a Resend adapter, durable outbox, signed delivery
+webhook and protected dispatch endpoint, but `.openai/hosting.json` currently
+has no D1 or R2 binding. Source presence is not hosted acceptance.
+
+The connected Resend account has **three of three domain slots occupied** and
+no Peninsula Equine sender on 9 October. Do not remove or borrow another
+business's domain. A paid upgrade has not been authorized.
+
+Before enabling online receipt:
+- Resolve PE sender capacity and verify its provider-issued DNS records.
+- Configure the required D1 binding/migrations, operator access and reviewed
+  privacy/retention settings.
+- Configure Site secrets for transport, webhook and dispatch without exposing
+  credentials in source, logs or documentation.
+- Install the periodic retry caller and verify monitoring/recovery behavior.
+- Prove hosted authorization, storage, signed events, retries and controlled
+  inbox delivery before enabling release flags.
+
+Use the current Site source documents `docs/notification-release-gates.md`,
+`docs/notification-workflow-review.md` and `docs/operating-record.md` for the
+implementation details, with dated current release evidence taking precedence
+over their historical publication statements.
+
+## DNS and Workspace
+
+Follow [DOMAIN_SETUP.md](./DOMAIN_SETUP.md). Instra #4485334 remains the reference
+for the missing Google Workspace root TXT record; the 4 October follow-up is
+already sent. Verify the requested record and Google's recognition separately.
+Do not change MX, receiving mail, nameservers or the working web route.
+
+## Historical application boundaries
+
+The previous July runbook described GitHub Pages, Supabase project
+`mxjuknqwzbvvmmdrvkql`, /hq and /auth/callback, Lovable, and senders under
+notify.peninsulaequine.systems. Those instructions are preserved in Git history
+but are **not the operating instructions for the published Sites website**.
+Do not run their deployment, test-email, credential-rotation or migration
+commands against the current Site by assumption.
+
+This correction makes no claim about the current health or billing of legacy
+accounts. Changes to them require their own scoped review. GroundLock is
+excluded from the public website programme.
