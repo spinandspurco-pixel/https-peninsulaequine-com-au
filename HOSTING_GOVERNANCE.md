@@ -1,44 +1,54 @@
 # Peninsula Equine Hosting Governance
 
-## Canonical production route
+## Current production route — verified 9 October 2026
 
-This repository, `spinandspurco-pixel/https-peninsulaequine-com-au`, is the
-canonical implementation and release source for Peninsula Equine.
+The public website at https://peninsulaequine.com.au is published by **ChatGPT
+Sites**, project `appgprj_6a816abda00c8191a88c78dac6fd7152`.
 
-The sole production frontend route is:
+The current release is **Site version 38**, published on 9 October 2026:
+- Source: `1ef39614adadf957202eb42044c4c66a1c7c919f`
+- Successful deployment: `appgdep_6ac854a94720819186f509b737708bab`
+- Native address: https://peninsula-equine.jordynn-oakl-5154.chatgpt.site
+- Both .com.au hostnames have active domain and SSL bindings in Sites.
 
-`reviewed PR -> main -> Deploy Peninsula Equine to GitHub Pages -> peninsulaequine.com.au`
+Production changes follow the existing Sites source repository, a tested saved
+version, and the Sites publication operation. A saved version is not proof of
+publication. Confirm its deployment result and actual production journeys.
 
-GitHub Pages serves the static React application. Supabase remains the managed
-backend for Auth, database, Storage, and Edge Functions; it is not an
-alternative frontend host.
-
-## Retirement policy
-
-Cloud Run/GCP, Vercel, CloudFront, S3, and any other legacy web-hosting route
-are retired as production deployment paths. Do not:
-
-- create or re-enable a deployment workflow for a retired host;
-- deploy this frontend to a retired host;
-- point production DNS at a retired host; or
-- treat a retired host as a preview or failover path.
-
-Legacy repositories, deployment manifests, and historical deployment guides
-remain records only. They do not authorise a deployment or infrastructure
-change. Their retention does not imply that their services should be deleted;
-any deletion, billing, DNS, or external-platform action requires a separately
-approved operational change outside this repository.
+This GitHub repository contains the earlier application and its operating
+history. It is **not the source of the currently published Sites release**.
+Its GitHub Pages workflows, checks, and older Supabase/HQ instructions do not
+establish the live website's implementation or release status.
 
 ## Operating controls
 
-1. Changes merge through reviewed pull requests to `main`.
-2. `.github/workflows/deploy-github-pages.yml` is the only frontend production
-   deployment workflow.
-3. DNS changes must preserve `peninsulaequine.com.au` and
-   `www.peninsulaequine.com.au` as GitHub Pages custom domains; see
-   [DOMAIN_SETUP.md](./DOMAIN_SETUP.md).
-4. Roll back frontend releases with a revert commit or follow-up corrective
-   commit, then redeploy GitHub Pages; do not rewrite `main` history or fail
-   over to a retired host.
-5. Historical GCP documents are labelled as archived and must not be followed
-   as runbooks.
+1. Keep GitHub changes on reviewed pull requests to `main`.
+2. Preserve the working Sites route. Do not change production DNS to match old
+   GitHub Pages, Vercel, Cloud Run/GCP, CloudFront or S3 guidance.
+3. Use the current Site's source and release records for changes to the public
+   website. Recheck for intervening versions before publishing.
+4. Confirm apex and www domain status, SSL, and public interactions after an
+   approved release. Do not infer complete functionality from a page fetch.
+5. Roll back through the same Site using a known, previously successful saved
+   version and its archive. Reverting this GitHub repository does not roll back
+   the current public website.
+6. Keep secrets, customer enquiries and operator identities out of public docs.
+7. GroundLock is excluded from this website programme.
+
+See [DOMAIN_SETUP.md](./DOMAIN_SETUP.md) for the observed DNS route and
+[RUNBOOK.md](./RUNBOOK.md) for checks and outstanding delivery prerequisites.
+
+## Historical hosting and pending work
+
+The former GitHub Pages production designation is superseded by the dated
+release and DNS evidence above. Legacy repositories, manifests, workflows and
+runbooks are historical records, not permission to deploy, change DNS, or
+delete services.
+
+Draft PR #37 still describes GitHub Pages as canonical. Do not apply its hosting
+claim without reconciling it with this record. Draft PR #35's .systems smoke-test
+target does not verify the current .com.au public website. Neither draft has
+been merged or closed by this documentation correction.
+
+No hosting assignment, deployment workflow, DNS, billing, or external account
+is changed by this documentation update.
