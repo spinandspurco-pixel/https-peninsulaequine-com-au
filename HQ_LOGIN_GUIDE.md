@@ -1,5 +1,11 @@
 # HQ Login Authentication Guide
 
+> **Earlier application / HQ reference, not the public Sites website.**
+> Hostnames, readiness claims and provider settings below are historical until
+> revalidated. Confirm the current application origin and backend target using
+> [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md); public website operations use
+> [RUNBOOK.md](./RUNBOOK.md). The Pages redirect does not serve HQ.
+
 ## Overview
 
 The HQ staff login page now supports **three authentication methods**:

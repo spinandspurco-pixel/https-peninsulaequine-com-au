@@ -12,30 +12,58 @@ SSL as active. The observed web DNS route is:
 | peninsulaequine.com.au | A | 172.66.3.26 |
 | www.peninsulaequine.com.au | CNAME | custom-domains.chatgpt.site. |
 
-These values record the current route; always obtain current required values
+These values record the route observed on 9 October; obtain current required values
 from this exact Site before an authorized DNS operation. Do not replace them
 with the historical GitHub Pages IPs or `spinandspurco-pixel.github.io`.
 
-The .systems and www.systems bindings remain pending in Sites with SSL
-validation incomplete. They are not the canonical public website and must not
-be treated as a ready failover host.
+On 9 October, the `.systems` and `www.systems` bindings were pending in Sites
+with SSL validation incomplete. This is not evidence of a current application
+deployment there. They are not the canonical public website or a ready failover.
 
-## Google Workspace verification — separate outstanding item
+## Google Workspace verification — two distinct domains
 
-Instra ticket **#4485334** concerns a root TXT record for Google verification.
-The latest recorded follow-up was sent on **4 October 2026**. On 9 October the
-public root TXT lookup did not show the requested record, and no later reply
-was found in the selected Gmail account.
+`@` means the root of the **selected DNS zone**, not an interchangeable record
+for every Peninsula Equine domain. The following evidence was reconciled on
+13 October 2026:
 
-Next action: confirm the requested TXT host/value/TTL from the existing ticket,
-apply only that record through authorized registrar access, then check public
-DNS and Google's recognition. A registrar acknowledgement alone does not
-complete verification. The ticket is the source for the exact verification
-value; do not copy it from an unrelated account or historical instruction.
+| Domain / full TXT owner | Purpose and evidence | Verification boundary |
+|---|---|---|
+| `peninsulaequine.com.au` (`@` in the `.com.au` zone) | Workspace domain-ownership verification requested in Instra **#4485334**. The 22 August request explicitly names this domain; the 2 October confirmation and 4 October follow-up repeat it. | Match the ticket to this domain in the intended Google Admin account before any future DNS edit. The 9 October lookup recorded the TXT as absent; no completion is established here. |
+| `peninsulaequine.systems` (`@` in the `.systems` zone) | Earlier application's Workspace verification helper: `DOMAIN` in [DnsPublish.tsx](./src/pages/DnsPublish.tsx) and `DEFAULT_DOMAIN` in [verify-google-dns](./supabase/functions/verify-google-dns/index.ts). | These constants prove what the application checks, not which Workspace tenant owns the domain, current Google acceptance, or the purpose of the `.com.au` ticket. Reconfirm the `.systems` task in its own Google Admin account. |
+
+The ticket and application contain **different verification values**. Do not
+copy the application's hardcoded token to `.com.au`, or the ticket's token to
+`.systems`. The precise values remain in their respective source records;
+confirm the current Google-issued value and TTL rather than treating either
+historical value as a new instruction. The selected Gmail ticket search on
+13 October found no later Instra response confirming completion.
+
+The function accepts explicit `domain` and `token` parameters; without them it
+checks `.systems` with its historical default token. Its `ready` result reports
+a DNS match from public resolvers, not successful Google Admin verification.
+It must not be used with defaults to clear the `.com.au` ticket.
+
+For a separately authorized verification task, record the full domain, Google
+account/tenant, purpose, TXT owner, value source and TTL before editing anything.
+Afterwards check the exact domain's TXT through independent public resolvers
+and confirm recognition in that same Google Admin account. A registrar save or
+acknowledgement alone does not complete verification. This documentation change
+does not apply either record.
 
 Preserve nameservers and all existing A, CNAME, MX, SPF, DKIM, DMARC and other
 verification records. Workspace verification does not authorize a web-hosting
 cutover or receiving-mail change.
+
+### Other Google and email records are separate
+
+- `public/google7675cee3aad607c0.html` is an HTML-file Google site-verification
+  artifact included by the Pages redirect workflow. Its presence does not
+  satisfy either Workspace root TXT task or prove which Google product/account
+  accepted it.
+- `notify.peninsulaequine.systems` is the sender domain expected by the
+  repository application's Resend diagnostics. Provider-issued sending records
+  and mailbox MX records are separate from Workspace ownership TXT records;
+  see [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md).
 
 ## Verification after an authorized change
 

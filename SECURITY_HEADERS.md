@@ -1,13 +1,18 @@
 # Security Headers
 
-Production-safe HTTP security headers configured at the hosting layer.
+Repository application header baseline. It does not establish the headers
+served by the public ChatGPT Sites website; use [RUNBOOK.md](./RUNBOOK.md) and
+verify that host's actual responses for public-site acceptance.
 
 ## Where they live
 
-- **GitHub Pages** — the static site is served from the Pages deployment; verify the live response headers after each hosting change.
+- **Public Sites website** — headers belong to the separate Site's source and
+  hosting configuration. This repository does not publish that website.
+- **GitHub Pages** — publishes the legacy redirect and Google verification file;
+  its workflow does not copy `public/_headers` or serve the application.
 - **`public/_headers`** — a portable static-host baseline retained for hosts that support the file.
 
-## What is enforced (production-safe)
+## Application baseline values (host enforcement must be verified)
 
 | Header | Value | Why |
 |---|---|---|
@@ -18,9 +23,9 @@ Production-safe HTTP security headers configured at the hosting layer.
 | `Permissions-Policy` | camera/mic/geolocation/payment/usb/sensors/FLoC all `=()` | Denies powerful APIs the site does not use. |
 | `Cross-Origin-Opener-Policy` | `same-origin-allow-popups` | Required so the Google OAuth popup can `postMessage` back to the opener. Do **not** tighten to `same-origin` — it breaks Google sign-in. |
 
-## CSP — running in Report-Only mode
+## Application CSP baseline — Report-Only
 
-A full Content-Security-Policy is shipped as `Content-Security-Policy-Report-Only` so violations surface in DevTools without breaking Google sign-in, Supabase auth, analytics, fonts, or remote imagery.
+The application baseline defines a Content-Security-Policy as `Content-Security-Policy-Report-Only` so violations surface in DevTools without breaking Google sign-in, Supabase auth, analytics, fonts, or remote imagery.
 
 Allowlist covers:
 - `script-src` — self + `'unsafe-inline'` + `'unsafe-eval'` (Vite), `accounts.google.com`, `apis.google.com`.
@@ -34,7 +39,9 @@ Allowlist covers:
 1. Leave Report-Only deployed for ≥ 1 week; watch the browser console + any CSP report endpoint.
 2. Add any missing origins surfaced by reports (most likely candidates: an analytics host, a future embed).
 3. Once clean, rename `Content-Security-Policy-Report-Only` → `Content-Security-Policy` in `public/_headers` and validate the equivalent response at the active host.
-4. Re-run the publish smoke test and verify Google sign-in end-to-end on `/login`.
+4. Verify headers and Google sign-in on the independently confirmed application
+   host. The old publish smoke workflow was retired in PR #41; it is not a Sites
+   release gate. See [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md).
 
 ### Known risks if enforced today
 

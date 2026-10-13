@@ -1,11 +1,13 @@
 # Archived: Peninsula Equine Cloud Run Deployment Package
 
-> **Historical record — do not follow as an operational runbook.** GitHub Pages
-> is the sole production frontend host, and Cloud Run/GCP must not be
-> re-enabled as a production, preview, or failover route. This document is
-> retained only for historical context; follow
+> **Historical record — deployment instructions below are superseded.**
+> The public website is published through ChatGPT Sites (version 38 verified
+> on 9 October 2026). GitHub Pages now publishes a legacy redirect, not the
+> public application. Do not use this document to deploy or change DNS, or to
+> re-enable a retired host for production, preview or failover. Follow
 > [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
-> [RUNBOOK.md](./RUNBOOK.md) for current operations.
+> [RUNBOOK.md](./RUNBOOK.md) for the website; use
+> [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md) for the active Supabase workflow.
 
 **Status:** ✅ **PRODUCTION READY**  
 **Date:** July 3, 2026  
