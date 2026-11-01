@@ -22,6 +22,22 @@ deployment there. They are not the canonical public website or a ready failover.
 
 ## Google Workspace verification — two distinct domains
 
+### Public TXT recheck — 2 November 2026
+
+Instra's reply of 27 October 2026 at 15:07 UTC (28 October in Melbourne), in
+ticket **#4485334**, confirms that it added the requested `.com.au` TXT record.
+On 2 November, independent Google Public DNS and Cloudflare DNS-over-HTTPS
+lookups both returned the exact verification value from the ticket at the root
+of `peninsulaequine.com.au`. No DNS record or nameserver was changed during
+this recheck.
+
+The public DNS prerequisite is now verified. Recognition in the intended
+Google Admin account remains unverified; do not mark Workspace setup or mail
+activation complete from the TXT match alone. The earlier absence recorded
+below is historical and no longer the current public DNS result.
+
+### Earlier reconciliation — 13 October 2026
+
 `@` means the root of the **selected DNS zone**, not an interchangeable record
 for every Peninsula Equine domain. The following evidence was reconciled on
 13 October 2026:

@@ -127,7 +127,18 @@ has verified it or that it is the public Site's sender.
 | `info@peninsulaequine.systems` | Reply-to in `send-test-email`; separate receiving mailbox |
 
 On the confirmed application host, an authorized admin can inspect
-`/hq/deploy-health` → Email. The [email-ops-status function](./supabase/functions/email-ops-status/index.ts)
+`/hq/legacy` → **Systems Health** → **Email diagnostics**. The route mounts
+`Admin` and its `ControlRoom`, which renders `EmailDiagnostics` in that tab.
+This requires a confirmed application deployment and admin access; it is not a
+route on the public Sites website.
+
+Do not use `/hq/deploy-health` as an operational entry point. Its existing
+application screen still emits obsolete GitHub Pages cutover actions for the
+public apex/www records and does not mount the email diagnostics. Those actions
+must be corrected or retired before that screen is used again. They must never
+be followed to replace the public Sites route.
+
+The [email-ops-status function](./supabase/functions/email-ops-status/index.ts)
 checks sender settings, provider domain records and `email_diagnostic_log`.
 Use `resend-domain-status` for its provider status view. Check the exact provider
 account, sender domain, timestamp and errors; an old successful diagnostic is
