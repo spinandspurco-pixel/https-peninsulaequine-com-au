@@ -1,10 +1,13 @@
 # Historical Status: "440 Problems" Resolved
 
-> **Historical record — do not follow its Cloud Run deployment instructions.**
-> GitHub Pages is the sole production frontend host, and Cloud Run/GCP must not
-> be re-enabled as a production, preview, or failover route. Follow
+> **Historical record — deployment instructions below are superseded.**
+> The public website is published through ChatGPT Sites (version 38 verified
+> on 9 October 2026). GitHub Pages now publishes a legacy redirect, not the
+> public application. Do not use this document to deploy or change DNS, or to
+> re-enable a retired host for production, preview or failover. Follow
 > [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) and
-> [RUNBOOK.md](./RUNBOOK.md) for current operations.
+> [RUNBOOK.md](./RUNBOOK.md) for the website; use
+> [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md) for the active Supabase workflow.
 
 **Date:** July 3, 2026  
 **Status:** ✅ **PRODUCTION READY - All Issues Resolved**

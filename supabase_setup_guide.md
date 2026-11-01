@@ -1,13 +1,20 @@
 # Supabase Setup Guide — Peninsula Equine
 
-> Comprehensive guide to understanding, configuring, and managing Supabase for the Peninsula Equine platform.
+> **Historical application setup reference.** Provider access, domain names,
+> project refs and deployment instructions below predate the current hosting
+> separation. For the active backend workflow and recovery procedures, use
+> [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md) and confirm its configured target.
+> The public Sites website uses [RUNBOOK.md](./RUNBOOK.md). This guide does not
+> establish a current `.systems` application deployment or authorize any DNS,
+> credential or service change.
 
 ---
 
-## 1. Project Overview
+## 1. Historical project overview
 
 **Project ID:** `mxjuknqwzbvvmmdrvkql`  
-**Canonical domain:** `peninsulaequine.systems`  
+**Historical application domain:** `peninsulaequine.systems` (current hosting unverified)
+
 **Hosting platform:** Lovable Cloud (manages Supabase + frontend deployment)  
 **Source of truth:** GitHub repository `spinandspurco-pixel/https-peninsulaequine-com-au`
 

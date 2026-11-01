@@ -1,5 +1,11 @@
 # HQ (Command Centre) Audit Summary
 
+> **Earlier application / HQ reference, not the public Sites website.**
+> Hostnames, readiness claims and provider settings below are historical until
+> revalidated. Confirm the current application origin and backend target using
+> [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md); public website operations use
+> [RUNBOOK.md](./RUNBOOK.md). The Pages redirect does not serve HQ.
+
 **Audit Date:** July 2, 2026  
 **Status:** ✅ Complete & Enhanced
 
@@ -177,7 +183,7 @@ const { data, error } = result;
 - Role mappings synced on login and on-demand via `/hq/whoami`
 
 ### Deployment Pipeline
-- HQ deep links use the GitHub Pages `404.html` SPA fallback
+- Historical HQ deployments used a SPA fallback; the current Pages `404.html` is a redirect and does not serve HQ
 - Authentication callback routed to `/auth/callback`
 - All HQ surfaces behind ProtectedRoute component with role validation
 

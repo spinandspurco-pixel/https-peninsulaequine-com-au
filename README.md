@@ -1,31 +1,39 @@
 # Peninsula Equine
 
-Production codebase for **peninsulaequine.com.au** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
+Repository for the earlier Peninsula Equine React application, **HQ**, and its
+separately maintained Supabase backend. The public website at
+**https://peninsulaequine.com.au** is published through **ChatGPT Sites**;
+version 38 was verified on 9 October 2026. This repository is not that Site's
+source or publication mechanism.
 
-> Single-bundle React SPA. The frontend deploys from GitHub Actions to GitHub Pages; Supabase provides Auth, database, storage, and Edge Functions.
+| Surface | Operating instructions |
+|---|---|
+| Public Sites website, contact and design brief | [Website runbook](./RUNBOOK.md) |
+| Repository application / HQ and active Supabase deployment workflow | [Backend and application runbook](./BACKEND_RUNBOOK.md) |
+| GitHub Pages | Legacy redirect and verification file only; see section 10 |
+| Web DNS and the two separate Workspace verification domains | [Domain guide](./DOMAIN_SETUP.md) |
 
-> **Hosting governance:** this repository and GitHub Pages are the canonical
-> production route. Read [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md)
-> before making any deployment, DNS, or hosting change.
+Read [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md) before any deployment or
+hosting change. The application routes and development details below describe
+this repository, not the published Sites website. An active backend workflow
+does not establish a current application frontend URL or prove backend health.
 
 ---
 
 ## Build & Security Status
 
-> Replace `OWNER/REPO` below with this repository's GitHub `owner/repo` slug. All badges reflect the `main` branch.
+These badges reflect this repository's `main` branch, not a Sites publication.
 
 | Workflow | Status |
 |---|---|
 | Security gate (blocking, per-PR) | [![Security gate](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/security-gate.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/security-gate.yml) |
 | Nightly security scan | [![Nightly security scan](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/nightly-security-scan.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/nightly-security-scan.yml) |
 | Strict build (typecheck + lint + vitest) | [![Strict Build](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/strict-build.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/strict-build.yml) |
-| Node.js CI | [![Node.js CI](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/node.js.yml) |
 | Prerender unit tests | [![Prerender unit tests](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/prerender-unit-tests.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/prerender-unit-tests.yml) |
 | Verify prerendered head tags | [![Verify prerendered head tags](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-prerender.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-prerender.yml) |
 | Verify accessibility (axe) | [![Verify accessibility](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-accessibility.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-accessibility.yml) |
 | Verify asset pointers | [![Verify asset pointers](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-assets.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-assets.yml) |
 | Verify internal links | [![Verify internal links](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-internal-links.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/verify-internal-links.yml) |
-| Publish smoke test (post-deploy) | [![Publish Smoke Test](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/publish-smoke-test.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/publish-smoke-test.yml) |
 | Preview mint gate | [![Preview Mint Gate](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/preview-mint-check.yml/badge.svg?branch=main)](https://github.com/spinandspurco-pixel/https-peninsulaequine-com-au/actions/workflows/preview-mint-check.yml) |
 
 ---
@@ -78,11 +86,12 @@ Production codebase for **peninsulaequine.com.au** — the public marketing site
 ├── scripts/                 # Build, prerender, verification, smoke tests
 ├── .github/workflows/       # CI (strict build, prerender, a11y, smoke, security)
 ├── vite.config.ts           # Vite config (alias @ → src/)
-├── .github/workflows/deploy-github-pages.yml # GitHub Pages deployment
+├── .github/workflows/deploy-github-pages.yml # Legacy redirect publication
 ├── public/_headers          # Static-host security-header baseline
 ├── OPS_ALERTS.md            # Live operational alerts (external infra)
-├── RUNBOOK.md               # Deploy, rollback, key rotation, and governance
-└── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
+├── RUNBOOK.md               # Public Sites website release and recovery
+├── BACKEND_RUNBOOK.md       # Repository application and Supabase operations
+└── docs/legacy/README.md    # Index of superseded hosting records
 ```
 
 ---
@@ -152,12 +161,16 @@ import { supabase } from "@/integrations/supabase/client";
 ### Migrations
 
 All schema changes go through `supabase/migrations/*.sql`. The Supabase deployment workflow applies them; do not run `supabase db push` directly against production.
+Confirm the actual workflow target and recovery plan in
+[BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md) before a backend release.
 
 ---
 
 ## 6. Edge functions
 
-Located in `supabase/functions/`. Deployed automatically on commit.
+Located in `supabase/functions/`. The backend workflow deploys on matching
+`main` pushes and manual dispatch; see [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md)
+for exact triggers, target selection and partial-failure recovery.
 
 | Function | Purpose |
 |---|---|
@@ -187,7 +200,8 @@ Backend-only (set in Supabase secrets, never in `.env`):
 - `SUPABASE_SERVICE_ROLE_KEY` — server only
 - `RESEND_API_KEY`, `LOVABLE_API_KEY`, plus any provider keys edge functions need
 
-`.env` is committed in this repo (publishable values only). Never add service-role or private keys.
+Use `.env.example` for local configuration. Never commit service-role or private
+keys. Application client settings do not configure the separate Sites website.
 
 ---
 
@@ -229,23 +243,34 @@ bun run verify:a11y   # axe-core accessibility sweep
 
 ## 10. Deployment
 
-### GitHub Pages
+### Public website — ChatGPT Sites
 
-GitHub Pages is the sole production frontend host. Retired GCP/Cloud Run,
-Vercel, CloudFront, S3, and similar routes must not be re-enabled or used as
-preview/failover paths; see [HOSTING_GOVERNANCE.md](./HOSTING_GOVERNANCE.md).
+Use the existing Site's source, tested saved version and publication operation
+in [RUNBOOK.md](./RUNBOOK.md). A merge here does not publish or roll back the
+public website. Do not repoint its custom domains to GitHub Pages.
 
-1. Merge a reviewed change to `main`.
-2. GitHub Actions runs `bun install --frozen-lockfile` and `bun run build`.
-3. The Pages workflow publishes `dist`, including `404.html` as the SPA fallback.
-4. Repository variables `VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID`, and `VITE_SUPABASE_PUBLISHABLE_KEY` provide the public client configuration.
-5. The production custom domain is `peninsulaequine.com.au`; DNS is managed at the registrar.
+### GitHub Pages — legacy redirect only
 
-After a deploy, verify on the production domain:
-- Homepage 200 + the latest bundle hash.
-- `/hq` renders the login gate.
-- Login completes against Supabase (no 401s — confirms `sb_publishable_*` key is bound correctly).
-- A deep link (e.g. `/services/arenas`) refreshes without 404.
+[deploy-github-pages.yml](./.github/workflows/deploy-github-pages.yml) copies
+`retired-site/index.html` into `dist/index.html` and `dist/404.html`, includes
+`public/google7675cee3aad607c0.html`, and publishes that artifact on `main`
+pushes or manual dispatch. Pull requests only prepare and verify the artifact.
+It does not build or serve this React application; `404.html` is a redirect,
+not an HQ SPA fallback.
+
+The redirect uses JavaScript to preserve path, query and fragment; its HTML
+meta-refresh fallback targets the public homepage. Verify browser navigation
+from the Pages URL reported by its deployment. `curl -I` alone cannot prove
+this client-side redirect, and preserving a path does not prove that path
+exists on the destination Site. Do not use `/hq` or `/auth/callback` on the
+public Site as repository-application acceptance tests.
+
+### Repository application and backend
+
+The React source remains available for local development. Confirm a separately
+approved application host before testing hosted HQ/auth flows or rebuilding a
+client after a key change. Supabase operations remain active and are covered
+by [BACKEND_RUNBOOK.md](./BACKEND_RUNBOOK.md).
 
 ---
 
@@ -259,27 +284,30 @@ After a deploy, verify on the production domain:
 | `verify-internal-links.yml` | PR | No broken internal links in prerendered HTML |
 | `verify-accessibility.yml` | PR | axe-core sweep on built output |
 | `verify-assets.yml` | PR | Asset integrity / no orphans introduced |
-| `preview-mint-check.yml` | scheduled | Preview-account session mint health |
-| `publish-smoke-test.yml` | post-publish | Verifies homepage loads, `/hq` renders, login flow, hero bundle hash matches latest build |
+| `preview-mint-check.yml` | PR + push to `main` | Static scan for forbidden preview data, with gate self-tests |
+| `deploy-github-pages.yml` | PR + push to `main` + manual | Prepare legacy redirect; publish only outside PR events |
+| `deploy-supabase-functions.yml` | Matching push to `main` + manual | Apply migrations, then deploy functions; see backend runbook |
 | `security-gate.yml` | PR | Blocks merges with unresolved criticals |
 | `nightly-security-scan.yml` | nightly | Full security scan |
 
 ---
 
-## 12. GitHub deployment flow
+## 12. Review and consolidation
 
-- GitHub is the source of truth: branch, review, and merge changes there.
-- A merge to `main` runs validation and deploys the public frontend to GitHub Pages.
-- Use the GitHub Actions run and `/hq/deploy-health` to verify each release.
-- Retired deployment documentation is historical only and cannot be used to
-  create a parallel production route.
+- Branch, review and validate repository changes before merging to `main`.
+- Distinguish repository CI, the Pages redirect, the backend deployment and
+  the separate Sites publication; none substitutes for the others' checks.
+- PR #41 removed the obsolete `publish-smoke-test.yml` workflow and
+  `scripts/publish-smoke-test.mjs`. Do not restore them from PR #35 or use a
+  `.systems` SPA smoke result as public Sites acceptance.
+- Follow the [PR #35 / #37 / #43 consolidation record](./docs/hosting-consolidation-2026-10-13.md).
 
 ---
 
 ## 13. Operational status
 
-- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). No open alerts.
-- **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
+- **Operational records:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md), the [website runbook](./RUNBOOK.md) and [backend runbook](./BACKEND_RUNBOOK.md). An empty alert file is not a live health check.
+- **Legacy deployment archive:** see [`docs/legacy/README.md`](./docs/legacy/README.md). Historical instructions are retained for reference and must not be used for the public website.
 - **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
 
 ---

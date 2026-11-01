@@ -1,5 +1,11 @@
 # Live Smoke Test — Knowledge Graph Phase (C.1b)
 
+> **Repository application test only.** Confirm the actual application host and
+> backend project using [BACKEND_RUNBOOK.md](../../BACKEND_RUNBOOK.md) before
+> running. Neither the historical `.systems` example nor the public `.com.au`
+> Sites website establishes a valid HQ test target. This suite may write data
+> and is separate from the retired `publish-smoke-test` workflow.
+
 Automated end-to-end regression that proves the project → media graph pipeline
 is functioning on a target environment, not just that migrations ran.
 
