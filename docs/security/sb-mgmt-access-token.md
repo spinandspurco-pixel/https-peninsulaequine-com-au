@@ -1,17 +1,18 @@
 # `SB_MGMT_ACCESS_TOKEN` — least-privilege scope guide
 
-This document defines the minimum scopes the Supabase Management API token needs
-for this project, and lists every endpoint the codebase is allowed to call with
-it. Anything outside this list is out of scope; if a new call is added, update
-this document in the same PR.
+This document defines the dedicated CI security-advisor token's minimum
+permissions. Runtime management consumers and deployment credentials are
+separate; do not replace or revoke them as part of CI configuration.
 
 ## Actual usage in this repo
 
-Only **one** endpoint is called with this token today:
+The CI scanner and read-access verifier use the documented advisor endpoint.
+The existing runtime endpoint remains allowlisted without changing its code:
 
 | Method | Endpoint                                                         | Caller                     | Purpose                                       |
 | ------ | ---------------------------------------------------------------- | -------------------------- | --------------------------------------------- |
-| `GET`  | `https://api.supabase.com/v1/projects/{ref}/database/lints`      | `scripts/security-gate.ts` | Nightly + PR security gate — reads DB linter. |
+| `GET` | `https://api.supabase.com/v1/projects/{ref}/advisors/security` | `scripts/security-gate.ts`, `scripts/ci/verifyMgmtTokenScopes.ts` | Required CI database security advisors. |
+| `GET` | `https://api.supabase.com/v1/projects/{ref}/database/lints` | Existing `supabase/functions/mgmt-db-lints` | Separate runtime consumer; unchanged. |
 
 Project ref: `mxjuknqwzbvvmmdrvkql` (production). No `POST`, `PATCH`, `PUT`, or
 `DELETE` call is made against `api.supabase.com` anywhere in `scripts/`, `src/`,
@@ -24,11 +25,10 @@ imported by browser code — this is enforced by
 
 When minting the token in Supabase → Account → Access Tokens, tick **only**:
 
-- **Projects → Read** — needed to resolve `{ref}` and hit project-scoped routes.
-- **Database → Read** — needed for `GET /v1/projects/{ref}/database/lints`.
+- **Advisors → Read** (`advisors_read`) for the CI advisor endpoint.
 
-Restrict the token to a **single organisation** and, if the UI offers it, a
-**single project** (`mxjuknqwzbvvmmdrvkql`). Do **not** grant any of the
+Restrict the token to the **single project** `mxjuknqwzbvvmmdrvkql` in its
+owning organisation. Do **not** grant any of the
 following — none are used and each expands blast radius materially:
 
 - Secrets (read or write)
@@ -41,8 +41,8 @@ following — none are used and each expands blast radius materially:
 
 ## Operational rules
 
-1. **CI-only.** The token lives in GitHub Actions secrets as
-   `SB_MGMT_ACCESS_TOKEN` and in the Lovable Cloud runtime secret store. It is
+1. **Dedicated CI token.** Store it in GitHub Actions secrets as
+   `SB_MGMT_ACCESS_TOKEN`. Leave the existing runtime secret unchanged. It is
    never checked into git, never referenced from `src/`, and never returned
    from an edge function.
 2. **Redacted in logs.** `assertMgmtToken()` installs a `console.*` sanitiser
@@ -52,8 +52,9 @@ following — none are used and each expands blast radius materially:
    third-party service may have captured it. Rotation steps:
    - Mint a new token with the scopes above.
    - Update the GitHub secret `SB_MGMT_ACCESS_TOKEN`.
-   - Update the Lovable Cloud secret `SB_MGMT_ACCESS_TOKEN`.
-   - Revoke the previous token in the Supabase account UI.
+   - Confirm completed database coverage in the generated report.
+   - Revoke a previous CI-only token after validating its replacement and
+     confirming it has no other consumers. Runtime rotation is separate.
 4. **Adding a new endpoint.** If a future task genuinely needs another
    management route, add the endpoint to the table above, add the matching
    scope to the "Required scopes" list, and re-mint the token. Do not silently
@@ -61,8 +62,13 @@ following — none are used and each expands blast radius materially:
 
 ## Verification checklist
 
-- [ ] `rg "api.supabase.com" .` returns only the single URL in
-      `scripts/security-gate.ts`.
+- [ ] Review token resources and permissions in Supabase: this project and
+      Advisors Read only. The verifier cannot prove absence of write access.
+- [ ] `bun test scripts/security-gate.test.ts` passes.
 - [ ] `bun run vitest run src/test/mgmt-token-guard.test.ts` passes.
-- [ ] `scripts/security-gate.ts` exits 0 against production with the newly
-      minted token (proves Projects+Database read scopes are sufficient).
+- [ ] `security-report.json` identifies this project, `database_scan: completed`
+      and `sources.supabase.status: ok`. Exit `1` means completed coverage with
+      new findings; review them rather than automatically accepting a baseline.
+
+Reference: [Supabase security-advisor API](https://supabase.com/docs/reference/api/v1-get-security-advisors)
+and [scoped personal access tokens](https://supabase.com/docs/guides/platform/personal-access-tokens).

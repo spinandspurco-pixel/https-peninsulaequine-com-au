@@ -19,10 +19,10 @@
  *   bun scripts/security-gate.ts                 # check, fail on new findings
  *   bun scripts/security-gate.ts --update-baseline   # rewrite baseline locally
  *
- * Env (optional):
+ * Env (required for a completed database scan):
  *   SB_MGMT_ACCESS_TOKEN    Supabase management API token w/ read access to the lint endpoint.
- *                           When absent, the source is reported as unavailable without
- *                           treating baseline findings as resolved.
+ *                           When absent, coverage is unavailable and the gate exits 2.
+ *                           Baseline findings are not treated as resolved.
  *                           (legacy SUPABASE_ACCESS_TOKEN is still honoured as a fallback)
 
  *
@@ -41,8 +41,8 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { assertMgmtToken } from "./ci/assertMgmtToken";
-import { assertMgmtCall, MgmtApiGuardError } from "./ci/mgmtApiGuard";
+import { assertMgmtToken, scrubError } from "./ci/assertMgmtToken";
+import { assertMgmtCall } from "./ci/mgmtApiGuard";
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "mxjuknqwzbvvmmdrvkql";
 // Prefer the standard SB_MGMT_ACCESS_TOKEN. Legacy fallback stays for one release
@@ -112,43 +112,45 @@ async function fetchSupabaseFindings(): Promise<SourceResult> {
     return { findings: [], status: "unavailable", reason };
   }
 
-  // Runtime guard: aborts if the mgmt token is missing AND installs a console
-  // sanitiser so the token cannot leak via subsequent logging.
   try {
-    assertMgmtToken();
-  } catch (err) {
-    console.error(`ERROR: ${(err as Error).message} (project ${PROJECT_REF}).`);
-    process.exit(2);
-  }
-  const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
-  try {
+    // Validate and redact the selected token, including the legacy fallback.
+    assertMgmtToken({ env: { SB_MGMT_ACCESS_TOKEN: TOKEN } });
+    const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/advisors/security`;
     assertMgmtCall(url, "GET");
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${TOKEN}` },
+      signal: AbortSignal.timeout(30_000),
+      redirect: "error",
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status} reading Supabase security advisors`);
+    const body = await res.json();
+    if (!Array.isArray(body?.lints) || !body.lints.every((lint: unknown) =>
+      lint !== null && typeof lint === "object" &&
+      typeof (lint as Lint).name === "string" && (lint as Lint).name.length > 0 &&
+      typeof (lint as Lint).level === "string" && (lint as Lint).level.length > 0
+    )) {
+      throw new Error("Invalid Supabase security-advisor response: expected { lints: Lint[] }");
+    }
+    const findings = (body.lints as Lint[]).map((l) => ({
+      source: "supabase",
+      fingerprint: fp("supabase", [l.name, l.level, l.metadata?.schema, l.metadata?.name, l.cache_key]),
+      name: l.name,
+      level: l.level,
+      schema: l.metadata?.schema,
+      object: l.metadata?.name,
+      description: l.description,
+      remediation: l.remediation,
+      searchHints: [l.metadata?.name, l.metadata?.schema && l.metadata?.name
+        ? `${l.metadata.schema}.${l.metadata.name}`
+        : undefined].filter((x): x is string => Boolean(x)),
+    }));
+    return { findings, status: "ok" };
   } catch (err) {
-    const msg = err instanceof MgmtApiGuardError ? err.message : String(err);
-    console.error(`ERROR: mgmt guard blocked call: ${msg}`);
-    process.exit(2);
+    const reason = scrubError(err).message;
+    console.warn(`Supabase database advisor scan unavailable: ${reason}`);
+    return { findings: [], status: "unavailable", reason };
   }
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
-  if (!res.ok) {
-
-    console.error(`ERROR: Supabase linter fetch failed: ${res.status} ${await res.text()}`);
-    process.exit(2);
-  }
-  const lints = (await res.json()) as Lint[];
-  const findings = lints.map((l) => ({
-    source: "supabase",
-    fingerprint: fp("supabase", [l.name, l.level, l.metadata?.schema, l.metadata?.name, l.cache_key]),
-    name: l.name,
-    level: l.level,
-    schema: l.metadata?.schema,
-    object: l.metadata?.name,
-    description: l.description,
-    remediation: l.remediation,
-    searchHints: [l.metadata?.name, l.metadata?.schema && l.metadata?.name
-      ? `${l.metadata.schema}.${l.metadata.name}`
-      : undefined].filter((x): x is string => Boolean(x)),
-  }));
-  return { findings, status: "ok" };
 }
 
 // ----------------------------------------------------------------------------
@@ -237,6 +239,9 @@ function loadBaseline(): BaselineEntry[] {
   if (!existsSync(BASELINE_PATH)) return [];
   try {
     const raw = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+    if (raw?.project_ref !== PROJECT_REF) {
+      throw new Error(`baseline project ${raw?.project_ref ?? "(missing)"} does not match scan project ${PROJECT_REF}`);
+    }
     return Array.isArray(raw?.findings) ? raw.findings : [];
   } catch (e) {
     console.error(`ERROR: failed to parse ${BASELINE_PATH}: ${(e as Error).message}`);
@@ -267,6 +272,8 @@ function summary(lines: string[]) {
 
 async function main() {
   const update = process.argv.includes("--update-baseline");
+  // Refuse a cross-project comparison before making any API request.
+  const baseline = loadBaseline();
 
   const [supabaseResult, wizResult] = await Promise.all([
     fetchSupabaseFindings(),
@@ -280,6 +287,8 @@ async function main() {
     REPORT_PATH,
     JSON.stringify({
       fetched_at: new Date().toISOString(),
+      project_ref: PROJECT_REF,
+      database_scan: supabaseResult.status === "ok" ? "completed" : "unavailable",
       sources: {
         supabase: { ...supabaseResult, findings: supabase },
         wiz: { ...wizResult, findings: wiz },
@@ -302,7 +311,6 @@ async function main() {
     return;
   }
 
-  const baseline = loadBaseline();
   const baselineFps = new Set(baseline.map((b) => b.fingerprint));
   const currentFps = new Set(findings.map((c) => c.fingerprint));
 
@@ -321,6 +329,7 @@ async function main() {
   const lines: string[] = [];
   lines.push("## Security Gate");
   lines.push(`- Project: \`${PROJECT_REF}\``);
+  lines.push(`- Required database scan: **${supabaseResult.status === "ok" ? "completed" : "unavailable"}**`);
   lines.push(`- Sources: supabase=${supabaseResult.status} (${supabase.length}), wiz=${wizResult.status} (${wiz.length})`);
   lines.push(`- Current findings: **${findings.length}**`);
   lines.push(`- Baseline findings: **${baseline.length}**`);
@@ -352,15 +361,20 @@ async function main() {
       lines.push(`| ${a.source} | ${a.level} | ${a.name} | ${a.schema ?? ""}.${a.object ?? ""} | \`${a.fingerprint}\` |`);
     }
     lines.push("", "To accept any of these intentionally, run `bun scripts/security-gate.ts --update-baseline` locally and commit `.security/baseline.json` in the same PR.");
+  }
+
+  if (supabaseResult.status !== "ok") {
+    lines.push("", "❌ Required Supabase database scan unavailable; security gate cannot pass.");
+    summary(lines);
+    process.exit(2);
+  }
+  if (added.length) {
     summary(lines);
     process.exit(1);
   }
-
   lines.push(
     "",
-    availableSources.size > 0
-      ? "✅ No new security findings from the available scanner sources."
-      : "⚠️ Gate completed with reduced coverage; no scanner source was available.",
+    "✅ Required database scan completed; no new security findings from the available scanner sources.",
   );
   summary(lines);
 }

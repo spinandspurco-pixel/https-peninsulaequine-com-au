@@ -27,6 +27,8 @@ jobs:
     name: Run all security scans
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      SUPABASE_PROJECT_REF: mxjuknqwzbvvmmdrvkql
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -49,6 +51,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Test security gate failure modes
+        run: bun test scripts/security-gate.test.ts
+
       - name: Run security gate
         id: gate
         env:
@@ -61,6 +66,7 @@ jobs:
           WIZ_AUTH_URL: ${{ secrets.WIZ_AUTH_URL }}
           WIZ_PROJECT_ID: ${{ secrets.WIZ_PROJECT_ID }}
         run: bun scripts/security-gate.ts | tee gate-output.txt
+        shell: bash
         continue-on-error: true
 
       - name: Verify Supabase credentials and run anon Data API regression suite
@@ -248,6 +254,6 @@ jobs:
               );
             }
 
-      - name: Fail job if any scan reported new findings
+      - name: Fail job if any required scan failed
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
         run: exit 1
