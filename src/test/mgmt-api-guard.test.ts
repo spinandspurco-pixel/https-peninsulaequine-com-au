@@ -8,6 +8,14 @@ import {
 const ALLOWED = "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints";
 
 describe("assertMgmtCall", () => {
+  it("allows the security advisor GET while rejecting writes", () => {
+    const advisors = ALLOWED.replace("database/lints", "advisors/security");
+    expect(assertMgmtCall(advisors, "GET")).toBe("/v1/projects/{ref}/advisors/security");
+    for (const method of ["POST", "DELETE", "PATCH", "PUT"]) {
+      expect(() => assertMgmtCall(advisors, method)).toThrow(MgmtApiGuardError);
+    }
+  });
+
   it("returns the normalised path for an allowlisted GET", () => {
     expect(assertMgmtCall(ALLOWED, "GET")).toBe(
       "/v1/projects/{ref}/database/lints",

@@ -11,9 +11,7 @@
  *     probe reflects the newly required capability.
  *   - If the new call is unintended → remove it from the source.
  *
- * The scope-prober itself (verifyMgmtTokenScopes.ts) is exempted because its
- * whole purpose is to probe over-scope endpoints — it never runs in prod
- * code paths.
+ * The credential verifier is governed by the same read-only allowlist.
  */
 
 import { describe, expect, it } from "vitest";
@@ -29,6 +27,7 @@ const SCAN_ROOTS = ["scripts", "supabase/functions", "src"];
 // future edit cannot quietly upgrade a read to a write against the
 // same URL (which would require broader token scopes).
 const ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
+  "/v1/projects/{ref}/advisors/security": ["GET"],
   "/v1/projects/{ref}/database/lints": ["GET"],
 };
 const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
@@ -36,7 +35,6 @@ const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
 // Files whose entire purpose is to enumerate Management API endpoints.
 // They document surface area rather than call it in production flows.
 const EXEMPT_FILES: readonly string[] = [
-  "scripts/ci/verifyMgmtTokenScopes.ts",
   "scripts/ci/assertMgmtToken.ts", // only mentions the host in a JSDoc comment
   "src/test/mgmt-api-allowlist.test.ts", // this file
   "src/test/mgmt-api-guard.test.ts", // negative-test fixtures for the runtime guard

@@ -1,7 +1,8 @@
 # Runbook — Rotating `SB_MGMT_ACCESS_TOKEN`
 
-Operational procedure for re-minting the Supabase Management API personal
-access token, rolling it into every consumer, and validating the rotation.
+Operational procedure for the dedicated CI security-advisor token. Production
+runtime and deployment credentials are separate and must remain unchanged.
+Inventory consumers before revoking a token that may have been shared.
 
 **Scope guide (what the token is / is not allowed to do):** see
 [`sb-mgmt-access-token.md`](./sb-mgmt-access-token.md). This runbook assumes
@@ -20,7 +21,6 @@ in order (old token stays live until step 6).
 
 - Supabase account owner for the `peninsulaequine` org (to mint / revoke PATs).
 - GitHub repo admin (to update Actions secrets).
-- Lovable Cloud project admin (to update the runtime secret).
 
 ---
 
@@ -34,7 +34,7 @@ change.
 # From a machine that has the current token exported locally, NOT from CI logs.
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $SB_MGMT_ACCESS_TOKEN" \
-  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints"
+  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/advisors/security"
 # Expect: 200
 ```
 
@@ -49,11 +49,9 @@ failure to the rotation itself.
 2. **Name:** `peninsula-os-mgmt-YYYY-MM` (e.g. `peninsula-os-mgmt-2026-10`).
    The date suffix makes the audit trail readable at a glance.
 3. **Scopes:** tick only
-   - Projects → **Read**
-   - Database → **Read**
+   - Advisors → **Read** (`advisors_read`)
 4. **Organisation:** restrict to `peninsulaequine` only.
-5. **Project:** if the UI offers project-level restriction, restrict to
-   `mxjuknqwzbvvmmdrvkql`.
+5. **Project:** restrict to `mxjuknqwzbvvmmdrvkql` only.
 6. **Expiry:** 90 days.
 7. Copy the value **once** into a password manager entry named
    `SB_MGMT_ACCESS_TOKEN — <YYYY-MM>`. Do not paste it into chat, email, or
@@ -62,8 +60,7 @@ failure to the rotation itself.
 ## 3. Roll into GitHub Actions
 
 1. Repo → **Settings → Secrets and variables → Actions**.
-2. Locate `SB_MGMT_ACCESS_TOKEN` → **Update secret** (do **not** delete/re-add;
-   updating preserves the audit log).
+2. Locate `SB_MGMT_ACCESS_TOKEN` → **Update secret**, or create it if missing.
 3. Paste the new value → **Save**.
 
 There is no code change — every workflow references the secret by name
@@ -74,50 +71,43 @@ There is no code change — every workflow references the secret by name
 rg -n "SB_MGMT_ACCESS_TOKEN" .github/workflows/
 ```
 
-## 4. Roll into Lovable Cloud runtime
+## 4. Preserve runtime and deployment credentials
 
-The edge function `mgmt-db-lints` reads the same secret at runtime.
-
-1. Lovable Cloud → **Backend → Secrets**.
-2. Update `SB_MGMT_ACCESS_TOKEN` to the new value → **Save**.
-3. No redeploy needed — edge function secrets are hot-reloaded.
+The existing `mgmt-db-lints` runtime uses a different API endpoint. Its
+credential may need different permissions. Do not copy this CI-only token
+into the runtime or change `SUPABASE_ACCESS_TOKEN` / `SUPABASE_DB_PASSWORD`.
+Any shared-token rotation requires a separately reviewed consumer inventory.
 
 ## 5. Validate the new token
 
-Run these three checks **before** revoking the old token. If any fails, stop
+Run these checks **before** revoking the old CI-only token. If any fails, stop
 and diagnose — the old token is still live so nothing is broken yet.
 
-### 5a. Scope probe (proves least-privilege in CI)
+### 5a. Read access and permission review
 
 Trigger the `Security gate` workflow manually:
 
 - GitHub → **Actions → Security gate → Run workflow → Run workflow**.
-- The **Verify token scopes are least-privilege** step must pass. It will
-  fail with **exit 1** if a required read scope is missing, or **exit 2** if
-  any write capability leaked in. Both cases mean the token was minted wrong —
-  return to step 2.
+- The **Verify security-advisor read access** step must pass. It makes only
+  a GET request. Separately review this project's Advisors Read permission
+  in Supabase; a successful GET cannot prove absence of extra permissions.
 
 ### 5b. End-to-end scan (proves the token unblocks the gate)
 
-Same workflow run: the subsequent **Run security gate** step must exit 0.
-This is the real-world check that `GET /v1/projects/{ref}/database/lints`
-succeeds with the new token.
+In the subsequent **Run security gate** step, inspect `security-report.json`:
+`project_ref` must match and `database_scan` must be `completed`, with
+`sources.supabase.status: ok`. Exit `0` means no new findings; exit `1`
+means completed coverage with findings requiring review. Exit `2` or a missing
+report does not prove completed coverage. Do not regenerate the baseline
+merely to make a check green.
 
-### 5c. Edge function smoke (proves runtime rollout)
-
-Curl the edge function directly:
-
-```bash
-curl -sS -o /dev/null -w "%{http_code}\n" \
-  "https://mxjuknqwzbvvmmdrvkql.supabase.co/functions/v1/mgmt-db-lints"
-# Expect: 200 (or 401 without auth — but never 500)
-```
-
-A `500` here means the runtime secret didn't update. Re-do step 4 and retry.
+The public Data API regression suite is separate coverage. Its success does
+not establish that the Management API database-advisor scan completed.
 
 ## 6. Revoke the old token
 
-Only after steps 5a–5c are all green.
+Only after read access and completed database coverage are verified, and the
+previous token is confirmed to have no runtime or deployment consumers.
 
 1. Supabase → **Account → Access Tokens**.
 2. Find the previous entry (the one whose date suffix is *not* the token you
@@ -128,7 +118,7 @@ Only after steps 5a–5c are all green.
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" \
   -H "Authorization: Bearer $OLD_TOKEN" \
-  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/database/lints"
+  "https://api.supabase.com/v1/projects/mxjuknqwzbvvmmdrvkql/advisors/security"
 # Expect: 401
 ```
 
@@ -151,8 +141,8 @@ exactly one live value.
 
 If step 5 fails and you have not yet revoked the old token:
 
-1. In GitHub secrets and Lovable Cloud secrets, re-paste the **old** value.
-2. Re-run `Security gate` — it should return to green immediately.
+1. Restore the previous CI-only GitHub secret if it is still valid.
+2. Re-run `Security gate` and inspect coverage and findings independently.
 3. File an incident note describing what the new token did wrong (e.g.
    over-scoped, wrong org, expired-on-mint) before retrying step 2.
 
@@ -167,6 +157,6 @@ replacement immediately following steps 2–5. There is no way to un-revoke.
 - The token must never be logged. `assertMgmtToken()` installs a `console.*`
   sanitiser plus Node `uncaughtException` / `unhandledRejection` scrubbers.
 - If you widen scopes, update `docs/security/sb-mgmt-access-token.md`,
-  `scripts/ci/verifyMgmtTokenScopes.ts` (add the new capability probe), and
+  `scripts/ci/verifyMgmtTokenScopes.ts` (add a read-only endpoint check), and
   `src/test/mgmt-api-allowlist.test.ts` (add the new endpoint) in the **same
   PR** as the code that uses it.
